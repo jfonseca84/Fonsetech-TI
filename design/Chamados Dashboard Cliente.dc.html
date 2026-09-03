@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  html, body { margin: 0; padding: 0; background: #f4f7fc; }
+  body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  * { box-sizing: border-box; }
+  a { color: #1558d6; text-decoration: none; }
+  a:hover { color: #0f47b0; }
+  ul { margin: 0; padding: 0; list-style: none; }
+  input, textarea, select { font-family: inherit; }
+  button { font-family: inherit; cursor: pointer; }
+  input::placeholder, textarea::placeholder { color: #93a0b8; }
+</style>
+</helmet>
+
+<div style="display: grid; grid-template-columns: 258px 1fr; min-height: 100vh; background: #f4f7fc; color: #0d1730;">
+
+  <aside style="background: linear-gradient(170deg, #0d2a6b 0%, #0b1f52 100%); padding: 26px 20px; display: flex; flex-direction: column;">
+    <div style="display: flex; align-items: center; gap: 11px;">
+      <span style="flex: none; width: 38px; height: 38px; border-radius: 10px; background: rgba(88, 150, 255, 0.22); border: 1px solid rgba(140, 185, 255, 0.34); display: flex; align-items: center; justify-content: center;">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2.6L21.4 12 12 21.4 2.6 12 12 2.6z" stroke="#8fc0ff" stroke-width="1.7" stroke-linejoin="round"></path><circle cx="12" cy="12" r="3.4" fill="#8fc0ff"></circle></svg>
+      </span>
+      <span style="display: block; line-height: 1;">
+        <span style="display: block; font-size: 17px; font-weight: 800; letter-spacing: -0.3px; color: #ffffff;">FONSETECH</span>
+        <span style="display: block; font-size: 8.5px; font-weight: 700; letter-spacing: 2px; color: #7ba7e8; margin-top: 5px;">CENTRAL DE CHAMADOS</span>
+      </span>
+    </div>
+
+    <nav style="margin-top: 34px; display: grid; gap: 5px;">
+      <sc-for list="{{ nav }}" as="item" hint-placeholder-count="5">
+        <button type="button" onClick="{{ item.go }}" style="{{ item.style }}">
+          <span style="display: flex; width: 18px; height: 18px;" dangerouslySetInnerHTML="{{ item.icon }}"></span>
+          {{ item.label }}
+        </button>
+      </sc-for>
+    </nav>
+
+    <div style="margin-top: auto; padding-top: 26px;">
+      <div style="padding: 15px 16px; border-radius: 12px; background: rgba(30, 70, 150, 0.42); border: 1px solid rgba(140, 185, 255, 0.2);">
+        <div style="font-size: 10px; font-weight: 700; letter-spacing: 1.2px; color: #7ba7e8;">SEU PLANO</div>
+        <div style="margin-top: 8px; font-size: 14.5px; font-weight: 700; color: #ffffff;">Profissional</div>
+        <div style="margin-top: 4px; font-size: 12px; color: #93aed4;">SLA de resposta em 4h</div>
+      </div>
+      <a href="Chamados Login.dc.html" style="margin-top: 14px; display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 10px; font-size: 13.5px; font-weight: 600; color: #b9cdec; transition: background .2s ease, color .2s ease;" style-hover="background: rgba(255, 255, 255, 0.08); color: #ffffff;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3.5H6a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h4"></path><path d="M15.5 8L20 12l-4.5 4"></path><path d="M20 12H10"></path></svg>
+        Sair
+      </a>
+    </div>
+  </aside>
+
+  <main style="padding: 26px 34px 44px; min-width: 0;">
+    <header style="display: flex; align-items: center; justify-content: space-between; gap: 20px;">
+      <div>
+        <h1 style="margin: 0; font-size: 24px; font-weight: 800; letter-spacing: -0.9px;">{{ title }}</h1>
+        <p style="margin: 6px 0 0; font-size: 13.5px; color: #6b7896;">{{ subtitle }}</p>
+      </div>
+      <div style="display: flex; align-items: center; gap: 14px;">
+        <button type="button" onClick="{{ goNovo }}" style="display: inline-flex; align-items: center; gap: 9px; background: #1d5ff5; color: #ffffff; font-size: 13.5px; font-weight: 700; padding: 12px 18px; border: 0; border-radius: 10px; box-shadow: 0 10px 24px rgba(29, 95, 245, 0.28); transition: background .22s ease, transform .22s ease;" style-hover="background: #2f7bff; transform: translateY(-1px);">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>
+          Abrir chamado
+        </button>
+        <div style="display: flex; align-items: center; gap: 11px; padding-left: 14px; border-left: 1px solid rgba(20, 45, 100, 0.12);">
+          <span style="width: 38px; height: 38px; border-radius: 50%; background: #dce6f9; display: flex; align-items: center; justify-content: center; font-size: 13.5px; font-weight: 800; color: #1558d6;">MR</span>
+          <span style="display: block; line-height: 1.2;">
+            <span style="display: block; font-size: 13.5px; font-weight: 700;">Marina Ribeiro</span>
+            <span style="display: block; font-size: 11.5px; color: #6b7896; margin-top: 2px;">Ribeiro Comércio Ltda</span>
+          </span>
+        </div>
+      </div>
+    </header>
+
+    <sc-if value="{{ isVisao }}" hint-placeholder-val="{{ true }}">
+      <div>
+        <div style="margin-top: 26px; display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 16px;">
+          <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="4">
+            <div style="background: #ffffff; border: 1px solid rgba(20, 45, 100, 0.1); border-radius: 14px; padding: 20px 22px; box-shadow: 0 2px 8px rgba(20, 45, 100, 0.04);">
+              <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                <span style="font-size: 11px; font-weight: 700; letter-spacing: 1px; color: #6b7896;">{{ k.label }}</span>
+                <span style="width: 9px; height: 9px; border-radius: 50%; background: {{ k.tone }}; display: block;"></span>
+              </div>
+              <div style="margin-top: 14px; font-size: 30px; font-weight: 800; letter-spacing: -1.2px;">{{ k.value }}</div>
+              <div style="margin-top: 5px; font-size: 12.5px; color: #6b7896;">{{ k.hint }}</div>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="margin-top: 24px; display: grid; grid-template-columns: 1.45fr 1fr; gap: 20px; align-items: start;">
+          <div style="background: #ffffff; border: 1px solid rgba(20, 45, 100, 0.1); border-radius: 14px; padding: 22px 24px;">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <h2 style="margin: 0; font-size: 15.5px; font-weight: 700;">Chamados recentes</h2>
+              <button type="button" onClick="{{ goChamados }}" style="background: none; border: 0; font-size: 13px; font-weight: 600; color: #1558d6;">Ver todos</button>
+            </div>
+            <div style="margin-top: 16px; display: grid; gap: 10px;">
+              <sc-for list="{{ recentes }}" as="t" hint-placeholder-count="4">
+                <button type="button" onClick="{{ t.open }}" style="text-align: left; display: flex; align-items: center; gap: 14px; padding: 13px 14px; border-radius: 11px; background: #f8fafd; border: 1px solid rgba(20, 45, 100, 0.09); transition: border-color .2s ease, transform .2s ease;" style-hover="border-color: rgba(29, 95, 245, 0.34); transform: translateY(-1px);">
+                  <span style="flex: none; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; font-weight: 500; color: #6b7896;">{{ t.id }}</span>
+                  <span style="min-width: 0; flex: 1;">
+                    <span style="display: block; font-size: 13.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ t.titulo }}</span>
+                    <span style="display: block; font-size: 11.5px; color: #6b7896; margin-top: 3px;">{{ t.meta }}</span>
+                  </span>
+                  <span style="flex: none; font-size: 11.5px; font-weight: 700; padding: 5px 10px; border-radius: 999px; color: {{ t.fg }}; background: {{ t.bg }};">{{ t.status }}</span>
+                </button>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="background: #ffffff; border: 1px solid rgba(20, 45, 100, 0.1); border-radius: 14px; padding: 22px 24px;">
+            <h2 style="margin: 0; font-size: 15.5px; font-weight: 700;">Próximos agendamentos</h2>
+            <div style="margin-top: 16px; display: grid; gap: 12px;">
+              <sc-for list="{{ agenda }}" as="a" hint-placeholder-count="2">
+                <div style="display: flex; gap: 14px; padding: 14px; border-radius: 11px; background: #f8fafd; border: 1px solid rgba(20, 45, 100, 0.09);">
+                  <span style="flex: none; width: 44px; text-align: center;">
+                    <span style="display: block; font-size: 19px; font-weight: 800; letter-spacing: -0.6px; color: #1558d6;">{{ a.dia }}</span>
+                    <span style="display: block; font-size: 10.5px; font-weight: 700; letter-spacing: 0.8px; color: #6b7896; margin-top: 2px;">{{ a.mes }}</span>
+                  </span>
+                  <span style="min-width: 0;">
+                    <span style="display: block; font-size: 13.5px; font-weight: 700;">{{ a.titulo }}</span>
+                    <span style="display: block; font-size: 12px; color: #6b7896; margin-top: 4px;">{{ a.detalhe }}</span>
+                  </span>
+                </div>
+              </sc-for>
+            </div>
+            <button type="button" onClick="{{ goAgenda }}" style="margin-top: 16px; width: 100%; padding: 12px; border-radius: 10px; background: #ffffff; border: 1px solid rgba(20, 45, 100, 0.16); font-size: 13.5px; font-weight: 600; color: #2c3853; transition: border-color .2s ease, background .2s ease;" style-hover="border-color: rgba(29, 95, 245, 0.42); background: #f8fafd;">Agendar visita ou reunião</button>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isChamados }}" hint-placeholder-val="{{ false }}">
+      <div style="margin-top: 24px; background: #ffffff; border: 1px solid rgba(20, 45, 100, 0.1); border-radius: 14px; overflow: hidden;">
+        <div style="display: flex; align-items: center; gap: 10px; padding: 18px 22px; border-bottom: 1px solid rgba(20, 45, 100, 0.1); flex-wrap: wrap;">
+          <sc-for list="{{ filtros }}" as="f" hint-placeholder-count="6">
+            <button type="button" onClick="{{ f.go }}" style="{{ f.style }}">{{ f.label }}</button>
+          </sc-for>
+        </div>
+        <div>
+          <sc-for list="{{ lista }}" as="t" hint-placeholder-count="6">
+            <div style="display: grid; grid-template-columns: 92px 1fr 130px 118px 96px; gap: 16px; align-items: center; padding: 16px 22px; border-bottom: 1px solid rgba(20, 45, 100, 0.07);">
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #6b7896;">{{ t.id }}</span>
+              <span style="min-width: 0;">
+                <span style="display: block; font-size: 14px; font-weight: 600;">{{ t.titulo }}</span>
+                <span style="display: block; font-size: 12px; color: #6b7896; margin-top: 4px;">{{ t.categoria }}</span>
+              </span>
+              <span style="font-size: 11.5px; font-weight: 700; padding: 6px 11px; border-radius: 999px; text-align: center; color: {{ t.fg }}; background: {{ t.bg }};">{{ t.status }}</span>
+              <span style="font-size: 12.5px; color: #55637f;">{{ t.abertura }}</span>
+              <button type="button" onClick="{{ t.open }}" style="justify-self: end; background: none; border: 0; font-size: 13px; font-weight: 600; color: #1558d6;">Detalhes</button>
+            </div>
+          </sc-for>
+        </div>
+        <sc-if value="{{ listaVazia }}" hint-placeholder-val="{{ false }}">
+          <div style="padding: 44px 22px; text-align: center; font-size: 13.5px; color: #6b7896;">Nenhum chamado com esse status.</div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isNovo }}" hint-placeholder-val="{{ false }}">
+      <form onSubmit="{{ enviarChamado }}" style="margin-top: 24px; max-width: 720px; background: #ffffff; border: 1px solid rgba(20, 45, 100, 0.1); border-radius: 14px; padding: 26px 28px; display: grid; gap: 18px;">
+        <label style="display: grid; gap: 8px;">
+          <span style="font-size: 12.5px; font-weight: 700; color: #2c3853;">Título do chamado</span>
+          <input type="text" value="{{ form.titulo }}" onChange="{{ setTitulo }}" placeholder="Ex.: VPN não conecta no escritório" style="height: 48px; padding: 0 14px; font-size: 14px; color: #0d1730; background: #f7f9fd; border: 1px solid rgba(20, 45, 100, 0.14); border-radius: 10px; outline: none;" style-focus="border-color: #1d5ff5; box-shadow: 0 0 0 3px rgba(29, 95, 245, 0.12); background: #ffffff;" />
+        </label>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <label style="display: grid; gap: 8px;">
+            <span style="font-size: 12.5px; font-weight: 700; color: #2c3853;">Categoria</span>
+            <select value="{{ form.categoria }}" onChange="{{ setCategoria }}" style="height: 48px; padding: 0 12px; font-size: 14px; color: #0d1730; background: #f7f9fd; border: 1px solid rgba(20, 45, 100, 0.14); border-radius: 10px; outline: none;">
+              <option value="Rede e internet">Rede e internet</option>
+              <option value="Computadores">Computadores</option>
+              <option value="Sistemas">Sistemas</option>
+              <option value="Servidores">Servidores</option>
+              <option value="E-mail e acessos">E-mail e acessos</option>
+            </select>
+          </label>
+          <label style="display: grid; gap: 8px;">
+            <span style="font-size: 12.5px; font-weight: 700; color: #2c3853;">Prioridade sugerida</span>
+            <select value="{{ form.prioridade }}" onChange="{{ setPrioridade }}" style="height: 48px; padding: 0 12px; font-size: 14px; color: #0d1730; background: #f7f9fd; border: 1px solid rgba(20, 45, 100, 0.14); border-radius: 10px; outline: none;">
+              <option value="Baixa">Baixa</option>
+              <option value="Média">Média</option>
+              <option value="Alta">Alta</option>
+              <option value="Urgente">Urgente</option>
+            </select>
+          </label>
+        </div>
+        <label style="display: grid; gap: 8px;">
+          <span style="font-size: 12.5px; font-weight: 700; color: #2c3853;">Máquina com problema</span>
+          <select value="{{ form.maquina }}" onChange="{{ setMaquina }}" style="height: 48px; padding: 0 12px; font-size: 14px; color: #0d1730; background: #f7f9fd; border: 1px solid rgba(20, 45, 100, 0.14); border-radius: 10px; outline: none;">
+            <option value="">Selecione a máquina</option>
+            <sc-for list="{{ maquinasOpc }}" as="m" hint-placeholder-count="4">
+              <option value="{{ m.id }}">{{ m.rotulo }}</option>
+            </sc-for>
+            <option value="outra">Outra máquina (não cadastrada)</option>
+          </select>
+        </label>
+
+        <sc-if value="{{ maqSelecionada }}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; align-items: center; gap: 14px; padding: 15px 17px; border-radius: 11px; background: #f8fafd; border: 1px solid rgba(29, 95, 245, 0.2);">
+            <span style="flex: none; width: 38px; height: 38px; border-radius: 10px; background: rgba(29, 95, 245, 0.09); display: flex; align-items: center; justify-content: center;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1558d6" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12.5" rx="2"></rect><path d="M8 20h8"></path><path d="M12 16.5V20"></path></svg>
+            </span>
+            <span style="min-width: 0;">
+              <span style="display: block; font-size: 13.5px; font-weight: 700;">{{ maqSelecionada.nome }} · {{ maqSelecionada.usuario }}</span>
+              <span style="display: block; font-size: 12px; color: #6b7896; margin-top: 4px;">{{ maqSelecionada.resumo }}</span>
+            </span>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ maqOutra }}" hint-placeholder-val="{{ false }}">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <label style="display: grid; gap: 8px;">
+              <span style="font-size: 12.5px; font-weight: 700; color: #2c3853;">Identificação da máquina</span>
+              <input type="text" value="{{ form.maquinaLivre }}" onChange="{{ setMaquinaLivre }}" placeholder="Ex.: Máquina 12" style="height: 48px; padding: 0 14px; font-size: 14px; color: #0d1730; background: #f7f9fd; border: 1px solid rgba(20, 45, 100, 0.14); border-radius: 10px; outline: none;" style-focus="border-color: #1d5ff5; box-shadow: 0 0 0 3px rgba(29, 95, 245, 0.12); background: #ffffff;" />
+            </label>
+            <label style="display: grid; gap: 8px;">
+              <span style="font-size: 12.5px; font-weight: 700; color: #2c3853;">Usuário do equipamento</span>
+              <input type="text" value="{{ form.usuario }}" onChange="{{ setUsuario }}" placeholder="Ex.: João" style="height: 48px; padding: 0 14px; font-size: 14px; color: #0d1730; background: #f7f9fd; border: 1px solid rgba(20, 45, 100, 0.14); border-radius: 10px; outline: none;" style-focus="border-color: #1d5ff5; box-shadow: 0 0 0 3px rgba(29, 95, 245, 0.12); background: #ffffff;" />
+            </label>
+          </div>
+        </sc-if>
+        <label style="display: grid; gap: 8px;">
+          <span style="font-size: 12.5px; font-weight: 700; color: #2c3853;">Descrição</span>
+          <textarea rows="5" value="{{ form.descricao }}" onChange="{{ setDescricao }}" placeholder="Descreva o que acontece, desde quando e quantas pessoas são afetadas." style="padding: 13px 14px; font-size: 14px; line-height: 1.6; color: #0d1730; background: #f7f9fd; border: 1px solid rgba(20, 45, 100, 0.14); border-radius: 10px; outline: none; resize: vertical;" style-focus="border-color: #1d5ff5; box-shadow: 0 0 0 3px rgba(29, 95, 245, 0.12); background: #ffffff;"></textarea>
+        </label>
+        <div style="display: flex; align-items: center; gap: 12px; padding: 16px; border-radius: 11px; border: 1px dashed rgba(20, 45, 100, 0.24); background: #f8fafd;">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#6b7896" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-3"></path><path d="M8 8.5L12 4.5l4 4"></path><path d="M12 4.5V15"></path></svg>
+          <span style="font-size: 13px; color: #55637f;">Anexo opcional — imagem ou print do erro (até 5 MB)</span>
+        </div>
+        <sc-if value="{{ aviso }}" hint-placeholder-val="{{ false }}">
+          <div role="status" style="display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 10px; background: rgba(34, 192, 122, 0.08); border: 1px solid rgba(34, 192, 122, 0.3); font-size: 13px; font-weight: 600; color: #14804a;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"></path></svg>
+            {{ aviso }}
+          </div>
+        </sc-if>
+        <div style="display: flex; gap: 12px;">
+          <button type="submit" style="display: inline-flex; align-items: center; gap: 10px; background: #1d5ff5; color: #ffffff; font-size: 14px; font-weight: 700; padding: 15px 22px; border: 0; border-radius: 10px; box-shadow: 0 10px 26px rgba(29, 95, 245, 0.28); transition: background .22s ease, transform .22s ease;" style-hover="background: #2f7bff; transform: translateY(-1px);">
+            Enviar chamado
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13"></path><path d="M12 5l7 7-7 7"></path></svg>
+          </button>
+          <button type="button" onClick="{{ goChamados }}" style="padding: 15px 22px; border-radius: 10px; background: #ffffff; border: 1px solid rgba(20, 45, 100, 0.16); font-size: 14px; font-weight: 600; color: #2c3853;" style-hover="border-color: rgba(20, 45, 100, 0.34);">Cancelar</button>
+        </div>
+      </form>
+    </sc-if>
+
+    <sc-if value="{{ isAgenda }}" hint-placeholder-val="{{ false }}">
+      <div style="margin-top: 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start;">
+        <form onSubmit="{{ enviarVisita }}" style="background: #ffffff; border: 1px solid rgba(20, 45, 100, 0.1); border-radius: 14px; padding: 24px 26px; display: grid; gap: 16px;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <span style="flex: none; width: 38px; height: 38px; border-radius: 10px; background: rgba(29, 95, 245, 0.1); display: flex; align-items: center; justify-content: center;">
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#1558d6" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-5.4 7-11a7 7 0 1 0-14 0c0 5.6 7 11 7 11z"></path><circle cx="12" cy="10" r="2.6"></circle></svg>
+            </span>
+            <h2 style="margin: 0; font-size: 16px; font-weight: 700;">Agendar visita técnica</h2>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+            <label style="display: grid; gap: 7px;"><span style="font-size: 12.5px; font-weight: 700; color: #2c3853;">Data</span>
+              <input type="date" style="height: 46px; padding: 0 12px; font-size: 14px; background: #f7f9fd; border: 1px solid rgba(20, 45, 100, 0.14); border-radius: 10px; outline: none; color: #0d1730;" /></label>
+            <label style="display: grid; gap: 7px;"><span style="font-size: 12.5px; font-weight: 700; color: #2c3853;">Horário</span>
+              <input type="time" style="height: 46px; padding: 0 12px; font-size: 14px; background: #f7f9fd; border: 1px solid rgba(20, 45, 100, 0.14); border-radius: 10px; outline: none; color: #0d1730;" /></label>
+          </div>
+          <label style="display: grid; gap: 7px;"><span style="font-size: 12.5px; font-weight: 700; color: #2c3853;">Motivo</span>
+            <input type="text" placeholder="Ex.: instalação de novos pontos de rede" style="height: 46px; padding: 0 12px; font-size: 14px; background: #f7f9fd; border: 1px solid rgba(20, 45, 100, 0.14); border-radius: 10px; outline: none; color: #0d1730;" /></label>
+          <label style="display: grid; gap: 7px;"><span style="font-size: 12.5px; font-weight: 700; color: #2c3853;">Endereço</span>
+            <input type="text" placeholder="Rua, número, complemento" style="height: 46px; padding: 0 12px; font-size: 14px; background: #f7f9fd; border: 1px solid rgba(20, 45, 100, 0.14); border-radius: 10px; outline: none; color: #0d1730;" /></label>
+          <button type="submit" style="margin-top: 4px; padding: 14px; background: #1d5ff5; color: #ffffff; font-size: 14px; font-weight: 700; border: 0; border-radius: 10px; transition: background .22s ease;" style-hover="background: #2f7bff;">Solicitar visita</button>
+        </form>
+
+        <form onSubmit="{{ enviarReuniao }}" style="background: #ffffff; border: 1px solid rgba(20, 45, 100, 0.1); border-radius: 14px; padding: 24px 26px; display: grid; gap: 16px;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <span style="flex: none; width: 38px; height: 38px; border-radius: 10px; background: rgba(124, 58, 237, 0.1); display: flex; align-items: center; justify-content: center;">
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="13" height="12" rx="2.2"></rect><path d="M16 10.5l5-3v9l-5-3z"></path></svg>
+            </span>
+            <h2 style="margin: 0; font-size: 16px; font-weight: 700;">Agendar reunião</h2>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+            <label style="display: grid; gap: 7px;"><span style="font-size: 12.5px; font-weight: 700; color: #2c3853;">Data</span>
+              <input type="date" style="height: 46px; padding: 0 12px; font-size: 14px; background: #f7f9fd; border: 1px solid rgba(20, 45, 100, 0.14); border-radius: 10px; outline: none; color: #0d1730;" /></label>
+            <label style="display: grid; gap: 7px;"><span style="font-size: 12.5px; font-weight: 700; color: #2c3853;">Horário</span>
+              <input type="time" style="height: 46px; padding: 0 12px; font-size: 14px; background: #f7f9fd; border: 1px solid rgba(20, 45, 100, 0.14); border-radius: 10px; outline: none; color: #0d1730;" /></label>
+          </div>
+          <label style="display: grid; gap: 7px;"><span style="font-size: 12.5px; font-weight: 700; color: #2c3853;">Assunto</span>
+            <input type="text" placeholder="Ex.: revisão do plano de suporte" style="height: 46px; padding: 0 12px; font-size: 14px; background: #f7f9fd; border: 1px solid rgba(20, 45, 100, 0.14); border-radius: 10px; outline: none; color: #0d1730;" /></label>
+          <label style="display: grid; gap: 7px;"><span style="font-size: 12.5px; font-weight: 700; color: #2c3853;">Formato</span>
+            <select style="height: 46px; padding: 0 12px; font-size: 14px; background: #f7f9fd; border: 1px solid rgba(20, 45, 100, 0.14); border-radius: 10px; outline: none; color: #0d1730;">
+              <option value="Online">Online</option>
+              <option value="Presencial">Presencial</option>
+            </select></label>
+          <button type="submit" style="margin-top: 4px; padding: 14px; background: #ffffff; color: #2c3853; font-size: 14px; font-weight: 700; border: 1px solid rgba(20, 45, 100, 0.18); border-radius: 10px; transition: border-color .22s ease, background .22s ease;" style-hover="border-color: rgba(29, 95, 245, 0.44); background: #f8fafd;">Solicitar reunião</button>
+        </form>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isEmpresa }}" hint-placeholder-val="{{ false }}">
+      <form onSubmit="{{ salvarEmpresa }}" style="margin-top: 24px; max-width: 780px; background: #ffffff; border: 1px solid rgba(20, 45, 100, 0.1); border-radius: 14px; padding: 26px 28px; display: grid; gap: 18px;">
+        <div style="display: grid; grid-template-columns: 1.4fr 1fr; gap: 16px;">
+          <label style="display: grid; gap: 8px;"><span style="font-size: 12.5px; font-weight: 700; color: #2c3853;">Razão social</span>
+            <input type="text" value="{{ emp.razao }}" onChange="{{ setRazao }}" style="height: 48px; padding: 0 14px; font-size: 14px; background: #f7f9fd; border: 1px solid rgba(20, 45, 100, 0.14); border-radius: 10px; outline: none; color: #0d1730;" style-focus="border-color: #1d5ff5; box-shadow: 0 0 0 3px rgba(29, 95, 245, 0.12); background: #ffffff;" /></label>
+          <label style="display: grid; gap: 8px;"><span style="font-size: 12.5px; font-weight: 700; color: #2c3853;">CNPJ</span>
+            <input type="text" value="{{ emp.cnpj }}" onChange="{{ setCnpj }}" style="height: 48px; padding: 0 14px; font-size: 14px; background: #f7f9fd; border: 1px solid rgba(20, 45, 100, 0.14); border-radius: 10px; outline: none; color: #0d1730;" style-focus="border-color: #1d5ff5; box-shadow: 0 0 0 3px rgba(29, 95, 245, 0.12); background: #ffffff;" /></label>
+        </div>
+        <label style="display: grid; gap: 8px;"><span style="font-size: 12.5px; font-weight: 700; color: #2c3853;">Endereço</span>
+          <input type="text" value="{{ emp.endereco }}" onChange="{{ setEndereco }}" style="height: 48px; padding: 0 14px; font-size: 14px; background: #f7f9fd; border: 1px solid rgba(20, 45, 100, 0.14); border-radius: 10px; outline: none; color: #0d1730;" style-focus="border-color: #1d5ff5; box-shadow: 0 0 0 3px rgba(29, 95, 245, 0.12); background: #ffffff;" /></label>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <label style="display: grid; gap: 8px;"><span style="font-size: 12.5px; font-weight: 700; color: #2c3853;">E-mail de contato</span>
+            <input type="email" value="{{ emp.email }}" onChange="{{ setEmailEmp }}" style="height: 48px; padding: 0 14px; font-size: 14px; background: #f7f9fd; border: 1px solid rgba(20, 45, 100, 0.14); border-radius: 10px; outline: none; color: #0d1730;" style-focus="border-color: #1d5ff5; box-shadow: 0 0 0 3px rgba(29, 95, 245, 0.12); background: #ffffff;" /></label>
+          <label style="display: grid; gap: 8px;"><span style="font-size: 12.5px; font-weight: 700; color: #2c3853;">Telefone</span>
+            <input type="tel" value="{{ emp.telefone }}" onChange="{{ setTelefone }}" style="height: 48px; padding: 0 14px; font-size: 14px; background: #f7f9fd; border: 1px solid rgba(20, 45, 100, 0.14); border-radius: 10px; outline: none; color: #0d1730;" style-focus="border-color: #1d5ff5; box-shadow: 0 0 0 3px rgba(29, 95, 245, 0.12); background: #ffffff;" /></label>
+        </div>
+        <div style="height: 1px; background: rgba(20, 45, 100, 0.1);"></div>
+
+        <div>
+          <h2 style="margin: 0; font-size: 15px; font-weight: 700;">Responsáveis</h2>
+          <p style="margin: 7px 0 0; font-size: 12.5px; line-height: 1.6; color: #6b7896;">Essas informações ajudam nossa equipe a saber com quem falar em cada situação.</p>
+        </div>
+
+        <div style="display: grid; gap: 8px;">
+          <span style="font-size: 12.5px; font-weight: 700; color: #2c3853;">A empresa tem responsável técnico de TI interno?</span>
+          <div style="display: flex; gap: 10px;">
+            <label style="flex: 1; display: flex; align-items: center; gap: 10px; padding: 13px 15px; border-radius: 10px; background: #f7f9fd; border: 1px solid rgba(20, 45, 100, 0.14); font-size: 13.5px; font-weight: 600; color: #2c3853; cursor: pointer;">
+              <input type="radio" name="temTI" value="sim" checked="{{ comTI }}" onChange="{{ setTemTI }}" style="width: 16px; height: 16px; accent-color: #1d5ff5; cursor: pointer;" />
+              Sim, temos
+            </label>
+            <label style="flex: 1; display: flex; align-items: center; gap: 10px; padding: 13px 15px; border-radius: 10px; background: #f7f9fd; border: 1px solid rgba(20, 45, 100, 0.14); font-size: 13.5px; font-weight: 600; color: #2c3853; cursor: pointer;">
+              <input type="radio" name="temTI" value="nao" checked="{{ semTI }}" onChange="{{ setTemTI }}" style="width: 16px; height: 16px; accent-color: #1d5ff5; cursor: pointer;" />
+              Não temos
+            </label>
+          </div>
+        </div>
+
+        <sc-if value="{{ comTI }}" hint-placeholder-val="{{ false }}">
+          <label style="display: grid; gap: 8px;"><span style="font-size: 12.5px; font-weight: 700; color: #2c3853;">Nome do responsável técnico de TI</span>
+            <input type="text" value="{{ nomeTI }}" onChange="{{ setNomeTI }}" placeholder="Nome completo do responsável" style="height: 48px; padding: 0 14px; font-size: 14px; background: #f7f9fd; border: 1px solid rgba(20, 45, 100, 0.14); border-radius: 10px; outline: none; color: #0d1730;" style-focus="border-color: #1d5ff5; box-shadow: 0 0 0 3px rgba(29, 95, 245, 0.12); background: #ffffff;" /></label>
+        </sc-if>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <label style="display: grid; gap: 8px;"><span style="font-size: 12.5px; font-weight: 700; color: #2c3853;">Nome do gerente geral</span>
+            <input type="text" value="{{ emp.gerente }}" onChange="{{ setGerente }}" placeholder="Nome completo" style="height: 48px; padding: 0 14px; font-size: 14px; background: #f7f9fd; border: 1px solid rgba(20, 45, 100, 0.14); border-radius: 10px; outline: none; color: #0d1730;" style-focus="border-color: #1d5ff5; box-shadow: 0 0 0 3px rgba(29, 95, 245, 0.12); background: #ffffff;" /></label>
+          <label style="display: grid; gap: 8px;"><span style="font-size: 12.5px; font-weight: 700; color: #2c3853;">Nome do diretor</span>
+            <input type="text" value="{{ emp.diretor }}" onChange="{{ setDiretor }}" placeholder="Nome completo" style="height: 48px; padding: 0 14px; font-size: 14px; background: #f7f9fd; border: 1px solid rgba(20, 45, 100, 0.14); border-radius: 10px; outline: none; color: #0d1730;" style-focus="border-color: #1d5ff5; box-shadow: 0 0 0 3px rgba(29, 95, 245, 0.12); background: #ffffff;" /></label>
+        </div>
+
+        <sc-if value="{{ salvo }}" hint-placeholder-val="{{ false }}">
+          <div role="status" style="padding: 12px 14px; border-radius: 10px; background: rgba(34, 192, 122, 0.08); border: 1px solid rgba(34, 192, 122, 0.3); font-size: 13px; font-weight: 600; color: #14804a;">{{ salvo }}</div>
+        </sc-if>
+        <div>
+          <button type="submit" style="padding: 15px 24px; background: #1d5ff5; color: #ffffff; font-size: 14px; font-weight: 700; border: 0; border-radius: 10px; box-shadow: 0 10px 26px rgba(29, 95, 245, 0.28); transition: background .22s ease;" style-hover="background: #2f7bff;">Salvar dados da empresa</button>
+        </div>
+      </form>
+    </sc-if>
+
+    <sc-if value="{{ isCursos }}" hint-placeholder-val="{{ false }}">
+      <div style="margin-top: 24px;">
+        <sc-if value="{{ semLeitura }}" hint-placeholder-val="{{ true }}">
+          <div>
+            <div style="display: flex; align-items: center; gap: 9px; flex-wrap: wrap;">
+              <sc-for list="{{ cursoCats }}" as="f" hint-placeholder-count="5">
+                <button type="button" onClick="{{ f.go }}" style="{{ f.style }}">{{ f.label }}</button>
+              </sc-for>
+            </div>
+            <div style="margin-top: 18px; display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 18px;">
+              <sc-for list="{{ apostilas }}" as="a" hint-placeholder-count="6">
+                <div style="display: flex; flex-direction: column; background: #ffffff; border: 1px solid rgba(20, 45, 100, 0.1); border-radius: 14px; padding: 22px 22px 20px;">
+                  <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 10px;">
+                    <span style="{{ a.iconStyle }}">
+                      <sc-if value="{{ a.ehPdf }}" hint-placeholder-val="{{ true }}">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5z"></path><path d="M14 3v5h5"></path><path d="M9 13.5h6"></path><path d="M9 17h4"></path></svg>
+                      </sc-if>
+                      <sc-if value="{{ a.ehPpt }}" hint-placeholder-val="{{ false }}">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12.5" rx="2"></rect><path d="M12 16.5V20"></path><path d="M8.5 20h7"></path><path d="M7.5 12.5l3-3 2.5 2.5 3.5-4"></path></svg>
+                      </sc-if>
+                    </span>
+                    <span style="display: flex; align-items: center; gap: 7px;">
+                      <span style="{{ a.tipoStyle }}">{{ a.tipoLabel }}</span>
+                      <span style="{{ a.nivelStyle }}">{{ a.nivel }}</span>
+                    </span>
+                  </div>
+                  <h3 style="margin: 16px 0 0; font-size: 15.5px; font-weight: 700; line-height: 1.35; text-wrap: pretty;">{{ a.titulo }}</h3>
+                  <p style="margin: 10px 0 0; font-size: 13px; line-height: 1.6; color: #6b7896; text-wrap: pretty;">{{ a.descricao }}</p>
+                  <div style="margin-top: 16px; font-size: 11.5px; color: #93a0b8;">{{ a.meta }} · {{ a.atualizado }}</div>
+                  <button type="button" onClick="{{ a.ver }}" style="margin-top: 18px; display: flex; align-items: center; justify-content: center; gap: 9px; padding: 12px; border-radius: 10px; background: #1d5ff5; color: #ffffff; font-size: 13.5px; font-weight: 700; border: 0; transition: background .22s ease, transform .22s ease;" style-hover="background: #2f7bff; transform: translateY(-1px);">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 12S6 5.8 12 5.8 21.5 12 21.5 12 18 18.2 12 18.2 2.5 12 2.5 12z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    {{ a.btnLabel }}
+                  </button>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ leitura }}" hint-placeholder-val="{{ false }}">
+          <div id="fs-visualizador" style="display: flex; flex-direction: column; height: calc(100vh - 128px); background: #ffffff; border: 1px solid rgba(20, 45, 100, 0.1); border-radius: 14px; overflow: hidden;">
+            <div style="padding: 16px 20px; border-bottom: 1px solid rgba(20, 45, 100, 0.1);">
+              <button type="button" onClick="{{ fecharLeitura }}" style="display: inline-flex; align-items: center; gap: 8px; padding: 9px 14px; border-radius: 9px; background: #f4f7fc; border: 1px solid rgba(20, 45, 100, 0.12); font-size: 13px; font-weight: 600; color: #2c3853; transition: background .2s ease, border-color .2s ease;" style-hover="background: #e8eef8; border-color: rgba(29, 95, 245, 0.34);">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H6"></path><path d="M12 5l-7 7 7 7"></path></svg>
+                Voltar
+              </button>
+              <div style="margin-top: 14px; display: flex; align-items: flex-end; justify-content: space-between; gap: 16px;">
+                <div style="min-width: 0;">
+                  <h2 style="margin: 0; font-size: 17px; font-weight: 700; letter-spacing: -0.4px; line-height: 1.3; text-wrap: pretty;">{{ leitura.titulo }}</h2>
+                  <div style="margin-top: 6px; font-size: 12px; color: #6b7896;">{{ leitura.meta }}</div>
+                </div>
+                <div style="flex: none; display: flex; align-items: center; gap: 10px;">
+                  <button type="button" onClick="{{ telaCheia }}" style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 15px; border-radius: 9px; background: #ffffff; border: 1px solid rgba(20, 45, 100, 0.16); font-size: 13px; font-weight: 600; color: #2c3853; white-space: nowrap; transition: border-color .2s ease, color .2s ease;" style-hover="border-color: rgba(29, 95, 245, 0.44); color: #1558d6;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5"></path><path d="M20 9V4h-5"></path><path d="M4 15v5h5"></path><path d="M20 15v5h-5"></path></svg>
+                    Tela cheia
+                  </button>
+                  <sc-if value="{{ leitura.temPdf }}" hint-placeholder-val="{{ false }}">
+                    <a href="{{ leitura.pdf }}" target="_blank" rel="noopener" style="{{ leitura.baixarStyle }}">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5v11"></path><path d="M8 11l4 4 4-4"></path><path d="M4 19.5h16"></path></svg>
+                      {{ leitura.baixarLabel }}
+                    </a>
+                  </sc-if>
+                  <sc-if value="{{ leitura.semPdf }}" hint-placeholder-val="{{ true }}">
+                    <span style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 15px; border-radius: 9px; background: #f4f7fc; border: 1px solid rgba(20, 45, 100, 0.1); font-size: 13px; font-weight: 600; color: #a3aec4; cursor: not-allowed; white-space: nowrap;">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7.5V12l3 2"></path></svg>
+                      {{ leitura.indispLabel }}
+                    </span>
+                  </sc-if>
+                </div>
+              </div>
+            </div>
+            <div style="flex: 1; min-height: 0; background: #e8edf6; display: flex; align-items: center; justify-content: center; padding: 20px;">
+              <sc-if value="{{ leitura.temPdf }}" hint-placeholder-val="{{ false }}">
+                <iframe src="{{ leitura.pdf }}" title="{{ leitura.titulo }}" allowFullScreen="{{ true }}" style="width: 100%; height: 100%; border: 0; border-radius: 6px; background: #ffffff; box-shadow: 0 10px 30px rgba(20, 45, 100, 0.12);"></iframe>
+              </sc-if>
+              <sc-if value="{{ leitura.semPdf }}" hint-placeholder-val="{{ true }}">
+                <div style="width: 100%; height: 100%; background: #ffffff; border: 1px solid rgba(20, 45, 100, 0.14); border-radius: 6px; box-shadow: 0 10px 30px rgba(20, 45, 100, 0.12); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 34px; text-align: center;">
+                  <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#93a0b8" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5z"></path><path d="M14 3v5h5"></path></svg>
+                  <div style="font-size: 14.5px; font-weight: 700; color: #2c3853;">{{ leitura.vazioTitulo }}</div>
+                  <p style="margin: 0; font-size: 12.5px; line-height: 1.62; color: #6b7896; max-width: 320px;">Este material ainda não foi publicado. Assim que estiver disponível, ele aparece aqui para leitura e download.</p>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isDownloads }}" hint-placeholder-val="{{ false }}">
+      <div style="margin-top: 24px;">
+        <div style="display: flex; align-items: flex-start; gap: 13px; padding: 16px 18px; border-radius: 12px; background: rgba(29, 95, 245, 0.05); border: 1px solid rgba(29, 95, 245, 0.2);">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#1558d6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex: none; margin-top: 1px;" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v5.5"></path><path d="M12 7.6h.01"></path></svg>
+          <p style="margin: 0; font-size: 13px; line-height: 1.62; color: #2c3853;">Todos os arquivos ficam no Google Drive da Fonsetech. Instale apenas os programas liberados para a sua empresa — em caso de dúvida, abra um chamado antes.</p>
+        </div>
+
+        <div style="margin-top: 18px; display: grid; gap: 12px;">
+          <sc-for list="{{ programas }}" as="p" hint-placeholder-count="6">
+            <div style="{{ p.cardStyle }}">
+              <span style="flex: none; width: 46px; height: 46px; border-radius: 12px; background: rgba(29, 95, 245, 0.08); display: flex; align-items: center; justify-content: center;">
+                <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#1558d6" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4" width="17" height="12.5" rx="2.2"></rect><path d="M8 20h8"></path><path d="M12 16.5V20"></path></svg>
+              </span>
+              <span style="min-width: 0; flex: 1;">
+                <span style="display: flex; align-items: center; gap: 10px;">
+                  <span style="font-size: 14.5px; font-weight: 700;">{{ p.nome }}</span>
+                  <sc-if value="{{ p.destaque }}" hint-placeholder-val="{{ false }}">
+                    <span style="font-size: 10.5px; font-weight: 700; letter-spacing: 0.6px; padding: 4px 9px; border-radius: 999px; color: #1558d6; background: rgba(29, 95, 245, 0.1);">RECOMENDADO</span>
+                  </sc-if>
+                </span>
+                <span style="display: block; font-size: 13px; line-height: 1.55; color: #6b7896; margin-top: 5px;">{{ p.descricao }}</span>
+                <span style="display: block; font-size: 11.5px; color: #93a0b8; margin-top: 7px;">{{ p.meta }}</span>
+              </span>
+              <span style="flex: none; font-size: 11.5px; font-weight: 700; padding: 6px 12px; border-radius: 999px; color: #55637f; background: rgba(20, 45, 100, 0.06);">{{ p.categoria }}</span>
+              <sc-if value="{{ p.temLink }}" hint-placeholder-val="{{ true }}">
+                <a href="{{ p.link }}" target="_blank" rel="noopener" style="flex: none; display: inline-flex; align-items: center; gap: 9px; padding: 12px 18px; border-radius: 10px; background: #1d5ff5; color: #ffffff; font-size: 13.5px; font-weight: 700; transition: background .22s ease, transform .22s ease;" style-hover="background: #2f7bff; color: #ffffff; transform: translateY(-1px);">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5v11"></path><path d="M8 11l4 4 4-4"></path><path d="M4 19.5h16"></path></svg>
+                  Baixar
+                </a>
+              </sc-if>
+              <sc-if value="{{ p.semLink }}" hint-placeholder-val="{{ false }}">
+                <span style="{{ p.btnStyle }}" title="Link ainda não disponibilizado">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7.5V12l3 2"></path></svg>
+                  Em breve
+                </span>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+
+    <sc-if value="{{ detalhe }}" hint-placeholder-val="{{ false }}">
+      <div onClick="{{ fechar }}" style="position: fixed; inset: 0; background: rgba(11, 25, 55, 0.55); display: flex; align-items: center; justify-content: center; padding: 40px; z-index: 60;">
+        <div onClick="{{ stop }}" style="width: 100%; max-width: 620px; max-height: 84vh; overflow: auto; background: #ffffff; border-radius: 16px; box-shadow: 0 30px 70px rgba(11, 25, 55, 0.4);">
+          <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; padding: 24px 26px; border-bottom: 1px solid rgba(20, 45, 100, 0.1);">
+            <div>
+              <div style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #6b7896;">{{ detalhe.id }}</div>
+              <h2 style="margin: 8px 0 0; font-size: 19px; font-weight: 700; letter-spacing: -0.5px;">{{ detalhe.titulo }}</h2>
+              <div style="margin-top: 10px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                <span style="font-size: 11.5px; font-weight: 700; padding: 5px 11px; border-radius: 999px; color: {{ detalhe.fg }}; background: {{ detalhe.bg }};">{{ detalhe.status }}</span>
+                <span style="font-size: 12.5px; color: #6b7896;">{{ detalhe.categoria }} · aberto em {{ detalhe.abertura }}</span>
+              </div>
+              <sc-if value="{{ detalhe.temEquip }}" hint-placeholder-val="{{ false }}">
+                <div style="margin-top: 12px; display: inline-flex; align-items: center; gap: 9px; padding: 8px 12px; border-radius: 9px; background: #f4f7fc; border: 1px solid rgba(20, 45, 100, 0.1);">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1558d6" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4" width="17" height="12.5" rx="2.2"></rect><path d="M8 20h8"></path><path d="M12 16.5V20"></path></svg>
+                  <span style="font-size: 12.5px; font-weight: 600; color: #2c3853;">{{ detalhe.equipamento }}</span>
+                </div>
+              </sc-if>
+            </div>
+            <button type="button" onClick="{{ fechar }}" aria-label="Fechar" style="flex: none; width: 34px; height: 34px; border-radius: 9px; background: #f4f7fc; border: 1px solid rgba(20, 45, 100, 0.12); display: flex; align-items: center; justify-content: center; color: #55637f;" style-hover="background: #e8eef8;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12"></path><path d="M18 6L6 18"></path></svg>
+            </button>
+          </div>
+          <div style="padding: 24px 26px;">
+            <p style="margin: 0; font-size: 14px; line-height: 1.7; color: #55637f;">{{ detalhe.descricao }}</p>
+            <h3 style="margin: 26px 0 0; font-size: 12px; font-weight: 700; letter-spacing: 1px; color: #6b7896;">HISTÓRICO</h3>
+            <div style="margin-top: 14px; display: grid; gap: 14px;">
+              <sc-for list="{{ detalhe.historico }}" as="h" hint-placeholder-count="3">
+                <div style="display: flex; gap: 13px;">
+                  <span style="flex: none; width: 9px; height: 9px; border-radius: 50%; background: #1d5ff5; margin-top: 6px; display: block;"></span>
+                  <span>
+                    <span style="display: block; font-size: 13.5px; font-weight: 600;">{{ h.texto }}</span>
+                    <span style="display: block; font-size: 11.5px; color: #6b7896; margin-top: 3px;">{{ h.quando }} · {{ h.autor }}</span>
+                  </span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+  </main>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;: {&quot;width&quot;: 1440, &quot;height&quot;: 900}}">
+const TONES = {
+  'Aberto':            { fg: '#1558d6', bg: 'rgba(29, 95, 245, 0.1)',  dot: '#1d5ff5' },
+  'Em atendimento':    { fg: '#0369a1', bg: 'rgba(56, 189, 248, 0.14)', dot: '#38bdf8' },
+  'Aguardando cliente':{ fg: '#a16207', bg: 'rgba(240, 160, 32, 0.14)', dot: '#f0a020' },
+  'Urgente':           { fg: '#b91c1c', bg: 'rgba(220, 38, 38, 0.1)',   dot: '#dc2626' },
+  'Resolvido':         { fg: '#14804a', bg: 'rgba(34, 192, 122, 0.12)', dot: '#22c07a' }
+};
+
+const ICONS = {
+  visao: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.8"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.8"/></svg>',
+  chamados: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3.5h8a2 2 0 0 1 2 2v13l-6-3-6 3v-13a2 2 0 0 1 2-2z"/></svg>',
+  novo: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>',
+  agenda: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="2.4"/><path d="M3.5 9.5h17"/><path d="M8 3.5v3"/><path d="M16 3.5v3"/></svg>',
+  empresa: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V7l8-3.5V20"/><path d="M12 10.5h6a2 2 0 0 1 2 2V20"/><path d="M3 20h18"/></svg>',
+  cursos: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6.5l9-3 9 3-9 3-9-3z"/><path d="M6 9v5.5c0 1.7 2.7 3 6 3s6-1.3 6-3V9"/><path d="M21 7v6"/></svg>',
+  downloads: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5v11"/><path d="M8 11l4 4 4-4"/><path d="M4 19.5h16"/></svg>'
+};
+
+// pdf/link: preencher com a URL do Drive de cada item; vazio mantém o botão desabilitado
+// tipo: 'pdf' (apostila) ou 'ppt' (apresentação)
+const APOSTILAS = [
+  { id: 'ap-01', tipo: 'pdf', titulo: 'Boas práticas de senhas e acessos', descricao: 'Como criar senhas fortes, usar gerenciador e ativar verificação em duas etapas.', paginas: 18, nivel: 'Básico', categoria: 'Segurança', atualizado: 'Ago/2026', pdf: '' },
+  { id: 'ap-02', tipo: 'pdf', titulo: 'Reconhecendo golpes e e-mails falsos', descricao: 'Sinais de phishing, links suspeitos e o que fazer ao receber uma mensagem duvidosa.', paginas: 24, nivel: 'Básico', categoria: 'Segurança', atualizado: 'Ago/2026', pdf: '' },
+  { id: 'ap-07', tipo: 'ppt', titulo: 'Treinamento de segurança para equipes', descricao: 'Apresentação usada nos treinamentos presenciais, pronta para exibir em reunião.', paginas: 34, nivel: 'Básico', categoria: 'Segurança', atualizado: 'Ago/2026', pdf: '' },
+  { id: 'ap-03', tipo: 'pdf', titulo: 'Guia do backup na rotina da empresa', descricao: 'O que precisa ser copiado, com que frequência e como validar se o backup funcionou.', paginas: 32, nivel: 'Intermediário', categoria: 'Infraestrutura', atualizado: 'Jul/2026', pdf: '' },
+  { id: 'ap-08', tipo: 'ppt', titulo: 'Panorama da infraestrutura de TI', descricao: 'Slides que explicam servidores, rede e nuvem em linguagem de negócio.', paginas: 28, nivel: 'Intermediário', categoria: 'Infraestrutura', atualizado: 'Jul/2026', pdf: '' },
+  { id: 'ap-04', tipo: 'pdf', titulo: 'Primeiros socorros de rede e Wi-Fi', descricao: 'Testes simples antes de abrir um chamado: cabos, reinício de equipamentos e velocidade.', paginas: 21, nivel: 'Básico', categoria: 'Redes', atualizado: 'Jul/2026', pdf: '' },
+  { id: 'ap-05', tipo: 'pdf', titulo: 'Trabalho remoto com VPN', descricao: 'Como conectar, boas práticas em redes públicas e solução dos erros mais comuns.', paginas: 27, nivel: 'Intermediário', categoria: 'Redes', atualizado: 'Jun/2026', pdf: '' },
+  { id: 'ap-06', tipo: 'pdf', titulo: 'Organizando arquivos em pastas compartilhadas', descricao: 'Padrão de nomes, permissões por setor e o que nunca deve ficar na área de trabalho.', paginas: 16, nivel: 'Básico', categoria: 'Produtividade', atualizado: 'Jun/2026', pdf: '' },
+  { id: 'ap-09', tipo: 'ppt', titulo: 'Produtividade no pacote Office', descricao: 'Atalhos e recursos pouco usados que economizam tempo no dia a dia.', paginas: 22, nivel: 'Básico', categoria: 'Produtividade', atualizado: 'Jun/2026', pdf: '' }
+];
+
+// máquinas cadastradas pelo admin para esta empresa
+const MAQUINAS = [
+  { id: 'mq-01', nome: 'Máquina 06', usuario: 'João Ferreira', setor: 'Comercial', modelo: 'Dell OptiPlex 3090', so: 'Windows 11 Pro', rede: 'Estático', ip: '192.168.0.106' },
+  { id: 'mq-02', nome: 'Máquina 07', usuario: 'Camila Prado', setor: 'Financeiro', modelo: 'Lenovo ThinkCentre M70q', so: 'Windows 11 Pro', rede: 'DHCP', ip: '—' },
+  { id: 'mq-03', nome: 'Notebook 02', usuario: 'Ricardo Ribeiro', setor: 'Diretoria', modelo: 'Dell Latitude 5440', so: 'Windows 11 Pro', rede: 'DHCP', ip: '—' },
+  { id: 'mq-04', nome: 'Servidor ARQ-01', usuario: 'Compartilhado', setor: 'Infraestrutura', modelo: 'Dell PowerEdge T150', so: 'Windows Server 2022', rede: 'Estático', ip: '192.168.0.10' }
+];
+
+const PROGRAMAS = [
+  { id: 'pr-01', nome: 'AnyDesk', descricao: 'Acesso remoto usado pela nossa equipe durante o atendimento.', versao: '8.1', tamanho: '4,2 MB', so: 'Windows', categoria: 'Suporte remoto', destaque: true, link: '' },
+  { id: 'pr-02', nome: 'Agente de Monitoramento Fonsetech', descricao: 'Coleta indicadores da máquina e abre alertas automáticos de falha.', versao: '2.4', tamanho: '11,8 MB', so: 'Windows', categoria: 'Monitoramento', destaque: true, link: '' },
+  { id: 'pr-03', nome: 'Cliente VPN configurado', descricao: 'Instalador já com o perfil da sua empresa aplicado.', versao: '5.0', tamanho: '18,5 MB', so: 'Windows', categoria: 'Redes', destaque: false, link: '' },
+  { id: 'pr-04', nome: 'Ferramenta de Backup Local', descricao: 'Rotina de cópia para HD externo, com agendamento diário.', versao: '3.2', tamanho: '9,1 MB', so: 'Windows', categoria: 'Backup', destaque: false, link: '' },
+  { id: 'pr-05', nome: 'Kit de Diagnóstico', descricao: 'Conjunto de utilitários para testar disco, memória e temperatura.', versao: '1.7', tamanho: '26,4 MB', so: 'Windows', categoria: 'Diagnóstico', destaque: false, link: '' },
+  { id: 'pr-06', nome: 'Leitor de PDF corporativo', descricao: 'Leitor licenciado para assinatura digital de documentos.', versao: '24.2', tamanho: '142 MB', so: 'Windows / macOS', categoria: 'Produtividade', destaque: false, link: '' }
+];
+
+const TICKETS = [
+  { id: 'CH-4821', titulo: 'VPN não conecta no escritório', categoria: 'Rede e internet', status: 'Em atendimento', abertura: '28/08/2026', equipamento: 'Máquina 06 · Usuário João',
+    descricao: 'Desde a manhã de hoje nenhum colaborador consegue conectar na VPN. A mensagem é de tempo esgotado na autenticação. Afeta 8 pessoas do time comercial.',
+    historico: [
+      { texto: 'Chamado aberto pelo cliente', quando: '28/08 09:12', autor: 'Marina Ribeiro' },
+      { texto: 'Triagem concluída, encaminhado para N2', quando: '28/08 09:34', autor: 'Suporte Fonsetech' },
+      { texto: 'Identificado certificado expirado no concentrador', quando: '28/08 10:05', autor: 'Rafael M.' }
+    ] },
+  { id: 'CH-4816', titulo: 'Impressora fora da rede', categoria: 'Rede e internet', status: 'Aguardando cliente', abertura: '26/08/2026',
+    descricao: 'A impressora do setor financeiro não aparece na lista de dispositivos. Precisamos confirmar se o cabo de rede foi movido durante a limpeza.',
+    historico: [
+      { texto: 'Chamado aberto pelo cliente', quando: '26/08 14:20', autor: 'Marina Ribeiro' },
+      { texto: 'Solicitada confirmação do cabo de rede', quando: '26/08 15:02', autor: 'Suporte Fonsetech' }
+    ] },
+  { id: 'CH-4809', titulo: 'Backup diário falhou duas noites seguidas', categoria: 'Servidores', status: 'Urgente', abertura: '25/08/2026',
+    descricao: 'O relatório de backup apontou falha nas rotinas de segunda e terça. Volume de destino aparentemente sem espaço.',
+    historico: [
+      { texto: 'Chamado aberto pelo cliente', quando: '25/08 08:02', autor: 'Marina Ribeiro' },
+      { texto: 'Prioridade elevada para urgente', quando: '25/08 08:30', autor: 'Rafael M.' }
+    ] },
+  { id: 'CH-4790', titulo: 'Reset de senha do e-mail corporativo', categoria: 'E-mail e acessos', status: 'Resolvido', abertura: '21/08/2026',
+    descricao: 'Colaborador novo precisava redefinir a senha do e-mail no primeiro acesso.',
+    historico: [
+      { texto: 'Chamado aberto pelo cliente', quando: '21/08 11:40', autor: 'Marina Ribeiro' },
+      { texto: 'Senha redefinida e acesso validado', quando: '21/08 11:58', autor: 'Suporte Fonsetech' },
+      { texto: 'Chamado resolvido', quando: '21/08 12:00', autor: 'Suporte Fonsetech' }
+    ] },
+  { id: 'CH-4782', titulo: 'Instalação do ERP na filial', categoria: 'Sistemas', status: 'Resolvido', abertura: '18/08/2026',
+    descricao: 'Necessária instalação e configuração do ERP em quatro estações da filial.',
+    historico: [
+      { texto: 'Chamado aberto pelo cliente', quando: '18/08 09:15', autor: 'Marina Ribeiro' },
+      { texto: 'Instalação concluída nas quatro estações', quando: '19/08 16:40', autor: 'Suporte Fonsetech' }
+    ] },
+  { id: 'CH-4830', titulo: 'Notebook do diretor está muito lento', categoria: 'Computadores', status: 'Aberto', abertura: '29/08/2026', equipamento: 'Notebook 02 · Usuário Ricardo',
+    descricao: 'Equipamento demora cerca de 5 minutos para iniciar e travá ao abrir planilhas grandes.',
+    historico: [{ texto: 'Chamado aberto pelo cliente', quando: '29/08 08:05', autor: 'Marina Ribeiro' }] }
+];
+
+class Component extends DCLogic {
+  state = {
+    view: 'visao',
+    filtro: 'Todos',
+    catCurso: 'Todas',
+    temTI: 'nao',
+    nomeTI: '',
+    empresa: {
+      razao: 'Ribeiro Comércio Ltda',
+      cnpj: '12.345.678/0001-90',
+      endereco: 'Av. Paulista, 1420 - Sala 12',
+      email: 'marina@empresa.com.br',
+      telefone: '(11) 98888-1234',
+      gerente: '',
+      diretor: ''
+    },
+    leitura: null,
+    detalheId: null,
+    aviso: '',
+    salvo: '',
+    form: { titulo: '', categoria: 'Rede e internet', prioridade: 'Média', descricao: '', maquina: '', maquinaLivre: '', usuario: '' },
+    tickets: TICKETS
+  };
+
+  navStyle(active) {
+    return 'display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; padding: 12px 14px; border: 0; border-radius: 10px; font-size: 13.5px; font-weight: 600; transition: background .2s ease, color .2s ease; ' +
+      (active
+        ? 'background: rgba(88, 150, 255, 0.24); color: #ffffff;'
+        : 'background: transparent; color: #b9cdec;');
+  }
+
+  chipStyle(active) {
+    return 'padding: 9px 15px; border-radius: 999px; font-size: 12.5px; font-weight: 700; transition: background .2s ease, border-color .2s ease; ' +
+      (active
+        ? 'background: #1d5ff5; color: #ffffff; border: 1px solid #1d5ff5;'
+        : 'background: #ffffff; color: #55637f; border: 1px solid rgba(20, 45, 100, 0.16);');
+  }
+
+  go(view) { return () => this.setState({ view, aviso: '', salvo: '' }); }
+
+  setField(k) {
+    return e => this.setState(s => ({ form: Object.assign({}, s.form, { [k]: e.target.value }), aviso: '' }));
+  }
+
+  setEmpresa(k) {
+    return e => this.setState(s => ({ empresa: Object.assign({}, s.empresa, { [k]: e.target.value }), salvo: '' }));
+  }
+
+  renderVals() {
+    const { view, filtro, detalheId, aviso, salvo, form, tickets } = this.state;
+    const titles = {
+      visao: ['Visão geral', 'Acompanhe seus chamados e agendamentos'],
+      chamados: ['Meus chamados', 'Histórico completo dos seus atendimentos'],
+      novo: ['Abrir chamado', 'Descreva o problema para nossa equipe'],
+      agenda: ['Agendamentos', 'Solicite visitas técnicas e reuniões'],
+      empresa: ['Minha empresa', 'Dados cadastrais e contatos'],
+      cursos: ['Cursos', 'Apostilas em PDF para a sua equipe'],
+      downloads: ['Downloads', 'Programas liberados para instalação']
+    };
+    const deco = t => Object.assign({}, t, TONES[t.status], {
+      meta: t.categoria + ' · ' + t.abertura,
+      open: () => this.setState({ detalheId: t.id })
+    });
+
+    const counts = {
+      abertos: tickets.filter(t => t.status === 'Aberto' || t.status === 'Em atendimento').length,
+      aguardando: tickets.filter(t => t.status === 'Aguardando cliente').length,
+      urgentes: tickets.filter(t => t.status === 'Urgente').length,
+      resolvidos: tickets.filter(t => t.status === 'Resolvido').length
+    };
+
+    const lista = (filtro === 'Todos' ? tickets : tickets.filter(t => t.status === filtro)).map(deco);
+    const det = tickets.find(t => t.id === detalheId);
+
+    return {
+      title: titles[view][0],
+      subtitle: titles[view][1],
+      isVisao: view === 'visao',
+      isChamados: view === 'chamados',
+      isNovo: view === 'novo',
+      isAgenda: view === 'agenda',
+      isEmpresa: view === 'empresa',
+      isCursos: view === 'cursos',
+      isDownloads: view === 'downloads',
+      nav: [
+        { key: 'visao', label: 'Visão geral', icon: { __html: ICONS.visao } },
+        { key: 'chamados', label: 'Meus chamados', icon: { __html: ICONS.chamados } },
+        { key: 'novo', label: 'Abrir chamado', icon: { __html: ICONS.novo } },
+        { key: 'agenda', label: 'Agendamentos', icon: { __html: ICONS.agenda } },
+        { key: 'cursos', label: 'Cursos', icon: { __html: ICONS.cursos } },
+        { key: 'downloads', label: 'Downloads', icon: { __html: ICONS.downloads } },
+        { key: 'empresa', label: 'Minha empresa', icon: { __html: ICONS.empresa } }
+      ].map(n => Object.assign({}, n, { style: this.navStyle(view === n.key), go: this.go(n.key) })),
+      kpis: [
+        { label: 'EM ANDAMENTO', value: counts.abertos, hint: 'Abertos e em atendimento', tone: '#1d5ff5' },
+        { label: 'AGUARDANDO VOCÊ', value: counts.aguardando, hint: 'Precisam da sua resposta', tone: '#f0a020' },
+        { label: 'URGENTES', value: counts.urgentes, hint: 'Tratativa prioritária', tone: '#dc2626' },
+        { label: 'RESOLVIDOS', value: counts.resolvidos, hint: 'Nos últimos 30 dias', tone: '#22c07a' }
+      ],
+      recentes: tickets.slice(0, 4).map(deco),
+      agenda: [
+        { dia: '03', mes: 'SET', titulo: 'Visita técnica', detalhe: '14:00 · Instalação de pontos de rede' },
+        { dia: '09', mes: 'SET', titulo: 'Reunião online', detalhe: '10:30 · Revisão do plano de suporte' }
+      ],
+      filtros: ['Todos', 'Aberto', 'Em atendimento', 'Aguardando cliente', 'Urgente', 'Resolvido']
+        .map(f => ({ label: f, style: this.chipStyle(filtro === f), go: () => this.setState({ filtro: f }) })),
+      lista,
+      listaVazia: lista.length === 0,
+      detalhe: det ? Object.assign({}, det, TONES[det.status], { temEquip: !!det.equipamento }) : null,
+      form, aviso, salvo,
+      setTitulo: this.setField('titulo'),
+      setCategoria: this.setField('categoria'),
+      setPrioridade: this.setField('prioridade'),
+      setDescricao: this.setField('descricao'),
+      setMaquina: this.setField('maquina'),
+      setMaquinaLivre: this.setField('maquinaLivre'),
+      setUsuario: this.setField('usuario'),
+      maquinasOpc: MAQUINAS.map(m => Object.assign({}, m, { rotulo: m.nome + ' — ' + m.usuario + ' (' + m.setor + ')' })),
+      maqOutra: form.maquina === 'outra',
+      maqSelecionada: (() => {
+        const m = MAQUINAS.find(x => x.id === form.maquina);
+        if (!m) return null;
+        return Object.assign({}, m, {
+          resumo: m.modelo + ' · ' + m.so + ' · rede ' + m.rede + (m.rede === 'Estático' ? ' (' + m.ip + ')' : '')
+        });
+      })(),
+      goNovo: this.go('novo'),
+      goChamados: this.go('chamados'),
+      goAgenda: this.go('agenda'),
+      emp: this.state.empresa,
+      setRazao: this.setEmpresa('razao'),
+      setCnpj: this.setEmpresa('cnpj'),
+      setEndereco: this.setEmpresa('endereco'),
+      setEmailEmp: this.setEmpresa('email'),
+      setTelefone: this.setEmpresa('telefone'),
+      setGerente: this.setEmpresa('gerente'),
+      setDiretor: this.setEmpresa('diretor'),
+      temTI: this.state.temTI,
+      comTI: this.state.temTI === 'sim',
+      semTI: this.state.temTI === 'nao',
+      nomeTI: this.state.nomeTI,
+      setTemTI: e => this.setState({ temTI: e.target.value, salvo: '' }),
+      setNomeTI: e => this.setState({ nomeTI: e.target.value, salvo: '' }),
+      catCurso: this.state.catCurso,
+      cursoCats: ['Todas', 'Segurança', 'Infraestrutura', 'Redes', 'Produtividade']
+        .map(f => ({ label: f, style: this.chipStyle(this.state.catCurso === f), go: () => this.setState({ catCurso: f }) })),
+      semLeitura: !this.state.leitura,
+      apostilas: (this.state.catCurso === 'Todas' ? APOSTILAS : APOSTILAS.filter(a => a.categoria === this.state.catCurso))
+        .map(a => {
+          const ppt = a.tipo === 'ppt';
+          return Object.assign({}, a, {
+            meta: (ppt ? a.paginas + ' slides · ' : a.paginas + ' páginas · ') + a.nivel,
+            ehPpt: ppt,
+            ehPdf: !ppt,
+            tipoStyle: 'font-size: 10.5px; font-weight: 700; letter-spacing: 0.6px; padding: 4px 9px; border-radius: 999px; ' +
+              (ppt ? 'color: #c2410c; background: rgba(234, 88, 12, 0.12);' : 'color: #b91c1c; background: rgba(220, 38, 38, 0.09);'),
+            tipoLabel: ppt ? 'POWERPOINT' : 'PDF',
+            iconStyle: 'flex: none; width: 42px; height: 42px; border-radius: 11px; display: flex; align-items: center; justify-content: center; ' +
+              (ppt
+                ? 'background: rgba(234, 88, 12, 0.08); border: 1px solid rgba(234, 88, 12, 0.22);'
+                : 'background: rgba(220, 38, 38, 0.08); border: 1px solid rgba(220, 38, 38, 0.2);'),
+            nivelStyle: 'font-size: 11px; font-weight: 700; padding: 4px 9px; border-radius: 999px; ' +
+              (a.nivel === 'Básico'
+                ? 'color: #14804a; background: rgba(34, 192, 122, 0.12);'
+                : 'color: #0369a1; background: rgba(56, 189, 248, 0.14);'),
+            btnLabel: ppt ? 'Abrir apresentação' : 'Visualizar apostila',
+            ver: () => this.setState({ leitura: a.id })
+          });
+        }),
+      leitura: (() => {
+        const a = APOSTILAS.find(x => x.id === this.state.leitura);
+        if (!a) return null;
+        const has = !!a.pdf;
+        const ppt = a.tipo === 'ppt';
+        return Object.assign({}, a, {
+          meta: (ppt ? a.paginas + ' slides · ' : a.paginas + ' páginas · ') + a.nivel + ' · ' + a.categoria,
+          ehPpt: ppt,
+          baixarLabel: ppt ? 'Baixar apresentação' : 'Baixar PDF',
+          indispLabel: ppt ? 'Apresentação em breve' : 'PDF em breve',
+          vazioTitulo: ppt ? 'Apresentação em preparação' : 'Apostila em preparação',
+          temPdf: has,
+          semPdf: !has,
+          baixarStyle: 'display: inline-flex; align-items: center; gap: 8px; padding: 10px 15px; border-radius: 9px; font-size: 13px; font-weight: 600; background: #ffffff; border: 1px solid rgba(20, 45, 100, 0.16); color: #2c3853;'
+        });
+      })(),
+      fecharLeitura: () => this.setState({ leitura: null }),
+      telaCheia: () => {
+        const el = document.getElementById('fs-visualizador');
+        if (!el) return;
+        if (document.fullscreenElement) document.exitFullscreen();
+        else if (el.requestFullscreen) el.requestFullscreen();
+      },
+      programas: PROGRAMAS.map(p => Object.assign({}, p, {
+        meta: 'Versão ' + p.versao + ' · ' + p.tamanho + ' · ' + p.so,
+        temLink: !!p.link,
+        semLink: !p.link,
+        cardStyle: 'display: flex; align-items: center; gap: 16px; padding: 18px 20px; border-radius: 13px; background: #ffffff; border: 1px solid ' +
+          (p.destaque ? 'rgba(29, 95, 245, 0.3)' : 'rgba(20, 45, 100, 0.1)') + ';',
+        btnStyle: 'flex: none; display: inline-flex; align-items: center; gap: 9px; padding: 12px 18px; border-radius: 10px; font-size: 13.5px; font-weight: 700; border: 0; ' +
+          (p.link
+            ? 'background: #1d5ff5; color: #ffffff; cursor: pointer;'
+            : 'background: #eef1f7; color: #93a0b8; cursor: not-allowed;'),
+        btnLabel: p.link ? 'Baixar' : 'Em breve'
+      })),
+      fechar: () => this.setState({ detalheId: null }),
+      stop: e => e.stopPropagation(),
+      enviarChamado: e => {
+        e.preventDefault();
+        const f = this.state.form;
+        if (!f.titulo.trim() || !f.descricao.trim()) {
+          this.setState({ aviso: '' });
+          return;
+        }
+        const n = tickets.length + 4831;
+        const reg = MAQUINAS.find(x => x.id === f.maquina);
+        const equip = reg
+          ? reg.nome + ' · Usuário ' + reg.usuario
+          : [f.maquinaLivre.trim(), f.usuario.trim() && 'Usuário ' + f.usuario.trim()].filter(Boolean).join(' · ');
+        const novo = {
+          id: 'CH-' + n,
+          titulo: f.titulo.trim(),
+          categoria: f.categoria,
+          status: f.prioridade === 'Urgente' ? 'Urgente' : 'Aberto',
+          abertura: '29/08/2026',
+          equipamento: equip,
+          descricao: f.descricao.trim(),
+          historico: [{ texto: 'Chamado aberto pelo cliente', quando: 'agora', autor: 'Marina Ribeiro' }]
+        };
+        this.setState(s => ({
+          tickets: [novo].concat(s.tickets),
+          form: { titulo: '', categoria: 'Rede e internet', prioridade: 'Média', descricao: '', maquina: '', maquinaLivre: '', usuario: '' },
+          aviso: 'Chamado ' + novo.id + ' registrado. Nossa equipe responde dentro do SLA.'
+        }));
+      },
+      enviarVisita: e => { e.preventDefault(); this.setState({ aviso: 'Solicitação de visita enviada.' }); },
+      enviarReuniao: e => { e.preventDefault(); this.setState({ aviso: 'Solicitação de reunião enviada.' }); },
+      salvarEmpresa: e => { e.preventDefault(); this.setState({ salvo: 'Dados da empresa atualizados.' }); }
+    };
+  }
+}
+
+</script>
+</body>
+</html>

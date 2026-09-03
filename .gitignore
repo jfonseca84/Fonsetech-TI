@@ -1,0 +1,55 @@
+# ===== SEGREDOS - nunca versionar =====
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+secrets.json
+credentials.json
+service-account*.json
+.supabase/
+supabase/.env
+supabase/config.toml.local
+
+# ===== dependencias =====
+node_modules/
+.pnp/
+.pnp.js
+
+# ===== nunca dentro do build publico =====
+# design/ fica versionado como referencia, mas jamais em public/ ou dist/
+public/design/
+dist/design/
+
+# ===== build =====
+dist/
+build/
+.vite/
+.output/
+
+# ===== supabase local =====
+supabase/.branches/
+supabase/.temp/
+
+# ===== logs =====
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ===== editor / sistema =====
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+
+# ===== testes =====
+coverage/
+
+# ===== temporarios =====
+*.tmp
+.cache/

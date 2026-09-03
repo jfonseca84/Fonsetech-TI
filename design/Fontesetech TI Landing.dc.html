@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<script src="./image-slot.js"></script>
+<style>
+  html, body { margin: 0; padding: 0; background: #ffffff; }
+  body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  * { box-sizing: border-box; }
+  a { color: #1558d6; text-decoration: none; }
+  a:hover { color: #0f47b0; }
+  ul { margin: 0; padding: 0; list-style: none; }
+  @keyframes fs-pulse { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+  @keyframes fs-shine { 0%, 62% { transform: translateX(-130%) skewX(-18deg); } 88%, 100% { transform: translateX(230%) skewX(-18deg); } }
+  @keyframes fs-ripple { from { transform: scale(0); opacity: .45; } to { transform: scale(2.6); opacity: 0; } }
+  @keyframes fs-rise { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: none; } }
+  .fs-rv { opacity: 0; will-change: opacity, transform, filter; }
+  .fs-rv.up { transform: translateY(34px); }
+  .fs-rv.left { transform: translateX(-38px); }
+  .fs-rv.right { transform: translateX(38px); }
+  .fs-rv.zoom { transform: scale(.93); }
+  .fs-rv.blur { filter: blur(9px); transform: translateY(20px); }
+  .fs-rv.flip { transform: perspective(900px) rotateX(-14deg) translateY(26px); transform-origin: top center; }
+  .fs-rv.clip { clip-path: inset(0 0 100% 0); transform: none; opacity: 1; }
+  .fs-rv.go {
+    opacity: 1; transform: none; filter: none; clip-path: inset(0 0 0 0);
+    transition: opacity .78s cubic-bezier(.2,.8,.3,1), transform .78s cubic-bezier(.2,.8,.3,1),
+                filter .78s ease, clip-path .9s cubic-bezier(.2,.8,.3,1);
+  }
+
+
+</style>
+</helmet>
+
+<div style="background: #ffffff; color: #0d1730; min-height: 100vh; min-width: 1240px;">
+
+  <header style="position: sticky; top: 0; z-index: 50; background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(14px); border-bottom: 1px solid rgba(20, 45, 100, 0.13);">
+    <div style="max-width: 1240px; margin: 0 auto; padding: 0 40px; height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 32px;">
+      <a href="#inicio" style="display: flex; align-items: center; gap: 12px; color: #0d1730;">
+        <span style="flex: none; width: 38px; height: 38px; border-radius: 10px; background: #f2f6fc; border: 1px solid rgba(20, 45, 100, 0.24); display: flex; align-items: center; justify-content: center;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 2.6L21.4 12 12 21.4 2.6 12 12 2.6z" stroke="#2f7bff" stroke-width="1.7" stroke-linejoin="round"></path>
+            <circle cx="12" cy="12" r="3.4" fill="#2f7bff"></circle>
+          </svg>
+        </span>
+        <span style="display: block; line-height: 1;">
+          <span style="display: block; font-size: 19px; font-weight: 800; letter-spacing: -0.4px;">Fonse<span style="color: #2f7bff;">tech</span></span>
+          <span style="display: block; font-size: 9px; font-weight: 600; letter-spacing: 1.6px; color: #6b7896; margin-top: 4px;">SUPORTE E SOLUÇÕES</span>
+        </span>
+      </a>
+      <nav style="display: flex; align-items: center; gap: 26px;">
+        <a href="#inicio" style="font-size: 14px; font-weight: 600; color: #0d1730; padding-bottom: 5px; border-bottom: 2px solid #2f7bff;">Início</a>
+        <a href="#planos" style="font-size: 14px; font-weight: 500; color: #4a5872;" style-hover="color: #0d1730;">Planos &amp; Preços</a>
+        <a href="#servicos" style="font-size: 14px; font-weight: 500; color: #4a5872;" style-hover="color: #0d1730;">Serviços</a>
+        <a href="#solucoes" style="font-size: 14px; font-weight: 500; color: #4a5872;" style-hover="color: #0d1730;">Desenvolvimento</a>
+        <a href="#sobre" style="font-size: 14px; font-weight: 500; color: #4a5872;" style-hover="color: #0d1730;">Sobre nós</a>
+        <a href="#portfolio" style="font-size: 14px; font-weight: 500; color: #4a5872;" style-hover="color: #0d1730;">Portfólio</a>
+        <a href="#sobre" style="font-size: 14px; font-weight: 500; color: #4a5872;" style-hover="color: #0d1730;">Blog</a>
+        <a href="#contato" style="font-size: 14px; font-weight: 500; color: #4a5872;" style-hover="color: #0d1730;">Contato</a>
+        <a href="#contato" style="display: inline-flex; align-items: center; gap: 7px; font-size: 14px; font-weight: 500; color: #3a4761;" style-hover="color: #0d1730;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#2f7bff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 16.5v3a2 2 0 0 1-2.2 2 19.6 19.6 0 0 1-8.5-3 19.3 19.3 0 0 1-6-6A19.6 19.6 0 0 1 1.3 4 2 2 0 0 1 3.3 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L7.6 9.6a16 16 0 0 0 6 6l1-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.5 2z"></path></svg>
+          Plantão TI
+        </a>
+      </nav>
+      <a href="Chamados Login.dc.html" data-ripple="true" style="position: relative; overflow: hidden; display: inline-flex; align-items: center; gap: 10px; background: #1d5ff5; color: #ffffff; font-size: 14px; font-weight: 600; padding: 11px 18px; border-radius: 9px; box-shadow: 0 8px 24px rgba(29, 95, 245, 0.35); transition: background .25s ease, transform .25s ease, box-shadow .25s ease;" style-hover="background: #2f7bff; transform: translateY(-2px); box-shadow: 0 12px 30px rgba(29, 95, 245, 0.5);" style-after="content: ''; position: absolute; top: 0; left: 0; width: 45%; height: 100%; background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.32) 50%, rgba(255,255,255,0) 100%); transform: translateX(-130%) skewX(-18deg); animation: fs-shine 5s ease-in-out infinite; pointer-events: none;">
+        <span style="font-size: 12.5px; font-weight: 700; letter-spacing: 0.8px;">ABRIR CHAMADO</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13"></path><path d="M12 5l7 7-7 7"></path></svg>
+      </a>
+    </div>
+  </header>
+
+  <section id="inicio" style="position: relative; overflow: hidden; border-bottom: 1px solid rgba(20, 45, 100, 0.13);">
+    <div style="position: absolute; top: -180px; left: 50%; transform: translateX(-50%); width: 900px; height: 620px; background: radial-gradient(ellipse at center, rgba(29, 95, 245, 0.09) 0%, rgba(29, 95, 245, 0) 66%); pointer-events: none;"></div>
+    <canvas id="fs-hero-canvas" style="position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none;"></canvas>
+    <div style="max-width: 1240px; margin: 0 auto; padding: 140px 40px 104px; position: relative; display: flex; flex-direction: column; align-items: center; text-align: center;">
+      <h1 style="margin: 0; max-width: 900px; font-size: 62px; line-height: 1.1; font-weight: 800; letter-spacing: -2.4px; color: #0d1730; text-wrap: pretty;">Suporte que resolve. Soluções que impulsionam <span style="color: #1565d8;">seu negócio.</span></h1>
+
+      <p style="margin: 30px 0 0; max-width: 700px; font-size: 17px; line-height: 1.68; color: #55637f; text-wrap: pretty;">Atendimento técnico ágil, gestão de infraestrutura de alta disponibilidade e desenvolvimento de sistemas sob medida para empresas que não podem parar.</p>
+
+      <div style="display: flex; align-items: center; justify-content: center; gap: 18px; margin-top: 42px;">
+        <a href="#planos" data-ripple="true" data-magnet="true" style="position: relative; overflow: hidden; display: inline-flex; align-items: center; gap: 12px; background: #1d78f5; color: #ffffff; font-size: 13px; font-weight: 700; letter-spacing: 0.8px; padding: 19px 30px; border-radius: 8px; box-shadow: 0 14px 36px rgba(29, 120, 245, 0.35); transition: background .25s ease, box-shadow .25s ease, transform .35s cubic-bezier(.2,.8,.3,1); will-change: transform;" style-hover="background: #2f8bff; box-shadow: 0 18px 44px rgba(29, 120, 245, 0.5);" style-after="content: ''; position: absolute; top: 0; left: 0; width: 45%; height: 100%; background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.32) 50%, rgba(255,255,255,0) 100%); transform: translateX(-130%) skewX(-18deg); animation: fs-shine 5s ease-in-out infinite; pointer-events: none;">
+          VER PLANOS E PREÇOS DE TI
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13"></path><path d="M12 5l7 7-7 7"></path></svg>
+        </a>
+        <a href="#contato" data-ripple="true" style="position: relative; overflow: hidden; display: inline-flex; align-items: center; gap: 11px; background: rgba(255, 255, 255, 0.95); color: #1d2a45; font-size: 14.5px; font-weight: 500; padding: 19px 26px; border-radius: 8px; border: 1px solid rgba(20, 45, 100, 0.18); transition: border-color .25s ease, background .25s ease, transform .25s ease;" style-hover="border-color: rgba(96, 130, 220, 0.6); background: #ffffff; transform: translateY(-2px);">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#1565d8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 9.3 9.3 0 0 1-3-.5L3.5 21l1.7-4.6A8.2 8.2 0 0 1 3 11.5 8.4 8.4 0 0 1 12 3.1a8.4 8.4 0 0 1 9 8.4z"></path></svg>
+          Fale com um especialista
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section id="servicos" style="border-bottom: 1px solid rgba(20, 45, 100, 0.13);">
+    <div style="max-width: 1240px; margin: 0 auto; padding: 58px 40px; display: grid; grid-template-columns: 340px 1fr; gap: 44px; align-items: start;">
+      <div>
+        <div style="font-size: 11.5px; font-weight: 700; letter-spacing: 1.4px; color: #1558d6;">HELPDESK EMPRESARIAL</div>
+        <h2 style="margin: 16px 0 0; font-size: 32px; line-height: 1.22; font-weight: 700; letter-spacing: -1.1px; color: #0d1730; text-wrap: pretty;">Suporte completo para cada nível da sua empresa</h2>
+        <p style="margin: 18px 0 0; font-size: 15px; line-height: 1.62; color: #55637f; text-wrap: pretty;">Atendimento especializado em N1, N2 e N3 com foco na agilidade, eficiência e resolução.</p>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+
+        <div data-tilt="true" style="position: relative; background: linear-gradient(160deg, #f8fafd 0%, #f2f6fc 100%); border: 1px solid rgba(20, 45, 100, 0.15); border-radius: 14px; padding: 24px 22px 26px; will-change: transform;">
+          <div style="display: flex; align-items: baseline; gap: 11px;">
+            <span style="font-size: 25px; font-weight: 800; color: #2f7bff; letter-spacing: -0.8px;">N1</span>
+            <span style="font-size: 16px; font-weight: 600; color: #0d1730;">Suporte Inicial</span>
+          </div>
+          <ul style="margin-top: 20px; display: grid; gap: 13px;">
+            <li style="display: flex; gap: 10px; font-size: 14px; color: #4a5872;"><span style="color: #2f7bff;">•</span>Atendimento e triagem</li>
+            <li style="display: flex; gap: 10px; font-size: 14px; color: #4a5872;"><span style="color: #2f7bff;">•</span>Resolução de chamados</li>
+            <li style="display: flex; gap: 10px; font-size: 14px; color: #4a5872;"><span style="color: #2f7bff;">•</span>Dúvidas e orientações</li>
+            <li style="display: flex; gap: 10px; font-size: 14px; color: #4a5872;"><span style="color: #2f7bff;">•</span>Acesso remoto</li>
+          </ul>
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#2f7bff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; right: 20px; bottom: 20px;" aria-hidden="true"><path d="M4 14v-2a8 8 0 0 1 16 0v2"></path><path d="M4 14h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-4z"></path><path d="M20 14h-2a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-4z"></path><path d="M18 19v1a2 2 0 0 1-2 2h-3"></path></svg>
+        </div>
+
+        <div data-tilt="true" style="position: relative; background: linear-gradient(160deg, #f8fafd 0%, #f2f6fc 100%); border: 1px solid rgba(20, 45, 100, 0.15); border-radius: 14px; padding: 24px 22px 26px; will-change: transform;">
+          <div style="display: flex; align-items: baseline; gap: 11px;">
+            <span style="font-size: 25px; font-weight: 800; color: #2f7bff; letter-spacing: -0.8px;">N2</span>
+            <span style="font-size: 16px; font-weight: 600; color: #0d1730;">Suporte Avançado</span>
+          </div>
+          <ul style="margin-top: 20px; display: grid; gap: 13px;">
+            <li style="display: flex; gap: 10px; font-size: 14px; color: #4a5872;"><span style="color: #2f7bff;">•</span>Análise aprofundada</li>
+            <li style="display: flex; gap: 10px; font-size: 14px; color: #4a5872;"><span style="color: #2f7bff;">•</span>Correções e configurações</li>
+            <li style="display: flex; gap: 10px; font-size: 14px; color: #4a5872;"><span style="color: #2f7bff;">•</span>Suporte a sistemas e redes</li>
+            <li style="display: flex; gap: 10px; font-size: 14px; color: #4a5872;"><span style="color: #2f7bff;">•</span>Acompanhamento</li>
+          </ul>
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#2f7bff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; right: 20px; bottom: 20px;" aria-hidden="true"><path d="M14.7 6.3a4 4 0 0 0 5 5l-8.4 8.4a2.8 2.8 0 0 1-4-4l7.4-9.4z"></path><path d="M14.7 6.3l3.3-3.3a4 4 0 0 1 1.7 6.3"></path></svg>
+        </div>
+
+        <div data-tilt="true" style="position: relative; background: linear-gradient(160deg, #f8fafd 0%, #f2f6fc 100%); border: 1px solid rgba(20, 45, 100, 0.15); border-radius: 14px; padding: 24px 22px 26px; will-change: transform;">
+          <div style="display: flex; align-items: baseline; gap: 11px;">
+            <span style="font-size: 25px; font-weight: 800; color: #2f7bff; letter-spacing: -0.8px;">N3</span>
+            <span style="font-size: 16px; font-weight: 600; color: #0d1730;">Suporte Especializado</span>
+          </div>
+          <ul style="margin-top: 20px; display: grid; gap: 13px;">
+            <li style="display: flex; gap: 10px; font-size: 14px; color: #4a5872;"><span style="color: #2f7bff;">•</span>Troubleshooting avançado</li>
+            <li style="display: flex; gap: 10px; font-size: 14px; color: #4a5872;"><span style="color: #2f7bff;">•</span>Soluções complexas</li>
+            <li style="display: flex; gap: 10px; font-size: 14px; color: #4a5872;"><span style="color: #2f7bff;">•</span>Infraestrutura e servidores</li>
+            <li style="display: flex; gap: 10px; font-size: 14px; color: #4a5872;"><span style="color: #2f7bff;">•</span>Consultoria técnica</li>
+          </ul>
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#2f7bff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; right: 20px; bottom: 20px;" aria-hidden="true"><path d="M12 3l8 3v5.5c0 4.6-3.2 8.3-8 9.5-4.8-1.2-8-4.9-8-9.5V6l8-3z"></path><path d="M8.8 11.6l2.6 2.6 3.8-4"></path></svg>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section id="solucoes" style="border-bottom: 1px solid rgba(20, 45, 100, 0.13);">
+    <div style="max-width: 1240px; margin: 0 auto; padding: 56px 40px 50px; display: grid; grid-template-columns: 1fr 320px 470px; gap: 0; position: relative;">
+      <div style="padding-right: 46px; border-right: 1px solid rgba(20, 45, 100, 0.14);">
+        <div style="font-size: 11.5px; font-weight: 700; letter-spacing: 1.4px; color: #1558d6;">SUPORTE PARTICULAR</div>
+        <h2 style="margin: 16px 0 0; font-size: 31px; line-height: 1.22; font-weight: 700; letter-spacing: -1.1px; color: #0d1730; text-wrap: pretty;">Suporte rápido para pessoas e profissionais</h2>
+        <p style="margin: 16px 0 0; font-size: 14.5px; line-height: 1.62; color: #55637f; max-width: 360px; text-wrap: pretty;">Atendimento personalizado para você resolver problemas do dia a dia com tecnologia.</p>
+        <ul style="margin-top: 26px; display: grid; gap: 15px;">
+          <sc-for list="{{ particular }}" as="item" hint-placeholder-count="5">
+            <li style="display: flex; align-items: center; gap: 13px; font-size: 14.5px; color: #2c3853;">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#1d5ff5" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"></path></svg>
+              {{ item }}
+            </li>
+          </sc-for>
+        </ul>
+      </div>
+
+      <div style="padding-left: 46px;">
+        <div style="font-size: 11.5px; font-weight: 700; letter-spacing: 1.4px; color: #1558d6;">SOLUÇÕES SOB MEDIDA</div>
+        <h2 style="margin: 16px 0 0; font-size: 31px; line-height: 1.22; font-weight: 700; letter-spacing: -1.1px; color: #0d1730; max-width: 330px; text-wrap: pretty;">Desenvolvimento que se adapta ao seu negócio</h2>
+        <p style="margin: 16px 0 0; font-size: 14.5px; line-height: 1.62; color: #55637f; max-width: 320px; text-wrap: pretty;">Criamos sites, sistemas e aplicativos personalizados para otimizar processos e gerar resultados.</p>
+        <ul style="margin-top: 26px; display: grid; gap: 18px; max-width: 300px;">
+          <li style="display: flex; align-items: center; gap: 15px;">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#2f7bff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M3 9h18"></path><path d="M7 13h5"></path><path d="M7 16h8"></path></svg>
+            <span style="font-size: 14.5px; line-height: 1.42; color: #2c3853;">Sites Institucionais e Landing Pages</span>
+          </li>
+          <li style="display: flex; align-items: center; gap: 15px;">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#2f7bff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M8.5 9.5L6 12l2.5 2.5"></path><path d="M15.5 9.5L18 12l-2.5 2.5"></path><path d="M13 8.5l-2 7"></path></svg>
+            <span style="font-size: 14.5px; line-height: 1.42; color: #2c3853;">Softwares e Sistemas Personalizados</span>
+          </li>
+          <li style="display: flex; align-items: center; gap: 15px;">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#2f7bff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2.4"></rect><path d="M11 18.5h2"></path></svg>
+            <span style="font-size: 14.5px; line-height: 1.42; color: #2c3853;">Aplicativos Web e Mobile</span>
+          </li>
+          <li style="display: flex; align-items: center; gap: 15px;">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#2f7bff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="7" r="2.5"></circle><circle cx="18" cy="17" r="2.5"></circle><path d="M6 9.5V15a3 3 0 0 0 3 3h6.5"></path><path d="M13 5.5h2.5a2.5 2.5 0 0 1 2.5 2.5v6.5"></path></svg>
+            <span style="font-size: 14.5px; line-height: 1.42; color: #2c3853;">Integrações e Automatizações</span>
+          </li>
+        </ul>
+      </div>
+
+      <div style="position: relative; margin-top: 44px; width: 470px; height: 300px; pointer-events: none;">
+        <div style="position: absolute; inset: 0; background: radial-gradient(circle at 55% 45%, rgba(45, 90, 220, 0.22) 0%, rgba(45, 90, 220, 0) 70%);"></div>
+        <div style="position: absolute; left: 0; top: 0; width: 400px; height: 258px; pointer-events: auto;">
+          <image-slot id="fs-dashboard-notebook" shape="rounded" radius="12" fit="cover" placeholder="Mockup: notebook com dashboard"></image-slot>
+        </div>
+        <div style="position: absolute; right: 6px; bottom: -8px; width: 104px; height: 200px; pointer-events: auto;">
+          <image-slot id="fs-dashboard-mobile" shape="rounded" radius="14" fit="cover" placeholder="Mockup: celular"></image-slot>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="planos" style="border-bottom: 1px solid rgba(20, 45, 100, 0.13); position: relative; overflow: hidden;">
+    <div style="position: absolute; top: 40px; left: 50%; transform: translateX(-50%); width: 760px; height: 380px; border-radius: 50%; background: radial-gradient(circle, rgba(29, 95, 245, 0.09) 0%, rgba(29, 95, 245, 0) 70%); pointer-events: none;"></div>
+    <div style="max-width: 1240px; margin: 0 auto; padding: 58px 40px 62px; position: relative;">
+      <div style="text-align: center; font-size: 11.5px; font-weight: 700; letter-spacing: 1.4px; color: #1558d6;">PLANOS DE SUPORTE</div>
+      <h2 style="margin: 12px 0 0; text-align: center; font-size: 32px; font-weight: 700; letter-spacing: -1.1px; color: #0d1730;">Escolha o nível de suporte ideal</h2>
+      <p style="margin: 14px auto 0; max-width: 520px; text-align: center; font-size: 15px; line-height: 1.62; color: #55637f; text-wrap: pretty;">Contratos mensais sem fidelidade, com equipe dedicada e SLA definido para cada operação.</p>
+
+      <div style="margin-top: 38px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; align-items: center;">
+
+        <div data-tilt="true" style="background: linear-gradient(160deg, #f8fafd 0%, #f2f6fc 100%); border: 1px solid rgba(20, 45, 100, 0.14); border-radius: 16px; padding: 30px 26px 32px; will-change: transform;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="flex: none; width: 42px; height: 42px; border-radius: 11px; background: rgba(47, 123, 255, 0.12); border: 1px solid rgba(20, 45, 100, 0.18); display: flex; align-items: center; justify-content: center;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2f7bff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14v-2a8 8 0 0 1 16 0v2"></path><path d="M4 14h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-4z"></path><path d="M20 14h-2a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-4z"></path></svg>
+            </div>
+            <div>
+              <div style="font-size: 17px; font-weight: 700; color: #0d1730;">Essencial</div>
+              <div style="font-size: 12.5px; color: #5c6b8a; margin-top: 2px;">Suporte N1</div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: baseline; gap: 7px; margin-top: 26px;">
+            <span style="font-size: 15px; font-weight: 600; color: #5c6b8a;">R$</span>
+            <span style="font-size: 40px; font-weight: 800; letter-spacing: -1.6px; color: #0d1730;">249</span>
+            <span style="font-size: 14px; color: #5c6b8a;">/mês</span>
+          </div>
+          <div style="height: 1px; background: rgba(20, 45, 100, 0.15); margin: 24px 0;"></div>
+          <ul style="display: grid; gap: 14px;">
+            <li style="display: flex; align-items: center; gap: 11px; font-size: 14px; color: #4a5872;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2f7bff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"></path></svg>Atendimento e triagem</li>
+            <li style="display: flex; align-items: center; gap: 11px; font-size: 14px; color: #4a5872;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2f7bff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"></path></svg>Acesso remoto ilimitado</li>
+            <li style="display: flex; align-items: center; gap: 11px; font-size: 14px; color: #4a5872;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2f7bff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"></path></svg>Até 10 chamados por mês</li>
+            <li style="display: flex; align-items: center; gap: 11px; font-size: 14px; color: #4a5872;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2f7bff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"></path></svg>SLA de resposta em 8h</li>
+          </ul>
+          <a href="#contato" data-ripple="true" style="position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 30px; background: transparent; color: #1d2a45; font-size: 14.5px; font-weight: 600; padding: 14px 18px; border-radius: 10px; border: 1px solid rgba(20, 45, 100, 0.22); transition: border-color .25s ease, background .25s ease, transform .25s ease;" style-hover="border-color: rgba(20, 45, 100, 0.45); background: rgba(29, 95, 245, 0.07); transform: translateY(-2px);">
+            Contratar Essencial
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13"></path><path d="M12 5l7 7-7 7"></path></svg>
+          </a>
+        </div>
+
+        <div data-tilt="true" style="position: relative; background: #ffffff; border: 1px solid #ffffff; border-radius: 16px; padding: 36px 28px 34px; will-change: transform; box-shadow: 0 24px 60px rgba(29, 95, 245, 0.28), 0 0 0 6px rgba(29, 95, 245, 0.10);">
+          <div style="position: absolute; top: -13px; left: 50%; transform: translateX(-50%); background: #1d5ff5; color: #ffffff; font-size: 10.5px; font-weight: 700; letter-spacing: 1.2px; padding: 7px 14px; border-radius: 7px; white-space: nowrap; box-shadow: 0 8px 20px rgba(29, 95, 245, 0.45);">MAIS CONTRATADO</div>
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="flex: none; width: 42px; height: 42px; border-radius: 11px; background: rgba(29, 95, 245, 0.10); border: 1px solid rgba(29, 95, 245, 0.22); display: flex; align-items: center; justify-content: center;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1d5ff5" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a4 4 0 0 0 5 5l-8.4 8.4a2.8 2.8 0 0 1-4-4l7.4-9.4z"></path><path d="M14.7 6.3l3.3-3.3a4 4 0 0 1 1.7 6.3"></path></svg>
+            </div>
+            <div>
+              <div style="font-size: 17px; font-weight: 700; color: #0b1224;">Profissional</div>
+              <div style="font-size: 12.5px; color: #5c6b8a; margin-top: 2px;">Suporte N1 + N2</div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: baseline; gap: 7px; margin-top: 26px;">
+            <span style="font-size: 15px; font-weight: 600; color: #5c6b8a;">R$</span>
+            <span style="font-size: 44px; font-weight: 800; letter-spacing: -1.8px; color: #0b1224;">549</span>
+            <span style="font-size: 14px; color: #5c6b8a;">/mês</span>
+          </div>
+          <div style="height: 1px; background: rgba(11, 18, 36, 0.10); margin: 24px 0;"></div>
+          <ul style="display: grid; gap: 14px;">
+            <li style="display: flex; align-items: center; gap: 11px; font-size: 14px; color: #2c3853;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1d5ff5" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"></path></svg>Tudo do plano Essencial</li>
+            <li style="display: flex; align-items: center; gap: 11px; font-size: 14px; color: #2c3853;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1d5ff5" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"></path></svg>Suporte a sistemas e redes</li>
+            <li style="display: flex; align-items: center; gap: 11px; font-size: 14px; color: #2c3853;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1d5ff5" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"></path></svg>Chamados ilimitados</li>
+            <li style="display: flex; align-items: center; gap: 11px; font-size: 14px; color: #2c3853;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1d5ff5" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"></path></svg>SLA de resposta em 4h</li>
+            <li style="display: flex; align-items: center; gap: 11px; font-size: 14px; color: #2c3853;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1d5ff5" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"></path></svg>Relatórios mensais</li>
+          </ul>
+          <a href="#contato" data-ripple="true" style="position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 30px; background: #1d5ff5; color: #ffffff; font-size: 14.5px; font-weight: 600; padding: 14px 18px; border-radius: 10px; box-shadow: 0 12px 28px rgba(29, 95, 245, 0.35); transition: background .25s ease, transform .25s ease, box-shadow .25s ease;" style-hover="background: #2f7bff; transform: translateY(-2px); box-shadow: 0 16px 36px rgba(29, 95, 245, 0.5);" style-after="content: ''; position: absolute; top: 0; left: 0; width: 45%; height: 100%; background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.32) 50%, rgba(255,255,255,0) 100%); transform: translateX(-130%) skewX(-18deg); animation: fs-shine 5s ease-in-out infinite; pointer-events: none;">
+            Contratar Profissional
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13"></path><path d="M12 5l7 7-7 7"></path></svg>
+          </a>
+        </div>
+
+        <div data-tilt="true" style="background: linear-gradient(160deg, #eef3fe 0%, #e2ebfd 100%); border: 1px solid rgba(20, 45, 100, 0.18); border-radius: 16px; padding: 30px 26px 32px; box-shadow: 0 0 44px rgba(29, 95, 245, 0.12) inset; will-change: transform;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="flex: none; width: 42px; height: 42px; border-radius: 11px; background: rgba(139, 92, 246, 0.14); border: 1px solid rgba(139, 92, 246, 0.34); display: flex; align-items: center; justify-content: center;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v5.5c0 4.6-3.2 8.3-8 9.5-4.8-1.2-8-4.9-8-9.5V6l8-3z"></path><path d="M8.8 11.6l2.6 2.6 3.8-4"></path></svg>
+            </div>
+            <div>
+              <div style="font-size: 17px; font-weight: 700; color: #0d1730;">Avançado</div>
+              <div style="font-size: 12.5px; color: #55637f; margin-top: 2px;">Suporte N1 + N2 + N3</div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: baseline; gap: 7px; margin-top: 26px;">
+            <span style="font-size: 15px; font-weight: 600; color: #55637f;">R$</span>
+            <span style="font-size: 40px; font-weight: 800; letter-spacing: -1.6px; color: #0d1730;">1.190</span>
+            <span style="font-size: 14px; color: #55637f;">/mês</span>
+          </div>
+          <div style="height: 1px; background: rgba(20, 45, 100, 0.14); margin: 24px 0;"></div>
+          <ul style="display: grid; gap: 14px;">
+            <li style="display: flex; align-items: center; gap: 11px; font-size: 14px; color: #2c3853;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"></path></svg>Tudo do plano Profissional</li>
+            <li style="display: flex; align-items: center; gap: 11px; font-size: 14px; color: #2c3853;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"></path></svg>Infraestrutura e servidores</li>
+            <li style="display: flex; align-items: center; gap: 11px; font-size: 14px; color: #2c3853;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"></path></svg>Consultoria técnica dedicada</li>
+            <li style="display: flex; align-items: center; gap: 11px; font-size: 14px; color: #2c3853;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"></path></svg>SLA de resposta em 1h</li>
+          </ul>
+          <a href="#contato" data-ripple="true" style="position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 30px; background: rgba(139, 92, 246, 0.14); color: #0d1730; font-size: 14.5px; font-weight: 600; padding: 14px 18px; border-radius: 10px; border: 1px solid rgba(139, 92, 246, 0.45); transition: background .25s ease, transform .25s ease, box-shadow .25s ease;" style-hover="background: rgba(139, 92, 246, 0.24); transform: translateY(-2px); box-shadow: 0 14px 32px rgba(139, 92, 246, 0.28);">
+            Contratar Avançado
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13"></path><path d="M12 5l7 7-7 7"></path></svg>
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section id="numeros" style="border-bottom: 1px solid rgba(20, 45, 100, 0.13);">
+    <div style="max-width: 1240px; margin: 0 auto; padding: 30px 40px; display: grid; grid-template-columns: repeat(4, 1fr);">
+      <div style="display: flex; align-items: center; gap: 18px; padding: 8px 24px;">
+        <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#2f7bff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"></circle><path d="M3.5 19a5.5 5.5 0 0 1 11 0"></path><circle cx="17.5" cy="9" r="2.4"></circle><path d="M16 14.6a4.6 4.6 0 0 1 5 4.4"></path></svg>
+        <div><div data-count="100" data-prefix="+" style="font-size: 25px; font-weight: 700; letter-spacing: -0.8px; color: #0d1730;">+100</div><div style="font-size: 13.5px; color: #55637f; margin-top: 2px;">Clientes Atendidos</div></div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 18px; padding: 8px 24px; border-left: 1px solid rgba(20, 45, 100, 0.14);">
+        <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#2f7bff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3.5" width="18" height="17" rx="4"></rect><circle cx="12" cy="10" r="2.6"></circle><path d="M7.5 17a4.5 4.5 0 0 1 9 0"></path></svg>
+        <div><div data-count="1200" data-prefix="+" style="font-size: 25px; font-weight: 700; letter-spacing: -0.8px; color: #0d1730;">+1200</div><div style="font-size: 13.5px; color: #55637f; margin-top: 2px;">Chamados Resolvidos</div></div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 18px; padding: 8px 24px; border-left: 1px solid rgba(20, 45, 100, 0.14);">
+        <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#2f7bff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="4"></rect><path d="M7 9.5h4"></path><path d="M7 14.5h4"></path><path d="M14.5 9.5h2.5"></path><path d="M14.5 14.5h2.5"></path></svg>
+        <div><div data-count="150" data-prefix="+" style="font-size: 25px; font-weight: 700; letter-spacing: -0.8px; color: #0d1730;">+150</div><div style="font-size: 13.5px; color: #55637f; margin-top: 2px;">Projetos Entregues</div></div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 18px; padding: 8px 24px; border-left: 1px solid rgba(20, 45, 100, 0.14);">
+        <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#2f7bff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M8 11l4 4 4-4"></path></svg>
+        <div><div data-count="98" data-suffix="%" style="font-size: 25px; font-weight: 700; letter-spacing: -0.8px; color: #0d1730;">98%</div><div style="font-size: 13.5px; color: #55637f; margin-top: 2px;">Satisfação dos Clientes</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="processo" style="border-bottom: 1px solid rgba(20, 45, 100, 0.13);">
+    <div style="max-width: 1240px; margin: 0 auto; padding: 34px 40px 44px;">
+      <div style="text-align: center; font-size: 11.5px; font-weight: 700; letter-spacing: 1.4px; color: #1558d6;">NOSSO PROCESSO</div>
+      <h2 style="margin: 12px 0 0; text-align: center; font-size: 27px; font-weight: 700; letter-spacing: -0.9px; color: #0d1730;">Simples, rápido e eficiente</h2>
+      <div style="margin-top: 30px; display: grid; grid-template-columns: 1fr 56px 1fr 56px 1fr 56px 1fr; align-items: center;">
+
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <div style="flex: none; width: 54px; height: 54px; border-radius: 50%; border: 1px solid rgba(20, 45, 100, 0.2); background: #ffffff; display: flex; align-items: center; justify-content: center;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#3a4761" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8.5" r="3.4"></circle><path d="M5.5 19.5a6.5 6.5 0 0 1 13 0"></path></svg>
+          </div>
+          <div><div style="font-size: 15px; font-weight: 700; color: #0d1730;">1. Contato</div><div style="font-size: 13px; line-height: 1.45; color: #5c6b8a; margin-top: 4px;">Você nos chama com sua necessidade</div></div>
+        </div>
+        <svg width="46" height="12" viewBox="0 0 46 12" fill="none" stroke="#3b5aa8" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="4 4" aria-hidden="true" style="justify-self: center;"><path d="M4 6h38" stroke-dasharray="4 4"></path><path d="M38 2l4 4-4 4" stroke-dasharray="0"></path><path d="M8 2L4 6l4 4" stroke-dasharray="0"></path></svg>
+
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <div style="flex: none; width: 54px; height: 54px; border-radius: 50%; border: 1px solid rgba(20, 45, 100, 0.2); background: #ffffff; display: flex; align-items: center; justify-content: center;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#3a4761" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="M15.4 15.4L21 21"></path><path d="M10.5 8v5"></path><path d="M8 10.5h5"></path></svg>
+          </div>
+          <div><div style="font-size: 15px; font-weight: 700; color: #0d1730;">2. Análise</div><div style="font-size: 13px; line-height: 1.45; color: #5c6b8a; margin-top: 4px;">Entendemos o problema e definimos a solução</div></div>
+        </div>
+        <svg width="46" height="12" viewBox="0 0 46 12" fill="none" stroke="#3b5aa8" stroke-width="1.4" stroke-linecap="round" aria-hidden="true" style="justify-self: center;"><path d="M4 6h38" stroke-dasharray="4 4"></path><path d="M38 2l4 4-4 4"></path></svg>
+
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <div style="flex: none; width: 54px; height: 54px; border-radius: 50%; border: 1px solid rgba(20, 45, 100, 0.2); background: #ffffff; display: flex; align-items: center; justify-content: center;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#3a4761" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="2.2"></circle><circle cx="5" cy="5.5" r="2"></circle><circle cx="19" cy="5.5" r="2"></circle><circle cx="5" cy="18.5" r="2"></circle><circle cx="19" cy="18.5" r="2"></circle><path d="M6.5 7l4 3.5"></path><path d="M17.5 7l-4 3.5"></path><path d="M6.5 17l4-3.5"></path><path d="M17.5 17l-4-3.5"></path></svg>
+          </div>
+          <div><div style="font-size: 15px; font-weight: 700; color: #0d1730;">3. Execução</div><div style="font-size: 13px; line-height: 1.45; color: #5c6b8a; margin-top: 4px;">Nossa equipe resolve ou desenvolve para você</div></div>
+        </div>
+        <svg width="46" height="12" viewBox="0 0 46 12" fill="none" stroke="#3b5aa8" stroke-width="1.4" stroke-linecap="round" aria-hidden="true" style="justify-self: center;"><path d="M4 6h38" stroke-dasharray="4 4"></path><path d="M38 2l4 4-4 4"></path></svg>
+
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <div style="flex: none; width: 54px; height: 54px; border-radius: 50%; border: 1px solid rgba(20, 45, 100, 0.2); background: #ffffff; display: flex; align-items: center; justify-content: center;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#3a4761" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 14.5a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1.04 1.56V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.56 1.7 1.7 0 0 0-1.88.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.56-1.04H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.55-1.1 1.7 1.7 0 0 0-.34-1.88l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34H9a1.7 1.7 0 0 0 1-1.56V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1.04 1.55 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87V9a1.7 1.7 0 0 0 1.56 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"></path></svg>
+          </div>
+          <div><div style="font-size: 15px; font-weight: 700; color: #0d1730;">4. Acompanhamento</div><div style="font-size: 13px; line-height: 1.45; color: #5c6b8a; margin-top: 4px;">Garantimos suporte contínuo e evolução constante</div></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section id="sobre" style="border-bottom: 1px solid rgba(20, 45, 100, 0.13);">
+    <div style="max-width: 1240px; margin: 0 auto; padding: 56px 40px 58px;">
+      <h2 style="margin: 0 auto; max-width: 720px; text-align: center; font-size: 40px; line-height: 1.16; font-weight: 800; letter-spacing: -1.6px; color: #0d1730; text-wrap: pretty;">Uma pessoa, um propósito, duas frentes de trabalho.</h2>
+
+      <div style="margin-top: 42px; display: grid; grid-template-columns: 1fr 1.15fr; gap: 40px; align-items: stretch;">
+
+        <div data-tilt="true" style="display: flex; flex-direction: column; background: linear-gradient(160deg, #f8fafd 0%, #f2f6fc 100%); border: 1px solid rgba(20, 45, 100, 0.15); border-radius: 16px; padding: 30px 30px 32px; will-change: transform;">
+          <div style="flex: none; width: 86px; height: 86px; border-radius: 18px; background: linear-gradient(150deg, #22c07a 0%, #1d78f5 100%); display: flex; align-items: center; justify-content: center; font-size: 30px; font-weight: 800; letter-spacing: -1px; color: #ffffff; box-shadow: 0 14px 32px rgba(29, 120, 245, 0.28);">JF</div>
+          <h3 style="margin: 26px 0 0; font-size: 25px; font-weight: 800; letter-spacing: -0.9px; color: #0d1730;">João Fonseca</h3>
+          <div style="margin-top: 9px; font-size: 14.5px; font-weight: 600; color: #1558d6;">Fundador · Helpdesk de TI &amp; Desenvolvimento de Software</div>
+          <div style="height: 1px; background: rgba(20, 45, 100, 0.14); margin: 24px 0;"></div>
+          <ul style="display: grid; gap: 16px;">
+            <li style="display: flex; align-items: center; gap: 13px; font-size: 14px; color: #55637f;">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#1558d6" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10.5c0 6-8 11.5-8 11.5S4 16.5 4 10.5a8 8 0 1 1 16 0z"></path><circle cx="12" cy="10.2" r="2.8"></circle></svg>
+              Lajeado, Rio Grande do Sul — atendimento home office e presencial
+            </li>
+            <li style="display: flex; align-items: center; gap: 13px; font-size: 14px; color: #55637f;">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#1558d6" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9.2"></circle><path d="M12 7v5.2l3.3 2"></path></svg>
+              Atendimento contínuo, com suporte remoto 24 horas
+            </li>
+            <li style="display: flex; align-items: center; gap: 13px; font-size: 14px; color: #55637f;">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#1558d6" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.2" y="5" width="17.6" height="16" rx="3"></rect><path d="M3.2 10h17.6"></path><path d="M8 3v4"></path><path d="M16 3v4"></path></svg>
+              Empresa fundada em junho de 2024
+            </li>
+          </ul>
+
+          <div style="height: 1px; background: rgba(20, 45, 100, 0.14); margin: 26px 0 24px;"></div>
+          <div style="font-size: 15px; font-weight: 700; color: #0d1730;">Nossas principais frentes</div>
+          <div style="margin-top: 20px; display: grid; gap: 18px;">
+            <sc-for list="{{ frentes }}" as="fr" hint-placeholder-count="4">
+              <div>
+                <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 14px;">
+                  <span style="font-size: 14px; color: #2c3853;">{{ fr.nome }}</span>
+                  <span style="font-size: 13px; font-weight: 700; color: #16a34a;">{{ fr.pct }}</span>
+                </div>
+                <div style="margin-top: 8px; height: 7px; border-radius: 4px; background: rgba(20, 45, 100, 0.1); overflow: hidden;">
+                  <div style="height: 100%; border-radius: 4px; background: linear-gradient(90deg, #22c07a, #1d78f5); width: {{ fr.pct }};"></div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+
+        </div>
+
+        <div style="display: flex; flex-direction: column; row-gap: 30px;">
+          <p style="margin: 0; font-size: 16px; line-height: 1.72; color: #55637f; text-wrap: pretty;">A <strong style="color: #0d1730; font-weight: 700;">Fontesetech</strong> nasceu para resolver um problema muito comum: empresas e pessoas que dependem de tecnologia no dia a dia, mas não têm um parceiro técnico de confiança para cuidar dela. Comecei atendendo <strong style="color: #0d1730; font-weight: 700;">helpdesk empresarial</strong> e <strong style="color: #0d1730; font-weight: 700;">suporte particular</strong> — e continuo fazendo isso todos os dias.</p>
+          <p style="margin: 0; font-size: 16px; line-height: 1.72; color: #55637f; text-wrap: pretty;">Com o tempo, o próximo passo natural foi criar, não só manter. Hoje a Fontesetech também desenvolve <strong style="color: #0d1730; font-weight: 700;">sites, sistemas web e aplicativos sob medida</strong>, unindo <strong style="color: #0d1730; font-weight: 700;">quem resolve o chamado</strong> com <strong style="color: #0d1730; font-weight: 700;">quem constrói o software</strong>.</p>
+          <p style="margin: 0; font-size: 16px; line-height: 1.72; color: #55637f; text-wrap: pretty;">Essa combinação muda o resultado: quem passa o dia resolvendo chamado sabe exatamente onde um sistema trava, onde o processo emperra e o que faz um usuário perder tempo.</p>
+
+          <div style="margin-top: 4px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div data-tilt="true" style="background: linear-gradient(160deg, #f8fafd 0%, #f2f6fc 100%); border: 1px solid rgba(20, 45, 100, 0.15); border-radius: 14px; padding: 22px; will-change: transform;">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <span style="flex: none; width: 36px; height: 36px; border-radius: 10px; background: rgba(34, 192, 122, 0.12); border: 1px solid rgba(34, 192, 122, 0.32); display: flex; align-items: center; justify-content: center;">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.6"></circle><path d="M12 8.4v7.2"></path><path d="M8.4 12h7.2"></path></svg>
+                </span>
+                <span style="font-size: 12px; font-weight: 700; letter-spacing: 1.2px; color: #0d1730;">01 · RESOLVER</span>
+              </div>
+              <p style="margin: 16px 0 0; font-size: 14px; line-height: 1.6; color: #55637f;">Suporte técnico, Helpdesk, manutenção e atendimento.</p>
+            </div>
+            <div data-tilt="true" style="background: linear-gradient(160deg, #f8fafd 0%, #f2f6fc 100%); border: 1px solid rgba(20, 45, 100, 0.15); border-radius: 14px; padding: 22px; will-change: transform;">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <span style="flex: none; width: 36px; height: 36px; border-radius: 10px; background: rgba(29, 120, 245, 0.1); border: 1px solid rgba(29, 120, 245, 0.3); display: flex; align-items: center; justify-content: center;">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1558d6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.6 8.8L5.4 12l3.2 3.2"></path><path d="M15.4 8.8L18.6 12l-3.2 3.2"></path><path d="M13 7.4l-2 9.2"></path></svg>
+                </span>
+                <span style="font-size: 12px; font-weight: 700; letter-spacing: 1.2px; color: #0d1730;">02 · CONSTRUIR</span>
+              </div>
+              <p style="margin: 16px 0 0; font-size: 14px; line-height: 1.6; color: #55637f;">Sites, sistemas, aplicativos, integrações e automações.</p>
+            </div>
+          </div>
+
+          <div data-tilt="true" style="margin-top: auto; padding: 24px 26px; border-radius: 14px; background: linear-gradient(160deg, #eef3fe 0%, #e2ebfd 100%); border: 1px solid rgba(29, 95, 245, 0.18); display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; will-change: transform;">
+            <div>
+              <div style="font-size: 26px; font-weight: 800; letter-spacing: -1px; color: #0d1730;">+100</div>
+              <div style="font-size: 13px; color: #55637f; margin-top: 4px;">Clientes atendidos</div>
+            </div>
+            <div style="border-left: 1px solid rgba(20, 45, 100, 0.14); padding-left: 20px;">
+              <div style="font-size: 26px; font-weight: 800; letter-spacing: -1px; color: #0d1730;">2024</div>
+              <div style="font-size: 13px; color: #55637f; margin-top: 4px;">Ano de fundação</div>
+            </div>
+            <div style="border-left: 1px solid rgba(20, 45, 100, 0.14); padding-left: 20px;">
+              <div style="font-size: 26px; font-weight: 800; letter-spacing: -1px; color: #0d1730;">24h</div>
+              <div style="font-size: 13px; color: #55637f; margin-top: 4px;">Suporte remoto</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section id="portfolio">
+    <div style="max-width: 1240px; margin: 0 auto; padding: 44px 40px;">
+      <div style="text-align: center; font-size: 11.5px; font-weight: 700; letter-spacing: 1.4px; color: #1558d6;">PROJETOS RECENTES</div>
+      <h2 style="margin: 12px 0 0; text-align: center; font-size: 27px; font-weight: 700; letter-spacing: -0.9px; color: #0d1730;">Alguns projetos desenvolvidos</h2>
+      <div style="margin-top: 30px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;">
+
+        <article data-tilt="true" style="background: linear-gradient(160deg, #f8fafd 0%, #f2f6fc 100%); border: 1px solid rgba(20, 45, 100, 0.15); border-radius: 14px; padding: 22px; will-change: transform; display: grid; grid-template-columns: minmax(0, 1fr) 140px; gap: 16px; align-items: center;">
+          <div>
+            <h3 style="margin: 0; font-size: 16px; font-weight: 700; color: #0d1730;">Sistema de Gestão</h3>
+            <p style="margin: 12px 0 0; font-size: 13px; line-height: 1.55; color: #5c6b8a;">Plataforma completa para gestão empresarial com relatórios e indicadores.</p>
+            <a href="#contato" style="display: inline-flex; align-items: center; gap: 8px; margin-top: 18px; font-size: 13.5px; font-weight: 600; color: #1558d6;">Ver projeto
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13"></path><path d="M12 5l7 7-7 7"></path></svg>
+            </a>
+          </div>
+          <div style="height: 128px; min-width: 0; width: 140px;"><image-slot id="fs-proj-gestao" shape="rounded" radius="9" fit="cover" placeholder="Mockup do sistema"></image-slot></div>
+        </article>
+
+        <article data-tilt="true" style="background: linear-gradient(160deg, #f8fafd 0%, #f2f6fc 100%); border: 1px solid rgba(20, 45, 100, 0.15); border-radius: 14px; padding: 22px; will-change: transform; display: grid; grid-template-columns: minmax(0, 1fr) 140px; gap: 16px; align-items: center;">
+          <div>
+            <h3 style="margin: 0; font-size: 16px; font-weight: 700; color: #0d1730;">App de Delivery</h3>
+            <p style="margin: 12px 0 0; font-size: 13px; line-height: 1.55; color: #5c6b8a;">Aplicativo mobile para pedidos online com painel administrativo integrado.</p>
+            <a href="#contato" style="display: inline-flex; align-items: center; gap: 8px; margin-top: 18px; font-size: 13.5px; font-weight: 600; color: #1558d6;">Ver projeto
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13"></path><path d="M12 5l7 7-7 7"></path></svg>
+            </a>
+          </div>
+          <div style="height: 128px; min-width: 0; width: 140px;"><image-slot id="fs-proj-delivery" shape="rounded" radius="9" fit="cover" placeholder="Mockup do app"></image-slot></div>
+        </article>
+
+        <article data-tilt="true" style="background: linear-gradient(160deg, #f8fafd 0%, #f2f6fc 100%); border: 1px solid rgba(20, 45, 100, 0.15); border-radius: 14px; padding: 22px; will-change: transform; display: grid; grid-template-columns: minmax(0, 1fr) 140px; gap: 16px; align-items: center;">
+          <div>
+            <h3 style="margin: 0; font-size: 16px; font-weight: 700; color: #0d1730;">Site Institucional</h3>
+            <p style="margin: 12px 0 0; font-size: 13px; line-height: 1.55; color: #5c6b8a;">Site moderno e responsivo com foco em performance e conversão.</p>
+            <a href="#contato" style="display: inline-flex; align-items: center; gap: 8px; margin-top: 18px; font-size: 13.5px; font-weight: 600; color: #1558d6;">Ver projeto
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13"></path><path d="M12 5l7 7-7 7"></path></svg>
+            </a>
+          </div>
+          <div style="height: 128px; min-width: 0; width: 140px;"><image-slot id="fs-proj-site" shape="rounded" radius="9" fit="cover" placeholder="Mockup do site"></image-slot></div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <section id="contato">
+    <div style="max-width: 1240px; margin: 0 auto; padding: 6px 40px 34px; display: grid; grid-template-columns: 1fr 1.15fr 1fr; gap: 24px; align-items: stretch;">
+
+      <div style="background: linear-gradient(160deg, #eef3fe 0%, #e2ebfd 100%); border: 1px solid rgba(20, 45, 100, 0.18); border-radius: 14px; padding: 26px 24px; box-shadow: 0 0 44px rgba(29, 95, 245, 0.12) inset;">
+        <div style="font-size: 11.5px; font-weight: 700; letter-spacing: 1.3px; color: #1558d6;">PRONTO PARA COMEÇAR?</div>
+        <h2 style="margin: 14px 0 0; font-size: 24px; font-weight: 700; letter-spacing: -0.8px; color: #0d1730; text-wrap: pretty;">Fale com a Fontesetech TI</h2>
+        <p style="margin: 12px 0 0; font-size: 13.5px; line-height: 1.55; color: #94a4c6;">Soluções em tecnologia com atendimento humanizado e resultados reais.</p>
+        <div style="display: flex; align-items: center; gap: 12px; margin-top: 22px;">
+          <a href="#contato" data-ripple="true" style="position: relative; overflow: hidden; display: inline-flex; align-items: center; gap: 10px; background: #1d5ff5; color: #ffffff; font-size: 14px; font-weight: 600; padding: 13px 18px; border-radius: 9px; box-shadow: 0 10px 26px rgba(29, 95, 245, 0.35); transition: background .25s ease, transform .25s ease, box-shadow .25s ease;" style-hover="background: #2f7bff; transform: translateY(-2px); box-shadow: 0 14px 34px rgba(29, 95, 245, 0.5);" style-after="content: ''; position: absolute; top: 0; left: 0; width: 45%; height: 100%; background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.32) 50%, rgba(255,255,255,0) 100%); transform: translateX(-130%) skewX(-18deg); animation: fs-shine 5s ease-in-out infinite; pointer-events: none;">
+            Falar com Especialista
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13"></path><path d="M12 5l7 7-7 7"></path></svg>
+          </a>
+          <a href="#contato" aria-label="WhatsApp" style="display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 9px; border: 1px solid rgba(37, 211, 102, 0.45); background: rgba(37, 211, 102, 0.08); color: #25d366;" style-hover="background: rgba(37, 211, 102, 0.16);">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2.5c-5.23 0-9.48 4.24-9.48 9.47 0 1.67.44 3.3 1.27 4.74L2.5 21.5l4.92-1.29a9.45 9.45 0 0 0 4.62 1.18h.01c5.22 0 9.47-4.25 9.47-9.48 0-2.53-.99-4.91-2.78-6.7a9.4 9.4 0 0 0-6.7-2.71zm0 17.06h-.01a7.86 7.86 0 0 1-4-1.1l-.29-.17-2.92.77.78-2.85-.19-.29a7.86 7.86 0 0 1-1.2-4.19c0-4.34 3.53-7.87 7.88-7.87 2.1 0 4.08.82 5.56 2.31a7.82 7.82 0 0 1 2.3 5.57c0 4.34-3.53 7.82-7.91 7.82zm4.32-5.86c-.24-.12-1.4-.69-1.62-.77-.22-.08-.38-.12-.53.12s-.61.77-.75.93c-.14.16-.28.18-.51.06a6.4 6.4 0 0 1-1.9-1.17 7.1 7.1 0 0 1-1.31-1.63c-.14-.24-.02-.37.1-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.53-1.28-.73-1.75-.19-.46-.38-.4-.53-.4l-.45-.01c-.16 0-.42.06-.63.3-.22.24-.83.81-.83 1.98s.85 2.3.97 2.46c.12.16 1.67 2.55 4.04 3.58.57.24 1 .39 1.35.5.57.18 1.08.15 1.49.09.46-.07 1.4-.57 1.6-1.13.2-.55.2-1.03.14-1.13-.06-.1-.22-.16-.46-.28z"></path></svg>
+          </a>
+        </div>
+      </div>
+
+      <div style="background: linear-gradient(160deg, #f8fafd 0%, #f2f6fc 100%); border: 1px solid rgba(20, 45, 100, 0.15); border-radius: 14px; padding: 26px 26px; display: flex; gap: 18px;">
+        <svg width="34" height="30" viewBox="0 0 34 30" fill="#2f7bff" aria-hidden="true" style="flex: none; margin-top: 2px;"><path d="M0 18.5C0 9.6 5.2 3.1 13.2 0l1.6 3.4C9.9 5.7 7 9.2 6.6 13.2h5.2V29H0V18.5zm18.6 0C18.6 9.6 23.8 3.1 31.8 0l1.6 3.4c-4.9 2.3-7.8 5.8-8.2 9.8h5.2V29H18.6V18.5z"></path></svg>
+        <div>
+          <p style="margin: 0; font-size: 14.5px; line-height: 1.66; color: #2c3853; text-wrap: pretty;">"A Fontesetech TI transformou nossa operação. O suporte é rápido, eficiente e sempre resolve. Super recomendo!"</p>
+          <div style="display: flex; align-items: center; gap: 13px; margin-top: 22px;">
+            <div style="flex: none; width: 42px; height: 42px;"><image-slot id="fs-depoimento-carlos" shape="circle" fit="cover" placeholder="Foto"></image-slot></div>
+            <div>
+              <div style="font-size: 14.5px; font-weight: 700; color: #0d1730;">Carlos Mendes</div>
+              <div style="font-size: 13px; color: #5c6b8a; margin-top: 2px;">CEO, Mendes Soluções</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="background: linear-gradient(160deg, #f8fafd 0%, #f2f6fc 100%); border: 1px solid rgba(20, 45, 100, 0.15); border-radius: 14px; padding: 26px 24px;">
+        <div style="font-size: 11.5px; font-weight: 700; letter-spacing: 1.3px; color: #1558d6;">ATENDIMENTO</div>
+        <ul style="margin-top: 22px; display: grid; gap: 20px;">
+          <li style="display: flex; align-items: center; gap: 14px;">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#2f7bff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="2.5"></rect><path d="M3.5 7l8.5 6 8.5-6"></path></svg>
+            <span style="font-size: 14px; color: #2c3853;">contato@fontesetechti.com.br</span>
+          </li>
+          <li style="display: flex; align-items: center; gap: 14px;">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#2f7bff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 16.5v3a2 2 0 0 1-2.2 2 19.6 19.6 0 0 1-8.5-3 19.3 19.3 0 0 1-6-6A19.6 19.6 0 0 1 1.3 4 2 2 0 0 1 3.3 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L7.6 9.6a16 16 0 0 0 6 6l1-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.5 2z"></path></svg>
+            <span style="font-size: 14px; color: #2c3853;">(11) 99999-9999</span>
+          </li>
+          <li style="display: flex; align-items: center; gap: 14px;">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#2f7bff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9.2"></circle><path d="M12 7v5.2l3.3 2"></path></svg>
+            <span style="font-size: 14px; color: #2c3853;">Seg - Sex: 08h às 18h</span>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <footer style="border-top: 1px solid rgba(20, 45, 100, 0.13);">
+    <div style="max-width: 1240px; margin: 0 auto; padding: 20px 40px; display: flex; align-items: center; justify-content: space-between; gap: 24px;">
+      <span style="font-size: 12.5px; color: #6b7896;">© 2024 Fontesetech TI. Todos os direitos reservados.</span>
+      <span style="display: inline-flex; align-items: center; gap: 7px; font-size: 12.5px; color: #6b7896;">
+        Feito com
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="#ef4444" aria-hidden="true"><path d="M12 21s-7.8-4.9-9.7-9.3C.8 8.2 2.6 4.7 6 4c2.2-.4 4.4.7 6 2.6C13.6 4.7 15.8 3.6 18 4c3.4.7 5.2 4.2 3.7 7.7C19.8 16.1 12 21 12 21z"></path></svg>
+        para impulsionar seu negócio.
+      </span>
+    </div>
+  </footer>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  componentDidMount() {
+    this._cleanup = [];
+    this._reduced = false;
+    this._boundTilt = new WeakSet();
+    this._boundRipple = new WeakSet();
+    this._boundMagnet = new WeakSet();
+    this.initAll();
+    this._retry = setInterval(() => this.initAll(), 200);
+    this._stop = setTimeout(() => clearInterval(this._retry), 12000);
+    this._onLoad = () => this.initAll();
+    window.addEventListener('load', this._onLoad);
+    this._cleanup.push(() => {
+      clearInterval(this._retry);
+      clearTimeout(this._stop);
+      window.removeEventListener('load', this._onLoad);
+    });
+  }
+
+  initConsole() {
+    const list = document.getElementById('fs-ticket-list');
+    if (!list || this._consoleReady) return;
+    this._consoleReady = true;
+
+    const pool = [
+      { id: 'CH-4821', t: 'VPN não conecta no escritório', n: 'N2', who: 'Marina R.' },
+      { id: 'CH-4822', t: 'Impressora fora da rede', n: 'N1', who: 'Diego F.' },
+      { id: 'CH-4823', t: 'Servidor de arquivos lento', n: 'N3', who: 'Paula S.' },
+      { id: 'CH-4824', t: 'Reset de senha do e-mail', n: 'N1', who: 'Lucas A.' },
+      { id: 'CH-4825', t: 'Backup diário falhou', n: 'N3', who: 'Rafael M.' },
+      { id: 'CH-4826', t: 'Instalação do ERP na filial', n: 'N2', who: 'Bianca L.' },
+      { id: 'CH-4827', t: 'Wi-Fi instável no 2º andar', n: 'N2', who: 'Tiago C.' },
+      { id: 'CH-4828', t: 'Acesso remoto para novo colaborador', n: 'N1', who: 'Helena V.' }
+    ];
+    const tone = { N1: '#2f7bff', N2: '#38bdf8', N3: '#7c3aed' };
+
+    const row = (tk, state) => {
+      const el = document.createElement('div');
+      const solved = state === 'solved';
+      el.style.cssText = 'display:flex;align-items:center;gap:12px;padding:11px 13px;border-radius:10px;' +
+        'background:' + (solved ? 'rgba(34,197,94,0.07)' : 'rgba(96,130,220,0.06)') + ';' +
+        'border:1px solid ' + (solved ? 'rgba(34,197,94,0.28)' : 'rgba(96,130,220,0.16)') + ';' +
+        'transition:background .5s ease,border-color .5s ease,opacity .45s ease,transform .45s cubic-bezier(.2,.8,.3,1);' +
+        'opacity:0;transform:translateY(-10px);';
+      el.innerHTML =
+        '<span style="flex:none;width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;' +
+          'font-size:11px;font-weight:800;color:' + tone[tk.n] + ';background:' + tone[tk.n] + '1f;border:1px solid ' + tone[tk.n] + '4d;">' + tk.n + '</span>' +
+        '<span style="min-width:0;flex:1;">' +
+          '<span style="display:block;font-size:13.5px;font-weight:600;color:#e3eaf8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + tk.t + '</span>' +
+          '<span style="display:block;font-family:\'JetBrains Mono\',monospace;font-size:11px;color:#7f92b8;margin-top:3px;">' + tk.id + ' · ' + tk.who + '</span>' +
+        '</span>' +
+        '<span data-badge="1" style="flex:none;display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;color:' +
+          (solved ? '#4ade80' : '#8fb6ff') + ';">' + (solved ? 'Resolvido' : 'Em atendimento') + '</span>';
+      requestAnimationFrame(() => { el.style.opacity = '1'; el.style.transform = 'none'; });
+      return el;
+    };
+
+    const solve = el => {
+      el.style.background = 'rgba(34,197,94,0.07)';
+      el.style.borderColor = 'rgba(34,197,94,0.28)';
+      const b = el.querySelector('[data-badge]');
+      if (b) { b.style.color = '#4ade80'; b.textContent = 'Resolvido'; }
+    };
+
+    let cursor = 0;
+    const seed = 3;
+    for (let i = 0; i < seed; i++) {
+      const el = row(pool[cursor % pool.length], i === 2 ? 'solved' : 'open');
+      cursor++;
+      list.appendChild(el);
+    }
+
+    if (this._reduced) return;
+
+    let resolved = 47, sla = 94;
+    const kpiFila = document.getElementById('fs-kpi-fila');
+    const kpiRes = document.getElementById('fs-kpi-res');
+    const slaBar = document.getElementById('fs-sla-bar');
+    const slaNum = document.getElementById('fs-sla-num');
+
+    const cycle = () => {
+      const oldest = list.lastElementChild;
+      if (oldest && list.children.length >= 4) {
+        // collapse height in the same frame as the insert, so the panel never grows
+        oldest.style.height = oldest.offsetHeight + 'px';
+        oldest.style.overflow = 'hidden';
+        requestAnimationFrame(() => {
+          oldest.style.transition += ',height .45s cubic-bezier(.2,.8,.3,1),padding .45s ease,margin .45s ease';
+          oldest.style.height = '0px';
+          oldest.style.paddingTop = '0px';
+          oldest.style.paddingBottom = '0px';
+          oldest.style.marginTop = '-9px';
+          oldest.style.borderWidth = '0px';
+          oldest.style.opacity = '0';
+        });
+        setTimeout(() => oldest.remove(), 520);
+      }
+      const el = row(pool[cursor % pool.length], 'open');
+      cursor++;
+      list.insertBefore(el, list.firstChild);
+
+      setTimeout(() => {
+        const target = list.children[1];
+        if (target) {
+          solve(target);
+          resolved++;
+          if (kpiRes) kpiRes.textContent = String(resolved);
+          sla = Math.min(99, Math.max(91, sla + (Math.random() < 0.55 ? 1 : -1)));
+          if (slaBar) slaBar.style.width = sla + '%';
+          if (slaNum) slaNum.textContent = String(sla);
+        }
+      }, 1500);
+
+      if (kpiFila) kpiFila.textContent = String(2 + Math.floor(Math.random() * 3));
+      this._consoleTimer = setTimeout(cycle, 3400);
+    };
+    this._consoleTimer = setTimeout(cycle, 1800);
+    this._cleanup.push(() => clearTimeout(this._consoleTimer));
+  }
+
+  initReveal() {
+    if (this._revealReady || this._reduced) return;
+    // espera o layout estabilizar: durante o stream as seções ficam empilhadas no topo
+    const h = document.documentElement.scrollHeight;
+    if (document.readyState !== 'complete' || this._lastH !== h) { this._lastH = h; return; }
+    const plan = [
+      ['#servicos > div > div:first-child > *', 'left', 90],
+      ['#servicos [data-tilt]', 'up', 120],
+      ['#solucoes > div > div:nth-child(1) > *', 'left', 80],
+      ['#solucoes > div > div:nth-child(2) > *', 'right', 80],
+      ['#solucoes > div > div:nth-child(3)', 'zoom', 0],
+      ['#planos > div > div:first-child, #planos > div > h2, #planos > div > p', 'up', 70],
+      ['#planos [data-tilt]', 'flip', 130],
+      ['#processo > div > div:first-child, #processo > div > h2', 'up', 70],
+      ['#processo > div > div:last-child > *', 'zoom', 75],
+      ['#numeros > div > *', 'up', 90],
+      ['#sobre > div > h2, #sobre > div > p, #sobre > div > div > div > p, #sobre > div > div > div > div:first-child', 'up', 70],
+      ['#sobre [data-tilt]', 'blur', 110],
+      ['#portfolio > div > div:first-child, #portfolio > div > h2', 'up', 70],
+      ['#portfolio article', 'up', 110],
+      ['#contato > div > *', 'up', 120],
+      ['footer > div > *', 'up', 90]
+    ];
+
+    const items = [];
+    const seen = new Set();
+    plan.forEach(([sel, variant, step]) => {
+      let els;
+      try { els = document.querySelectorAll(sel); } catch (e) { return; }
+      Array.from(els).forEach((el, i) => {
+        if (seen.has(el) || el.closest('#inicio')) return;
+        seen.add(el);
+        el.classList.add('fs-rv', variant);
+        items.push({ el, delay: i * step });
+      });
+    });
+    if (!items.length) return;
+    this._revealReady = true;
+
+    const EASE = 'cubic-bezier(.2,.8,.3,1)';
+    const ease = t => 1 - Math.pow(1 - t, 3);
+    const from = {
+      up:    p => 'translateY(' + (34 * (1 - p)).toFixed(2) + 'px)',
+      left:  p => 'translateX(' + (-38 * (1 - p)).toFixed(2) + 'px)',
+      right: p => 'translateX(' + (38 * (1 - p)).toFixed(2) + 'px)',
+      zoom:  p => 'scale(' + (0.93 + 0.07 * p).toFixed(4) + ')',
+      blur:  p => 'translateY(' + (20 * (1 - p)).toFixed(2) + 'px)',
+      flip:  p => 'perspective(900px) rotateX(' + (-14 * (1 - p)).toFixed(2) + 'deg) translateY(' + (26 * (1 - p)).toFixed(2) + 'px)'
+    };
+
+    // tween em JS: alguns contextos suspendem a linha do tempo e travam transições CSS
+    const show = it => {
+      const el = it.el;
+      if (el.dataset.fsShown) return;
+      el.dataset.fsShown = '1';
+      const tilt = el.hasAttribute('data-tilt');
+      const kind = ['up', 'left', 'right', 'zoom', 'blur', 'flip'].find(k => el.classList.contains(k)) || 'up';
+      el.classList.remove('fs-rv', 'go', 'up', 'left', 'right', 'zoom', 'blur', 'flip', 'clip');
+      // encerra qualquer transição CSS presa (linha do tempo congelada em aba oculta)
+      if (el.getAnimations) el.getAnimations().forEach(a => { try { a.finish(); } catch (e) { try { a.cancel(); } catch (e2) {} } });
+      el.style.transition = 'none';
+      el.style.opacity = '0';
+      el.style.transform = from[kind](0);
+      if (kind === 'blur') el.style.filter = 'blur(9px)';
+
+      const dur = 780, t0 = performance.now() + it.delay;
+      const finish = () => {
+        el.style.transition = 'none';
+        el.style.opacity = '';
+        el.style.transform = '';
+        el.style.filter = '';
+        el.style.willChange = tilt ? 'transform' : '';
+        if (el.getAnimations) el.getAnimations().forEach(a => { try { a.finish(); } catch (e) {} });
+        setTimeout(() => {
+          el.style.transition = tilt ? 'transform .35s ' + EASE + ', box-shadow .35s ease, border-color .35s ease' : '';
+        }, 50);
+      };
+      const step = () => {
+        const p = Math.min(1, Math.max(0, (performance.now() - t0) / dur));
+        const e = ease(p);
+        el.style.opacity = String(e);
+        el.style.transform = from[kind](e);
+        if (kind === 'blur') el.style.filter = 'blur(' + (9 * (1 - e)).toFixed(2) + 'px)';
+        if (p >= 1) { clearInterval(timer); finish(); }
+      };
+      const timer = setInterval(step, 16);
+      setTimeout(() => { clearInterval(timer); finish(); }, it.delay + dur + 400);
+      this._cleanup.push(() => clearInterval(timer));
+    };
+
+    const map = new Map(items.map(it => [it.el, it]));
+    const io = new IntersectionObserver(entries => {
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+      entries.forEach(en => {
+        if (!en.isIntersecting) return;
+        // revalida: a primeira entrega pode chegar com layout ainda instável
+        const r = en.target.getBoundingClientRect();
+        if (r.top > vh * 0.94 || r.bottom < 0) return;
+        const it = map.get(en.target);
+        if (it) show(it);
+        io.unobserve(en.target);
+      });
+    }, { rootMargin: '0px 0px -12% 0px', threshold: 0.12 });
+
+    let pending = items.slice();
+    const sweep = () => {
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+      pending = pending.filter(it => {
+        const r = it.el.getBoundingClientRect();
+        if (r.top < vh * 0.94 && r.bottom > 0) { show(it); return false; }
+        return true;
+      });
+      if (!pending.length) stop();
+    };
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      setTimeout(() => { ticking = false; sweep(); }, 60);
+    };
+    const stop = () => {
+      window.removeEventListener('scroll', onScroll, true);
+      document.removeEventListener('scroll', onScroll, true);
+      window.removeEventListener('resize', onScroll);
+      io.disconnect();
+    };
+    window.addEventListener('scroll', onScroll, true);
+    document.addEventListener('scroll', onScroll, true);
+    window.addEventListener('resize', onScroll);
+    pending.forEach(it => io.observe(it.el));
+    setTimeout(sweep, 80);
+    // rede de segurança seletiva: libera só o que já passou pela viewport
+    setTimeout(() => {
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+      pending = pending.filter(it => {
+        if (it.el.getBoundingClientRect().top < vh) { show(it); return false; }
+        return true;
+      });
+      if (!pending.length) stop();
+    }, 3000);
+    this._cleanup.push(stop);
+  }
+
+  initAll() {
+    const safe = fn => { try { fn.call(this); } catch (e) { console.warn('[fs]', e); } };
+    if (!this._netReady) safe(this.initNetwork);
+    safe(this.initTilt);
+    safe(this.initReveal);
+    this.initRipple();
+    this.initMagnet();
+    if (!this._countReady) this.initCounters();
+    if (this._netReady && this._countReady && this._revealReady && document.querySelectorAll('[data-tilt]').length >= 9) {
+      clearInterval(this._retry);
+    }
+  }
+
+  componentWillUnmount() {
+    (this._cleanup || []).forEach(fn => fn());
+    if (this._raf) cancelAnimationFrame(this._raf);
+  }
+
+  on(target, type, fn, opts) {
+    target.addEventListener(type, fn, opts);
+    this._cleanup.push(() => target.removeEventListener(type, fn, opts));
+  }
+
+  initNetwork() {
+    const canvas = document.getElementById('fs-hero-canvas');
+    if (!canvas || !canvas.parentElement) return;
+    const host = canvas.parentElement;
+    if (!host.getBoundingClientRect().width) return;
+    if (this._netInit) return; // listeners e laço só uma vez
+    this._netInit = true;
+    const ctx = canvas.getContext('2d');
+    const state = { w: 0, h: 0, t: 0, mx: -9999, my: -9999, px: -9999, py: -9999, on: false };
+    let nodes = [];
+
+    const seed = () => {
+      const n = Math.max(34, Math.min(74, Math.round((state.w * state.h) / 21000)));
+      nodes = Array.from({ length: n }, () => ({
+        x: Math.random() * state.w,
+        y: Math.random() * state.h,
+        vx: (Math.random() - 0.5) * 0.22,
+        vy: (Math.random() - 0.5) * 0.22,
+        r: Math.random() * 1.6 + 1.1,
+        big: Math.random() < 0.14
+      }));
+    };
+
+    const resize = () => {
+      const rect = host.getBoundingClientRect();
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      state.w = rect.width; state.h = rect.height;
+      canvas.width = Math.round(state.w * dpr);
+      canvas.height = Math.round(state.h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      seed();
+      if (this._netReady) render(); // atribuir width limpa o canvas
+    };
+    resize();
+    this.on(window, 'resize', resize);
+
+    // rastreia no documento: pega o cursor mesmo sobre título, botões ou header
+    this.on(document, 'mousemove', e => {
+      const rect = host.getBoundingClientRect();
+      const x = e.clientX - rect.left, y = e.clientY - rect.top;
+      const near = x > -160 && x < rect.width + 160 && y > -160 && y < rect.height + 160;
+      if (!near) { state.on = false; return; }
+      state.mx = x; state.my = y;
+      if (!state.on) { state.px = x; state.py = y; }
+      state.on = true;
+    });
+    this.on(document, 'mouseleave', () => { state.on = false; });
+
+    // campo de nós conectados, reativo ao cursor (tema claro)
+    const LINK = 150, PULL = 230;
+
+    const render = () => {
+      const { w, h } = state;
+      ctx.clearRect(0, 0, w, h);
+
+      if (state.on) {
+        const g = ctx.createRadialGradient(state.px, state.py, 0, state.px, state.py, 260);
+        g.addColorStop(0, 'rgba(29, 95, 245, 0.16)');
+        g.addColorStop(0.5, 'rgba(59, 130, 246, 0.07)');
+        g.addColorStop(1, 'rgba(29, 95, 245, 0)');
+        ctx.fillStyle = g;
+        ctx.beginPath(); ctx.arc(state.px, state.py, 260, 0, Math.PI * 2); ctx.fill();
+      }
+
+      for (let i = 0; i < nodes.length; i++) {
+        const a = nodes[i];
+        for (let j = i + 1; j < nodes.length; j++) {
+          const b = nodes[j];
+          const dx = a.x - b.x, dy = a.y - b.y;
+          const d2 = dx * dx + dy * dy;
+          if (d2 > LINK * LINK) continue;
+          const near = state.on &&
+            (Math.min((a.x - state.px) ** 2 + (a.y - state.py) ** 2, (b.x - state.px) ** 2 + (b.y - state.py) ** 2) < PULL * PULL);
+          const fade = 1 - Math.sqrt(d2) / LINK;
+          ctx.strokeStyle = near
+            ? 'rgba(29, 95, 245, ' + (fade * 0.5).toFixed(3) + ')'
+            : 'rgba(60, 100, 180, ' + (fade * 0.15).toFixed(3) + ')';
+          ctx.lineWidth = near ? 1.5 : 1;
+          ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+        }
+      }
+
+      for (const p of nodes) {
+        let near = 0;
+        if (state.on) {
+          const d = Math.sqrt((p.x - state.px) ** 2 + (p.y - state.py) ** 2);
+          near = Math.max(0, 1 - d / PULL);
+          if (near > 0.01) {
+            ctx.strokeStyle = 'rgba(29, 95, 245, ' + (near * 0.4).toFixed(3) + ')';
+            ctx.lineWidth = 1;
+            ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(state.px, state.py); ctx.stroke();
+          }
+        }
+        const r = p.r * (p.big ? 1.9 : 1) + near * 1.6;
+        if (p.big || near > 0.2) {
+          const halo = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r * 5);
+          halo.addColorStop(0, 'rgba(47, 123, 255, ' + (0.13 + near * 0.2).toFixed(3) + ')');
+          halo.addColorStop(1, 'rgba(47, 123, 255, 0)');
+          ctx.fillStyle = halo;
+          ctx.beginPath(); ctx.arc(p.x, p.y, r * 5, 0, Math.PI * 2); ctx.fill();
+        }
+        ctx.fillStyle = 'rgba(' + Math.round(29 + near * 30) + ', ' + Math.round(95 + near * 40) + ', 245, ' + (0.34 + near * 0.5).toFixed(3) + ')';
+        ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, Math.PI * 2); ctx.fill();
+      }
+    };
+
+    if (this._reduced) { render(); return; }
+
+    let last = performance.now();
+    let frames = 0;
+    const tick = stamp => {
+      const now = stamp || performance.now();
+      const dt = Math.min(64, now - last) / 1000;
+      last = now;
+      frames++;
+      state.t += dt;
+      state.px += (state.mx - state.px) * 0.12;
+      state.py += (state.my - state.py) * 0.12;
+      const k = dt * 60;
+      for (const p of nodes) {
+        p.x += p.vx * k; p.y += p.vy * k;
+        if (state.on) {
+          const dx = state.px - p.x, dy = state.py - p.y;
+          const d = Math.hypot(dx, dy);
+          if (d < PULL && d > 1) {
+            const f = (1 - d / PULL) * 0.5 * k;
+            p.x += (dx / d) * f; p.y += (dy / d) * f;
+          }
+        }
+        if (p.x < -30) p.x = state.w + 30; else if (p.x > state.w + 30) p.x = -30;
+        if (p.y < -30) p.y = state.h + 30; else if (p.y > state.h + 30) p.y = -30;
+      }
+      render();
+      this._netReady = true; // só considera pronto após o primeiro frame real
+      if (!this._netInterval) this._raf = requestAnimationFrame(tick);
+    };
+    this._raf = requestAnimationFrame(tick);
+    // alguns contextos suspendem rAF (aba oculta); nesse caso, mantém o laço por timer
+    const useTimer = () => {
+      if (this._netInterval) return;
+      cancelAnimationFrame(this._raf);
+      this._netInterval = setInterval(() => tick(performance.now()), 33);
+      this._cleanup.push(() => clearInterval(this._netInterval));
+    };
+    setTimeout(() => { if (frames < 2) useTimer(); }, 600);
+    const onVis = () => {
+      if (document.visibilityState !== 'visible') return;
+      resize();
+      tick(performance.now());
+      if (!this._netInterval && frames < 2) useTimer();
+    };
+    this.on(document, 'visibilitychange', onVis);
+  }
+
+  initTilt() {
+    if (this._reduced) return;
+    document.querySelectorAll('[data-tilt]').forEach(card => {
+      if (this._boundTilt.has(card)) return;
+      this._boundTilt.add(card);
+      const base = card.style.boxShadow;
+      card.style.transformStyle = 'preserve-3d';
+      card.style.transition = 'transform .35s cubic-bezier(.2,.8,.3,1), box-shadow .35s ease, border-color .35s ease';
+      const move = e => {
+        const r = card.getBoundingClientRect();
+        const px = (e.clientX - r.left) / r.width - 0.5;
+        const py = (e.clientY - r.top) / r.height - 0.5;
+        card.style.transition = 'transform .12s linear, box-shadow .35s ease, border-color .35s ease';
+        card.style.transform = 'perspective(900px) rotateY(' + (px * 7).toFixed(2) + 'deg) rotateX(' + (-py * 7).toFixed(2) + 'deg) translateY(-6px)';
+      };
+      const enter = () => {
+        card.style.boxShadow = (base ? base + ', ' : '') + '0 26px 54px rgba(20, 45, 100, 0.16), 0 0 0 1px rgba(29, 95, 245, 0.22)';
+      };
+      const leave = () => {
+        card.style.transition = 'transform .5s cubic-bezier(.2,.8,.3,1), box-shadow .4s ease, border-color .4s ease';
+        card.style.transform = '';
+        card.style.boxShadow = base;
+      };
+      this.on(card, 'mouseenter', enter);
+      this.on(card, 'mousemove', move);
+      this.on(card, 'mouseleave', leave);
+    });
+  }
+
+  initRipple() {
+    document.querySelectorAll('[data-ripple]').forEach(btn => {
+      if (this._boundRipple.has(btn)) return;
+      this._boundRipple.add(btn);
+      this.on(btn, 'click', e => {
+        if (this._reduced) return;
+        const r = btn.getBoundingClientRect();
+        const size = Math.max(r.width, r.height);
+        const span = document.createElement('span');
+        span.style.cssText = 'position:absolute;pointer-events:none;border-radius:50%;background:rgba(255,255,255,.55);width:' +
+          size + 'px;height:' + size + 'px;left:' + (e.clientX - r.left - size / 2) + 'px;top:' +
+          (e.clientY - r.top - size / 2) + 'px;transform:scale(0);animation:fs-ripple .62s ease-out forwards;';
+        btn.appendChild(span);
+        setTimeout(() => span.remove(), 700);
+      });
+    });
+  }
+
+  initMagnet() {
+    if (this._reduced) return;
+    document.querySelectorAll('[data-magnet]').forEach(el => {
+      if (this._boundMagnet.has(el)) return;
+      this._boundMagnet.add(el);
+      this.on(el, 'mousemove', e => {
+        const r = el.getBoundingClientRect();
+        const x = (e.clientX - r.left - r.width / 2) / (r.width / 2);
+        const y = (e.clientY - r.top - r.height / 2) / (r.height / 2);
+        el.style.transform = 'translate(' + (x * 8).toFixed(1) + 'px,' + (y * 6).toFixed(1) + 'px)';
+      });
+      this.on(el, 'mouseleave', () => { el.style.transform = ''; });
+    });
+  }
+
+  initCounters() {
+    const els = Array.from(document.querySelectorAll('[data-count]'));
+    if (els.length < 4) return;
+    this._countReady = true;
+    const fmt = n => String(n);
+    const done = new WeakSet();
+    const run = el => {
+      if (done.has(el)) return;
+      done.add(el);
+      const target = parseFloat(el.dataset.count);
+      const pre = el.dataset.prefix || '';
+      const suf = el.dataset.suffix || '';
+      if (this._reduced) { el.textContent = pre + fmt(target) + suf; return; }
+      const dur = 1400, t0 = performance.now();
+      const step = now => {
+        const p = Math.min(1, (now - t0) / dur);
+        const eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = pre + fmt(Math.round(target * eased)) + suf;
+        if (p < 1) requestAnimationFrame(step);
+      };
+      el.textContent = pre + '0' + suf;
+      requestAnimationFrame(step);
+    };
+    let pending = els.slice();
+    let armed = false;
+    const inView = el => {
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+      const r = el.getBoundingClientRect();
+      return r.height > 0 && r.top < vh * 0.88 && r.bottom > vh * 0.08;
+    };
+    const poll = () => {
+      if (armed) pending = pending.filter(el => (inView(el) ? (run(el), false) : true));
+      if (pending.length) this._countPoll = requestAnimationFrame(poll);
+    };
+    // only start watching once layout has settled, so the count-up isn't spent while the page streams
+    const arm = () => { armed = true; };
+    if (document.readyState === 'complete') setTimeout(arm, 400);
+    else window.addEventListener('load', () => setTimeout(arm, 400), { once: true });
+    setTimeout(arm, 2500);
+    this._countPoll = requestAnimationFrame(poll);
+    this._cleanup.push(() => cancelAnimationFrame(this._countPoll));
+  }
+
+  renderVals() {
+    return {
+      dots: Array.from({ length: 35 }, (_, i) => i),
+      frentes: [
+        { nome: 'Helpdesk empresarial (N1, N2 e N3)', pct: '95%' },
+        { nome: 'Suporte particular', pct: '92%' },
+        { nome: 'Manutenção corretiva e preventiva', pct: '90%' },
+        { nome: 'Desenvolvimento de software, apps & sites', pct: '88%' }
+      ],
+      particular: [
+        'Problemas com PC e notebooks',
+        'Internet, redes e Wi-Fi',
+        'Instalação de programas',
+        'Formatação e recuperação',
+        'Consultoria e orientações'
+      ]
+    };
+  }
+}
+
+</script>
+</body>
+</html>
