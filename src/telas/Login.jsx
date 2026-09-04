@@ -287,29 +287,6 @@ export default function Login() {
         padding: 'clamp(24px, 4vh, 48px) clamp(28px, 3.4vw, 52px)', overflow: 'auto'
       }}>
         <div style={{ width: '100%', maxWidth: 372 }}>
-          <div style={{ marginBottom: 18, textAlign: 'left' }}>
-            <a
-              href="/"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: 6,
-                fontSize: 12.5,
-                fontWeight: 600,
-                color: '#5a6882',
-                textDecoration: 'none',
-                transition: 'color .2s ease'
-              }}
-              onMouseEnter={(e) => { e.currentTarget.style.color = '#1d5ff5'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.color = '#5a6882'; }}
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <path d="M19 12H5" />
-                <path d="M12 19l-7-7 7-7" />
-              </svg>
-              Voltar ao site da Fonsetech
-            </a>
-          </div>
           <h2 style={{
             margin: 0, textAlign: 'center', fontSize: 'clamp(22px, 2.1vw, 27px)',
             fontWeight: 800, letterSpacing: '-1px', color: c.tinta
@@ -447,6 +424,54 @@ export default function Login() {
             </div>
             <div style={{ marginTop: 6, fontSize: 11, color: c.texto5, textAlign: 'center' }}>
               © 2026 Todos os direitos reservados.
+            </div>
+
+            {/* Retornar ao site institucional (abaixo dos direitos autorais, mais compacto e discreto) */}
+            <div style={{ marginTop: 28, textAlign: 'center' }}>
+              <a
+                href="/"
+                id="btn-retornar-site"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 6,
+                  padding: '6px 14px',
+                  borderRadius: 8,
+                  background: 'transparent',
+                  border: '1px solid ' + c.borda,
+                  color: c.texto3,
+                  fontSize: 12,
+                  fontWeight: 500,
+                  textDecoration: 'none',
+                  fontFamily: 'inherit',
+                  cursor: 'pointer',
+                  transition: 'background .2s ease, border-color .2s ease, color .2s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = '#f1f5f9';
+                  e.currentTarget.style.borderColor = '#cbd5e1';
+                  e.currentTarget.style.color = '#1d5ff5';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'transparent';
+                  e.currentTarget.style.borderColor = c.borda;
+                  e.currentTarget.style.color = c.texto3;
+                }}
+                onFocus={(e) => {
+                  e.currentTarget.style.background = '#f1f5f9';
+                  e.currentTarget.style.borderColor = '#cbd5e1';
+                  e.currentTarget.style.color = '#1d5ff5';
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.background = 'transparent';
+                  e.currentTarget.style.borderColor = c.borda;
+                  e.currentTarget.style.color = c.texto3;
+                }}
+              >
+                <span aria-hidden="true" style={{ fontSize: 13, lineHeight: 1 }}>←</span>
+                <span>Retornar ao site</span>
+              </a>
             </div>
           </div>
         </div>
