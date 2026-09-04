@@ -92,16 +92,18 @@ O `package-lock.json` **deve** ser commitado — a Railway usa ele para o build 
 ## 4. Railway
 
 1. **New Project → Deploy from GitHub repo** → selecione o repositório.
-2. **Variables** → adicione apenas estas duas:
+2. **Variables** → adicione as variáveis de ambiente:
 
-   | Variável | Valor |
-   |---|---|
-   | `VITE_SUPABASE_URL` | Project URL do Supabase |
-   | `VITE_SUPABASE_ANON_KEY` | chave `anon public` |
+   | Variável | Valor | Observação |
+   |---|---|---|
+   | `VITE_SUPABASE_URL` ou `SUPABASE_URL` | Project URL do Supabase (ex: `https://vceeaqswgasjsonixvqs.supabase.co`) | Sem aspas, sem barra no final |
+   | `VITE_SUPABASE_ANON_KEY` ou `SUPABASE_ANON_KEY` | Chave `anon public` | Sem aspas, sem espaços |
 
-   Opcional: `NODE_ENV=production`.
-   Não cadastre `PORT` (a Railway injeta), nem `SUPABASE_SERVICE_ROLE_KEY`,
-   nem `DATABASE_URL` — nada neste projeto as usa.
+   > **Atenção:** Se as variáveis forem cadastradas com aspas ou barras extras no final, o sistema agora as sanitiza automaticamente. Além disso, o servidor `server.js` injeta as variáveis em runtime no `app.html` e possui um endpoint de proxy resiliente (`/api/auth/login`) para evitar o erro `Failed to fetch` quando o navegador sofre restrição de rede ou adblocker.
+   >
+   > Opcional: `NODE_ENV=production`.
+   > Não cadastre `PORT` (a Railway injeta automaticamente).
+   > **NÃO** cadastre `SUPABASE_SERVICE_ROLE_KEY` nem `DATABASE_URL` no frontend — nunca exponha chaves sensíveis.
 
 3. O deploy roda sozinho lendo o `railway.json`:
    build `npm ci && npm run build` · start `npm run start` · healthcheck `/healthz`.
@@ -112,12 +114,23 @@ O `package-lock.json` **deve** ser commitado — a Railway usa ele para o build 
 
 ---
 
-## 5. Verificação em produção
+## 5. Verificação em produção e Diagnóstico
 
 ```bash
-curl https://<seu-dominio>.up.railway.app/healthz     # {"ok":true}
-curl -I https://<seu-dominio>.up.railway.app/design/  # 404 (protótipos bloqueados)
+curl https://<seu-dominio>.up.railway.app/healthz                 # {"ok":true}
+curl https://<seu-dominio>.up.railway.app/api/supabase-status     # {"ok":true, "supabaseReachable":true}
+curl -I https://<seu-dominio>.up.railway.app/design/              # 404 (protótipos bloqueados)
 ```
+
+Se ao fazer login aparecer erro:
+- **E-mail ou senha incorretos**: Usuário ou senha digitados não coincidem com o Supabase Auth.
+- **Perfil não encontrado na tabela profiles**: O usuário foi criado em Authentication > Users, mas falta o registro correspondente na tabela `profiles`. Execute no SQL Editor do Supabase:
+  ```sql
+  insert into public.profiles (id, nome, role, ativo)
+  values ('<UUID_DO_USUARIO>', 'Nome Admin', 'admin', true)
+  on conflict (id) do update set role = 'admin', ativo = true;
+  ```
+- **E-mail não confirmado**: No painel do Supabase, vá em **Authentication > Users**, localize o usuário e clique nos três pontinhos (...) > **Confirm email**.
 
 No navegador:
 

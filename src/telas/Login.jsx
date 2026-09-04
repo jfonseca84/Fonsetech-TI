@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase, estaConfigurado, carregarPerfil } from '../lib/supabase.js';
+import { supabase, estaConfigurado, carregarPerfil, fazerLogin } from '../lib/supabase.js';
 import { c } from '../ui/tokens.js';
 import Icone, { Aspas } from '../ui/Icone.jsx';
 import { PRODUTO } from '../ui/marca.js';
@@ -43,7 +43,7 @@ export default function Login() {
     setCarregando(true);
     setErro('');
 
-    const { error: authError } = await supabase.auth.signInWithPassword({
+    const { error: authError } = await fazerLogin({
       email: email.trim(),
       password: senha
     });
@@ -51,11 +51,15 @@ export default function Login() {
     if (authError) {
       setCarregando(false);
       console.error('[Login] Erro ao autenticar no Supabase Auth:', authError);
-      const msg = authError.message?.toLowerCase() || '';
-      if (msg.includes('email not confirmed')) {
+      const msg = (authError.message || '').toLowerCase();
+      if (authError.amigavel) {
+        setErro(authError.message);
+      } else if (msg.includes('email not confirmed')) {
         setErro('E-mail não confirmado no Supabase. No painel do Supabase, vá em Authentication > Users, localize seu usuário e clique nos três pontinhos (...) > "Confirm email", ou desative a confirmação de e-mail em Authentication > Providers > Email.');
-      } else if (msg.includes('invalid login credentials')) {
+      } else if (msg.includes('invalid login credentials') || msg.includes('invalid_credentials')) {
         setErro('E-mail ou senha incorretos.');
+      } else if (msg.includes('failed to fetch') || msg.includes('networkerror')) {
+        setErro('Não foi possível conectar ao servidor de autenticação. Verifique sua conexão com a internet ou as variáveis no Railway.');
       } else {
         setErro(authError.message || 'Erro ao realizar login.');
       }
@@ -203,6 +207,29 @@ export default function Login() {
         padding: 'clamp(24px, 4vh, 48px) clamp(28px, 3.4vw, 52px)', overflow: 'auto'
       }}>
         <div style={{ width: '100%', maxWidth: 372 }}>
+          <div style={{ marginBottom: 18, textAlign: 'left' }}>
+            <a
+              href="/"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 6,
+                fontSize: 12.5,
+                fontWeight: 600,
+                color: '#5a6882',
+                textDecoration: 'none',
+                transition: 'color .2s ease'
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.color = '#1d5ff5'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = '#5a6882'; }}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M19 12H5" />
+                <path d="M12 19l-7-7 7-7" />
+              </svg>
+              Voltar ao site da Fonsetech
+            </a>
+          </div>
           <h2 style={{
             margin: 0, textAlign: 'center', fontSize: 'clamp(22px, 2.1vw, 27px)',
             fontWeight: 800, letterSpacing: '-1px', color: c.tinta
