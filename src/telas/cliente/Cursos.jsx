@@ -69,7 +69,7 @@ export default function Cursos() {
               </Botao>
               {url && (
                 <a
-                  href={url} target="_blank" rel="noopener"
+                  href={url} target="_blank" rel="noopener noreferrer"
                   style={{
                     display: 'inline-flex', alignItems: 'center', gap: 8, padding: '10px 15px',
                     borderRadius: 9, background: c.azul, color: c.branco, fontSize: 13,

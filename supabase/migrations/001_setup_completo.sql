@@ -23,16 +23,7 @@ create extension if not exists "citext";
 do $$
 begin
   if not exists (select 1 from pg_type where typname = 'papel_usuario') then
-    DO $$
-BEGIN
-    IF NOT EXISTS (
-        SELECT 1
-        FROM pg_type
-        WHERE typname = 'papel_usuario'
-    ) THEN
-        CREATE TYPE papel_usuario AS ENUM ('cliente', 'admin');
-    END IF;
-END $$;
+    create type papel_usuario as enum ('cliente', 'admin');
   end if;
 end $$;
 

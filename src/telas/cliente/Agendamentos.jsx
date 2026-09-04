@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { c, card, TONS, dataBR } from '../../ui/tokens.js';
+import { c, card, dataBR } from '../../ui/tokens.js';
 import { usarDados, traduzir } from '../../dados/usarDados.js';
 import { listarAgendamentos, solicitarAgendamento } from '../../dados/consultas.js';
 import { useSessao } from '../../auth/SessaoProvider.jsx';

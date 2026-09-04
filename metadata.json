@@ -1,0 +1,6 @@
+{
+  "name": "Fonsetech TI",
+  "description": "Suporte de TI em Lajeado/RS, sistema de chamados FonseDesk e desenvolvimento de sistemas.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -2,10 +2,9 @@ import { useNavigate } from 'react-router-dom';
 import { c, card } from '../../ui/tokens.js';
 import { usarDados } from '../../dados/usarDados.js';
 import { listarChamados, listarAgendamentos } from '../../dados/consultas.js';
-import { Carregando, Erro, Vazio } from '../../ui/Estado.jsx';
+import { Carregando, Erro } from '../../ui/Estado.jsx';
 import Kpi from '../../ui/Kpi.jsx';
 import LinhaChamado from '../../ui/LinhaChamado.jsx';
-import Icone from '../../ui/Icone.jsx';
 
 const MESES = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'];
 

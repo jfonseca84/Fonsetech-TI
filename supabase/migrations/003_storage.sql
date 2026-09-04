@@ -10,6 +10,7 @@ values ('materiais', 'materiais', false)
 on conflict (id) do nothing;
 
 -- Admin gerencia os arquivos
+drop policy if exists materiais_storage_admin on storage.objects;
 create policy materiais_storage_admin on storage.objects
   for all to authenticated
   using (bucket_id = 'materiais' and public.eh_admin())
@@ -18,6 +19,7 @@ create policy materiais_storage_admin on storage.objects
 -- Cliente lê apenas arquivos de materiais publicados e liberados para sua empresa.
 -- No frontend, gere URL assinada:
 --   supabase.storage.from('materiais').createSignedUrl(path, 3600)
+drop policy if exists materiais_storage_cliente_le on storage.objects;
 create policy materiais_storage_cliente_le on storage.objects
   for select to authenticated
   using (

@@ -56,7 +56,7 @@ export default function Downloads() {
 
           {p.link_externo ? (
             <a
-              href={p.link_externo} target="_blank" rel="noopener"
+              href={p.link_externo} target="_blank" rel="noopener noreferrer"
               style={{
                 marginTop: 18, display: 'flex', alignItems: 'center', justifyContent: 'center',
                 gap: 9, padding: 12, borderRadius: 10, background: c.azul, color: c.branco,

@@ -1,22 +1,34 @@
 import { createClient } from '@supabase/supabase-js';
+import { criarClienteMock } from './mockSupabase.js';
 
 const url = import.meta.env.VITE_SUPABASE_URL;
 const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-if (!url || !anonKey) {
-  throw new Error(
-    'Variaveis VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY nao configuradas. ' +
-    'Copie .env.example para .env (local) ou cadastre no painel da Railway.'
+export const estaConfigurado = Boolean(
+  url &&
+  anonKey &&
+  !url.startsWith('%') &&
+  !anonKey.startsWith('%') &&
+  url.trim() !== '' &&
+  anonKey.trim() !== ''
+);
+
+if (!estaConfigurado) {
+  console.info(
+    '[FonseDesk] Modo de demonstração ativo (dados em memória). ' +
+    'Para conectar ao Supabase de produção, preencha VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY no arquivo .env.'
   );
 }
 
-export const supabase = createClient(url, anonKey, {
-  auth: {
-    persistSession: true,
-    autoRefreshToken: true,
-    detectSessionInUrl: true
-  }
-});
+export const supabase = estaConfigurado
+  ? createClient(url, anonKey, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true
+      }
+    })
+  : criarClienteMock();
 
 /** Erro com texto ja pronto para o usuario (traduzir() nao mexe nele). */
 function amigavel(mensagem) {

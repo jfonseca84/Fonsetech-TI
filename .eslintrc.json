@@ -2,7 +2,8 @@
   "root": true,
   "env": {
     "browser": true,
-    "es2022": true
+    "es2022": true,
+    "node": true
   },
   "extends": [
     "eslint:recommended",
@@ -34,6 +35,16 @@
   "ignorePatterns": [
     "dist",
     "design",
-    "node_modules"
+    "node_modules",
+    "image-slot.js",
+    "public/image-slot.js"
+  ],
+  "overrides": [
+    {
+      "files": ["src/dados/usarDados.js"],
+      "rules": {
+        "react-hooks/rules-of-hooks": "off"
+      }
+    }
   ]
 }

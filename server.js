@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const dist = path.join(__dirname, 'dist');
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 3000;
 
 if (!fs.existsSync(dist)) {
   console.error('[fonsetech] pasta dist/ nao encontrada. Rode "npm run build" antes de "npm start".');
@@ -20,7 +20,6 @@ app.use(compression());
 // cabecalhos de seguranca basicos
 app.use((req, res, next) => {
   res.setHeader('X-Content-Type-Options', 'nosniff');
-  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
   res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
   res.setHeader('Permissions-Policy', 'geolocation=(), microphone=(), camera=()');
   next();
@@ -57,6 +56,6 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(dist, 'app.html'));
 });
 
-app.listen(port, () => {
+app.listen(port, '0.0.0.0', () => {
   console.log('[fonsetech] servindo dist/ na porta ' + port);
 });

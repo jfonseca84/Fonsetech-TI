@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../lib/supabase.js';
+import { supabase, estaConfigurado } from '../lib/supabase.js';
 import { c } from '../ui/tokens.js';
 import Icone, { Aspas } from '../ui/Icone.jsx';
 import { PRODUTO } from '../ui/marca.js';
@@ -184,6 +184,43 @@ export default function Login() {
           <p style={{ margin: '9px 0 0', textAlign: 'center', fontSize: 13, color: c.texto3 }}>
             Faça login para acessar o {PRODUTO.nome}
           </p>
+
+          {!estaConfigurado && (
+            <div style={{
+              background: '#f0f6ff', border: '1px solid #bfdbfe', borderRadius: 10,
+              padding: '12px 14px', marginTop: 14, textAlign: 'left'
+            }}>
+              <div style={{ fontSize: 12, fontWeight: 700, color: '#1e40af', display: 'flex', alignItems: 'center', gap: 6 }}>
+                <Icone nome="info" tamanho={14} cor="#2563eb" />
+                Modo Demonstração (banco local)
+              </div>
+              <div style={{ fontSize: 11.5, color: '#4b5563', margin: '4px 0 10px' }}>
+                Selecione um perfil para testar o sistema:
+              </div>
+              <div style={{ display: 'flex', gap: 8 }}>
+                <button
+                  type="button"
+                  onClick={() => { setEmail('admin@fonsetech.com.br'); setSenha('admin123'); }}
+                  style={{
+                    flex: 1, padding: '7px 10px', fontSize: 11.5, fontWeight: 700,
+                    background: '#1d5ff5', color: '#fff', border: 0, borderRadius: 7, cursor: 'pointer'
+                  }}
+                >
+                  Entrar como Admin
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { setEmail('marina@empresa.com.br'); setSenha('cliente123'); }}
+                  style={{
+                    flex: 1, padding: '7px 10px', fontSize: 11.5, fontWeight: 700,
+                    background: '#ffffff', color: '#1d5ff5', border: '1px solid #93c5fd', borderRadius: 7, cursor: 'pointer'
+                  }}
+                >
+                  Entrar como Cliente
+                </button>
+              </div>
+            </div>
+          )}
 
           <form onSubmit={entrar} style={{ marginTop: 'clamp(18px, 2.8vh, 28px)', display: 'grid', gap: 11 }}>
             <label style={{ position: 'relative', display: 'block' }}>

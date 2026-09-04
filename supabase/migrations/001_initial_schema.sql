@@ -10,18 +10,59 @@ create extension if not exists "citext";
 -- ---------------------------------------------------------------------
 -- TIPOS
 -- ---------------------------------------------------------------------
-create type papel_usuario   as enum ('cliente', 'admin');
-create type status_chamado  as enum ('Aberto', 'Em atendimento', 'Aguardando cliente', 'Urgente', 'Resolvido');
-create type prioridade_nvl  as enum ('Baixa', 'Média', 'Alta', 'Urgente');
-create type tipo_rede       as enum ('DHCP', 'Estático');
-create type tipo_agendamento as enum ('visita', 'reuniao');
-create type status_agenda   as enum ('Solicitado', 'Confirmado', 'Concluído', 'Cancelado');
-create type tipo_material   as enum ('pdf', 'ppt', 'programa');
+do $$
+begin
+  if not exists (select 1 from pg_type where typname = 'papel_usuario') then
+    create type papel_usuario as enum ('cliente', 'admin');
+  end if;
+end $$;
+
+do $$
+begin
+  if not exists (select 1 from pg_type where typname = 'status_chamado') then
+    create type status_chamado as enum ('Aberto', 'Em atendimento', 'Aguardando cliente', 'Urgente', 'Resolvido');
+  end if;
+end $$;
+
+do $$
+begin
+  if not exists (select 1 from pg_type where typname = 'prioridade_nvl') then
+    create type prioridade_nvl as enum ('Baixa', 'Média', 'Alta', 'Urgente');
+  end if;
+end $$;
+
+do $$
+begin
+  if not exists (select 1 from pg_type where typname = 'tipo_rede') then
+    create type tipo_rede as enum ('DHCP', 'Estático');
+  end if;
+end $$;
+
+do $$
+begin
+  if not exists (select 1 from pg_type where typname = 'tipo_agendamento') then
+    create type tipo_agendamento as enum ('visita', 'reuniao');
+  end if;
+end $$;
+
+do $$
+begin
+  if not exists (select 1 from pg_type where typname = 'status_agenda') then
+    create type status_agenda as enum ('Solicitado', 'Confirmado', 'Concluído', 'Cancelado');
+  end if;
+end $$;
+
+do $$
+begin
+  if not exists (select 1 from pg_type where typname = 'tipo_material') then
+    create type tipo_material as enum ('pdf', 'ppt', 'programa');
+  end if;
+end $$;
 
 -- ---------------------------------------------------------------------
 -- EMPRESAS (clientes da Fonsetech)
 -- ---------------------------------------------------------------------
-create table public.empresas (
+create table if not exists public.empresas (
   id                uuid primary key default gen_random_uuid(),
   razao_social      text not null,
   cnpj              text unique,
@@ -47,7 +88,7 @@ comment on column public.empresas.tem_ti_interno is 'Marcado pelo cliente na aba
 -- PROFILES (1:1 com auth.users) - define papel e empresa
 -- Não há cadastro público: o admin cria o usuário e o convida.
 -- ---------------------------------------------------------------------
-create table public.profiles (
+create table if not exists public.profiles (
   id            uuid primary key references auth.users(id) on delete cascade,
   empresa_id    uuid references public.empresas(id) on delete restrict,
   nome          text not null,
@@ -62,13 +103,13 @@ create table public.profiles (
         or (role = 'admin'))
 );
 
-create index profiles_empresa_idx on public.profiles(empresa_id);
-create index profiles_role_idx    on public.profiles(role);
+create index if not exists profiles_empresa_idx on public.profiles(empresa_id);
+create index if not exists profiles_role_idx    on public.profiles(role);
 
 -- ---------------------------------------------------------------------
 -- MÁQUINAS (inventário cadastrado pelo admin, por empresa)
 -- ---------------------------------------------------------------------
-create table public.maquinas (
+create table if not exists public.maquinas (
   id            uuid primary key default gen_random_uuid(),
   empresa_id    uuid not null references public.empresas(id) on delete cascade,
   nome          text not null,                -- "Máquina 06", "Servidor ARQ-01"
@@ -95,7 +136,7 @@ create table public.maquinas (
     check (rede <> 'Estático' or ip is not null)
 );
 
-create index maquinas_empresa_idx on public.maquinas(empresa_id);
+create index if not exists maquinas_empresa_idx on public.maquinas(empresa_id);
 
 -- ---------------------------------------------------------------------
 -- ACESSO REMOTO - tabela SEPARADA por segurança.
@@ -103,7 +144,7 @@ create index maquinas_empresa_idx on public.maquinas(empresa_id);
 -- Como o RLS do Postgres é por linha (não por coluna), isolar em outra
 -- tabela é o que garante que a senha não vaze para o frontend do cliente.
 -- ---------------------------------------------------------------------
-create table public.maquinas_acesso_remoto (
+create table if not exists public.maquinas_acesso_remoto (
   maquina_id    uuid primary key references public.maquinas(id) on delete cascade,
   ferramenta    text not null default 'AnyDesk',   -- AnyDesk, RDP, SSH...
   host          text,                              -- "531 902 774" ou "192.168.0.10:3389"
@@ -119,9 +160,9 @@ comment on table public.maquinas_acesso_remoto is
 -- ---------------------------------------------------------------------
 -- CHAMADOS
 -- ---------------------------------------------------------------------
-create sequence public.chamado_seq start 4831;
+create sequence if not exists public.chamado_seq start 4831;
 
-create table public.chamados (
+create table if not exists public.chamados (
   id             uuid primary key default gen_random_uuid(),
   numero         text not null unique default ('CH-' || nextval('public.chamado_seq')),
   empresa_id     uuid not null references public.empresas(id) on delete cascade,
@@ -143,18 +184,18 @@ create table public.chamados (
   constraint descricao_nao_vazia check (length(btrim(descricao)) > 0)
 );
 
-create index chamados_empresa_idx  on public.chamados(empresa_id);
-create index chamados_status_idx   on public.chamados(status);
-create index chamados_resp_idx     on public.chamados(responsavel_id);
-create index chamados_aberto_idx   on public.chamados(aberto_em desc);
+create index if not exists chamados_empresa_idx  on public.chamados(empresa_id);
+create index if not exists chamados_status_idx   on public.chamados(status);
+create index if not exists chamados_resp_idx     on public.chamados(responsavel_id);
+create index if not exists chamados_aberto_idx   on public.chamados(aberto_em desc);
 -- busca por título/número no painel admin
-create index chamados_busca_idx    on public.chamados
+create index if not exists chamados_busca_idx    on public.chamados
   using gin (to_tsvector('portuguese', titulo || ' ' || coalesce(descricao, '')));
 
 -- ---------------------------------------------------------------------
 -- HISTÓRICO DO CHAMADO (timeline exibida nos dois dashboards)
 -- ---------------------------------------------------------------------
-create table public.chamado_historico (
+create table if not exists public.chamado_historico (
   id          uuid primary key default gen_random_uuid(),
   chamado_id  uuid not null references public.chamados(id) on delete cascade,
   autor_id    uuid references public.profiles(id) on delete set null,
@@ -164,12 +205,12 @@ create table public.chamado_historico (
   criado_em   timestamptz not null default now()
 );
 
-create index historico_chamado_idx on public.chamado_historico(chamado_id, criado_em);
+create index if not exists historico_chamado_idx on public.chamado_historico(chamado_id, criado_em);
 
 -- ---------------------------------------------------------------------
 -- AGENDAMENTOS (visitas técnicas e reuniões)
 -- ---------------------------------------------------------------------
-create table public.agendamentos (
+create table if not exists public.agendamentos (
   id           uuid primary key default gen_random_uuid(),
   empresa_id   uuid not null references public.empresas(id) on delete cascade,
   solicitado_por uuid references public.profiles(id) on delete set null,
@@ -183,13 +224,13 @@ create table public.agendamentos (
   criado_em    timestamptz not null default now()
 );
 
-create index agendamentos_empresa_idx on public.agendamentos(empresa_id);
-create index agendamentos_data_idx    on public.agendamentos(data);
+create index if not exists agendamentos_empresa_idx on public.agendamentos(empresa_id);
+create index if not exists agendamentos_data_idx    on public.agendamentos(data);
 
 -- ---------------------------------------------------------------------
 -- MATERIAIS (Cursos: PDF/PPT | Downloads: programas)
 -- ---------------------------------------------------------------------
-create table public.materiais (
+create table if not exists public.materiais (
   id          uuid primary key default gen_random_uuid(),
   tipo        tipo_material not null,
   titulo      text not null,
@@ -211,10 +252,10 @@ create table public.materiais (
     check (not publicado or (arquivo_path is not null or link_externo is not null))
 );
 
-create index materiais_tipo_idx on public.materiais(tipo) where publicado;
+create index if not exists materiais_tipo_idx on public.materiais(tipo) where publicado;
 
 -- Liberação opcional por empresa. Sem linha aqui = liberado para todos.
-create table public.material_empresas (
+create table if not exists public.material_empresas (
   material_id uuid not null references public.materiais(id) on delete cascade,
   empresa_id  uuid not null references public.empresas(id) on delete cascade,
   primary key (material_id, empresa_id)
@@ -230,12 +271,16 @@ begin
   return new;
 end $$;
 
+drop trigger if exists t_empresas_upd on public.empresas;
 create trigger t_empresas_upd before update on public.empresas
   for each row execute function public.tocar_atualizado_em();
+drop trigger if exists t_profiles_upd on public.profiles;
 create trigger t_profiles_upd before update on public.profiles
   for each row execute function public.tocar_atualizado_em();
+drop trigger if exists t_maquinas_upd on public.maquinas;
 create trigger t_maquinas_upd before update on public.maquinas
   for each row execute function public.tocar_atualizado_em();
+drop trigger if exists t_chamados_upd on public.chamados;
 create trigger t_chamados_upd before update on public.chamados
   for each row execute function public.tocar_atualizado_em();
 
@@ -270,6 +315,7 @@ begin
   return new;
 end $$;
 
+drop trigger if exists t_chamados_mudanca on public.chamados;
 create trigger t_chamados_mudanca before update on public.chamados
   for each row execute function public.registrar_mudanca_chamado();
 
@@ -284,5 +330,6 @@ begin
   return new;
 end $$;
 
+drop trigger if exists t_chamados_abertura on public.chamados;
 create trigger t_chamados_abertura after insert on public.chamados
   for each row execute function public.historico_abertura();

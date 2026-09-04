@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { c, card, TONS, mono, horaBR, STATUS } from '../../ui/tokens.js';
+import { c, TONS, mono, horaBR, STATUS } from '../../ui/tokens.js';
 import { usarDados, traduzir } from '../../dados/usarDados.js';
 import { listarChamados, listarHistorico, comentar } from '../../dados/consultas.js';
 import { useSessao } from '../../auth/SessaoProvider.jsx';
