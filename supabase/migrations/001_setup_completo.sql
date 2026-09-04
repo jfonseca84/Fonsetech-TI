@@ -7,6 +7,11 @@
 -- destruir dados. NAO contem DROP TABLE, DROP TYPE nem DELETE.
 --
 -- Como usar: Supabase > SQL Editor > New query > cole tudo > Run.
+--
+-- SEGURO EM BANCO JA POPULADO: cada objeto e criado somente se ainda nao
+-- existir (tipos via pg_type, tabelas via if not exists, policies recriadas
+-- com drop policy if exists). Rodar de novo com admin, empresas e chamados
+-- ja cadastrados nao apaga nem sobrescreve dado nenhum.
 -- =====================================================================
 
 create extension if not exists "pgcrypto";
@@ -17,38 +22,52 @@ create extension if not exists "citext";
 -- ---------------------------------------------------------------------
 do $$
 begin
-  create type papel_usuario as enum ('cliente', 'admin');
-exception when duplicate_object then null; end $$;
+  if not exists (select 1 from pg_type where typname = 'papel_usuario') then
+    create type papel_usuario as enum ('cliente', 'admin');
+  end if;
+end $$;
 
 do $$
 begin
-  create type status_chamado as enum ('Aberto', 'Em atendimento', 'Aguardando cliente', 'Urgente', 'Resolvido');
-exception when duplicate_object then null; end $$;
+  if not exists (select 1 from pg_type where typname = 'status_chamado') then
+    create type status_chamado as enum ('Aberto', 'Em atendimento', 'Aguardando cliente', 'Urgente', 'Resolvido');
+  end if;
+end $$;
 
 do $$
 begin
-  create type prioridade_nvl as enum ('Baixa', 'Média', 'Alta', 'Urgente');
-exception when duplicate_object then null; end $$;
+  if not exists (select 1 from pg_type where typname = 'prioridade_nvl') then
+    create type prioridade_nvl as enum ('Baixa', 'Média', 'Alta', 'Urgente');
+  end if;
+end $$;
 
 do $$
 begin
-  create type tipo_rede as enum ('DHCP', 'Estático');
-exception when duplicate_object then null; end $$;
+  if not exists (select 1 from pg_type where typname = 'tipo_rede') then
+    create type tipo_rede as enum ('DHCP', 'Estático');
+  end if;
+end $$;
 
 do $$
 begin
-  create type tipo_agendamento as enum ('visita', 'reuniao');
-exception when duplicate_object then null; end $$;
+  if not exists (select 1 from pg_type where typname = 'tipo_agendamento') then
+    create type tipo_agendamento as enum ('visita', 'reuniao');
+  end if;
+end $$;
 
 do $$
 begin
-  create type status_agenda as enum ('Solicitado', 'Confirmado', 'Concluído', 'Cancelado');
-exception when duplicate_object then null; end $$;
+  if not exists (select 1 from pg_type where typname = 'status_agenda') then
+    create type status_agenda as enum ('Solicitado', 'Confirmado', 'Concluído', 'Cancelado');
+  end if;
+end $$;
 
 do $$
 begin
-  create type tipo_material as enum ('pdf', 'ppt', 'programa');
-exception when duplicate_object then null; end $$;
+  if not exists (select 1 from pg_type where typname = 'tipo_material') then
+    create type tipo_material as enum ('pdf', 'ppt', 'programa');
+  end if;
+end $$;
 
 -- ---------------------------------------------------------------------
 -- EMPRESAS (clientes da Fonsetech)
