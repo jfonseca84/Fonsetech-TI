@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase, estaConfigurado } from '../lib/supabase.js';
+import { supabase, estaConfigurado, carregarPerfil } from '../lib/supabase.js';
 import { c } from '../ui/tokens.js';
 import Icone, { Aspas } from '../ui/Icone.jsx';
 import { PRODUTO } from '../ui/marca.js';
@@ -42,17 +42,43 @@ export default function Login() {
     }
     setCarregando(true);
     setErro('');
-    const { error } = await supabase.auth.signInWithPassword({
-      email: email.trim(), password: senha
+
+    const { error: authError } = await supabase.auth.signInWithPassword({
+      email: email.trim(),
+      password: senha
     });
-    setCarregando(false);
-    if (error) {
-      // Mensagem generica de proposito: nao revela se o e-mail existe.
-      setErro('E-mail ou senha incorretos.');
+
+    if (authError) {
+      setCarregando(false);
+      console.error('[Login] Erro ao autenticar no Supabase Auth:', authError);
+      const msg = authError.message?.toLowerCase() || '';
+      if (msg.includes('email not confirmed')) {
+        setErro('E-mail não confirmado no Supabase. No painel do Supabase, vá em Authentication > Users, localize seu usuário e clique nos três pontinhos (...) > "Confirm email", ou desative a confirmação de e-mail em Authentication > Providers > Email.');
+      } else if (msg.includes('invalid login credentials')) {
+        setErro('E-mail ou senha incorretos.');
+      } else {
+        setErro(authError.message || 'Erro ao realizar login.');
+      }
       return;
     }
-    // A rota "/" redireciona conforme o papel lido do perfil.
-    navegar('/', { replace: true });
+
+    try {
+      const perfil = await carregarPerfil();
+      setCarregando(false);
+      if (!perfil) {
+        setErro('Usuário autenticado no Supabase Auth, mas nenhum registro correspondente foi encontrado na tabela "profiles".');
+        return;
+      }
+      if (perfil.role === 'admin') {
+        navegar('/admin', { replace: true });
+      } else {
+        navegar('/dashboard', { replace: true });
+      }
+    } catch (perfilErro) {
+      setCarregando(false);
+      console.error('[Login] Erro ao consultar perfil após autenticação:', perfilErro);
+      setErro(perfilErro.message || 'Erro ao verificar as permissões do seu perfil.');
+    }
   }
 
   async function recuperar(e) {

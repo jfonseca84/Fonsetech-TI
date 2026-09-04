@@ -11,6 +11,7 @@ export function SessaoProvider({ children }) {
   const [estado, setEstado] = useState(INICIAL);
 
   const sincronizar = useCallback(async () => {
+    setEstado((prev) => ({ ...prev, carregando: true, erro: '' }));
     let autenticado = false;
     try {
       const { data: { session } } = await supabase.auth.getSession();
@@ -22,6 +23,7 @@ export function SessaoProvider({ children }) {
       const perfil = await carregarPerfil();
       setEstado({ carregando: false, autenticado: true, perfil, erro: '' });
     } catch (e) {
+      console.error('[SessaoProvider] Falha ao sincronizar sessao/perfil:', e);
       setEstado({ carregando: false, autenticado, perfil: null, erro: traduzir(e) });
     }
   }, []);

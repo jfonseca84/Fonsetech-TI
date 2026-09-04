@@ -43,7 +43,7 @@ function LoginOuPainel() {
   if (carregando) return <Carregando altura="100vh" texto="Verificando acesso..." />;
   if (perfil) return <Navigate to={perfil.role === 'admin' ? '/admin' : '/dashboard'} replace />;
   // logado, mas sem perfil valido: mostra a saida em vez de repetir o formulario
-  if (autenticado && erro) return <SemAcesso mensagem={erro} />;
+  if (autenticado && !perfil) return <SemAcesso mensagem={erro || 'Seu usuário está autenticado, mas o perfil não foi localizado no banco de dados.'} />;
   return <Login />;
 }
 
