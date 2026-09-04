@@ -3,14 +3,45 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Fonsetech — Suporte e Soluções em TI</title>
-<meta name="description" content="Helpdesk empresarial, suporte particular, manutenção e desenvolvimento de software. Planos de TI com SLA definido." />
+<title>Fonsetech TI — Suporte de TI em Lajeado/RS e desenvolvimento de sistemas</title>
+<meta name="description" content="Suporte de TI para empresas e pessoas em Lajeado e no Vale do Taquari, presencial e remoto: helpdesk N1/N2/N3, manutenção de computadores, infraestrutura, backup e desenvolvimento de sites, sistemas e aplicativos." />
+<meta name="author" content="Fonsetech TI" />
+<meta name="robots" content="index, follow, max-image-preview:large" />
+<link rel="canonical" href="https://www.fontesetechti.com.br/" />
+<link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="./favicon.svg" />
+<meta name="theme-color" content="#1d5ff5" />
+<meta name="geo.region" content="BR-RS" />
+<meta name="geo.placename" content="Lajeado, Rio Grande do Sul" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Fonsetech TI" />
+<meta property="og:locale" content="pt_BR" />
+<meta property="og:url" content="https://www.fontesetechti.com.br/" />
+<meta property="og:title" content="Fonsetech TI — Suporte de TI em Lajeado/RS e desenvolvimento de sistemas" />
+<meta property="og:description" content="Helpdesk empresarial, manutenção de computadores, infraestrutura e desenvolvimento de software. Atendimento presencial em Lajeado e remoto para todo o Brasil." />
+<meta property="og:image" content="https://www.fontesetechti.com.br/imagens/dashboard-notebook.jpg" />
+<meta property="og:image:alt" content="FonseDesk, o sistema de chamados da Fonsetech, aberto em um notebook" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Fonsetech TI — Suporte de TI e desenvolvimento de sistemas" />
+<meta name="twitter:description" content="Suporte técnico para empresas e pessoas em Lajeado/RS, com o sistema de chamados FonseDesk, e desenvolvimento de sites, sistemas e aplicativos." />
+<meta name="twitter:image" content="https://www.fontesetechti.com.br/imagens/dashboard-notebook.jpg" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-<script src="/image-slot.js"></script>
 <style>
   html, body { margin: 0; padding: 0; background: #ffffff; }
+  /* Espaco de imagem. O src padrao vem de ./imagens/; se o painel admin tiver
+     uma imagem enviada, o script no fim da pagina troca por ela. */
+  .fs-img { position: relative; width: 100%; height: 100%; border-radius: inherit; overflow: hidden;
+            background: #eef2f9; display: flex; align-items: center; justify-content: center; }
+  .fs-img > img { position: relative; z-index: 1; width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  html { scroll-behavior: smooth; }
+  /* o header tem 72px e e sticky: sem esta margem o topo da secao fica escondido atras dele */
+  section[id] { scroll-margin-top: 72px; }
+
   body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
   * { box-sizing: border-box; }
   a { color: #1558d6; text-decoration: none; }
@@ -20,7 +51,77 @@
   @keyframes fs-shine { 0%, 62% { transform: translateX(-130%) skewX(-18deg); } 88%, 100% { transform: translateX(230%) skewX(-18deg); } }
   @keyframes fs-ripple { from { transform: scale(0); opacity: .45; } to { transform: scale(2.6); opacity: 0; } }
   @keyframes fs-rise { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: none; } }
+  /* =====================================================================
+     Passe responsivo. Todas as regras vivem dentro de media queries de
+     largura maxima: o desktop (>=1240px) continua exatamente como estava.
+     Os seletores usam o proprio style inline como ancora, para nao exigir
+     classes novas na marcacao.
+     ===================================================================== */
+  @media (max-width: 1239px) {
+    body > div { min-width: 0 !important; }
+
+    header > div { height: auto !important; flex-wrap: wrap; padding: 12px 22px !important; gap: 14px !important; }
+    header nav { order: 3; width: 100%; overflow-x: auto; padding-bottom: 2px; gap: 20px !important; scrollbar-width: none; }
+    header nav::-webkit-scrollbar { display: none; }
+
+    section[id] { scroll-margin-top: 118px; }
+    section > div { padding-left: 22px !important; padding-right: 22px !important; }
+
+    #inicio > div { padding-top: 86px !important; padding-bottom: 74px !important; }
+    #inicio h1 { font-size: clamp(32px, 6.4vw, 58px) !important; letter-spacing: -1.6px !important; }
+    #inicio > div > p { font-size: 16px !important; }
+
+    div[style*="340px 1fr"],
+    div[style*="1fr 320px 470px"],
+    div[style*="1fr 1.15fr 1fr"],
+    div[style*="1fr 1.15fr"],
+    div[style*="1fr 56px 1fr 56px 1fr 56px 1fr"] { grid-template-columns: minmax(0, 1fr) !important; }
+
+    div[style*="repeat(3, 1fr)"] { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)) !important; }
+    div[style*="repeat(4, 1fr)"] { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+
+    /* colunas do "Suporte particular" perdem a divisoria vertical ao empilhar */
+    #solucoes > div > div { border-right: 0 !important; padding-left: 0 !important; padding-right: 0 !important; }
+    #solucoes > div > div + div { padding-top: 30px !important; border-top: 1px solid rgba(20, 45, 100, 0.14); }
+
+    /* setas horizontais do processo nao fazem sentido em coluna */
+    #processo svg[style*="justify-self: center"] { display: none; }
+    #processo > div > div { padding: 14px 0 !important; }
+
+    #sobre h2 { font-size: clamp(28px, 5.4vw, 40px) !important; letter-spacing: -1px !important; }
+    #numeros > div > div { padding: 14px 16px !important; }
+  }
+
+  @media (max-width: 760px) {
+    /* par de mockups tem medidas fixas: reduz proporcionalmente em vez de cortar */
+    #solucoes div[style*="width: 470px"] { transform: scale(.68); transform-origin: top center; margin-bottom: -92px !important; }
+    #inicio > div > div { flex-wrap: wrap; justify-content: center; }
+    footer > div { padding-left: 22px !important; padding-right: 22px !important; }
+  }
+
+  @media (max-width: 520px) {
+    div[style*="repeat(4, 1fr)"] { grid-template-columns: minmax(0, 1fr) !important; }
+    #inicio h1 { letter-spacing: -1px !important; }
+    section > div { padding-left: 18px !important; padding-right: 18px !important; }
+  }
+
+  /* ---------- Seção da plataforma: empilha antes de apertar o texto ---------- */
+  @media (max-width: 1080px) {
+    .fs-plat-grid { grid-template-columns: minmax(0, 1fr) !important; gap: 34px !important; }
+    .fs-plat-visual { order: 2; }
+    .fs-plat-cards { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  }
+  @media (max-width: 560px) {
+    .fs-plat-cards { grid-template-columns: minmax(0, 1fr) !important; }
+  }
+
   .fs-rv { opacity: 0; will-change: opacity, transform, filter; }
+  /* Movimento reduzido: initReveal nao roda, entao o conteudo tem de nascer visivel. */
+  @media (prefers-reduced-motion: reduce) {
+    .fs-rv, .fs-rv.up, .fs-rv.left, .fs-rv.right, .fs-rv.zoom, .fs-rv.blur, .fs-rv.flip, .fs-rv.clip {
+      opacity: 1 !important; transform: none !important; filter: none !important; clip-path: none !important;
+    }
+  }
   .fs-rv.up { transform: translateY(34px); }
   .fs-rv.left { transform: translateX(-38px); }
   .fs-rv.right { transform: translateX(38px); }
@@ -48,6 +149,64 @@
 .fs-s9:hover { background: #2f7bff !important; transform: translateY(-2px) !important; box-shadow: 0 14px 34px rgba(29, 95, 245, 0.5) !important; }
 .fs-s10:hover { background: rgba(37, 211, 102, 0.16) !important; }
 </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://www.fontesetechti.com.br/#site",
+      "url": "https://www.fontesetechti.com.br/",
+      "name": "Fonsetech TI",
+      "inLanguage": "pt-BR",
+      "publisher": { "@id": "https://www.fontesetechti.com.br/#empresa" }
+    },
+    {
+      "@type": "ProfessionalService",
+      "@id": "https://www.fontesetechti.com.br/#empresa",
+      "name": "Fonsetech TI",
+      "description": "Suporte de TI para empresas e pessoas, manutenção de computadores, infraestrutura e desenvolvimento de sites, sistemas e aplicativos.",
+      "url": "https://www.fontesetechti.com.br/",
+      "email": "contato@fontesetechti.com.br",
+      "foundingDate": "2024-06",
+      "founder": { "@type": "Person", "name": "João Fonseca" },
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Lajeado",
+        "addressRegion": "RS",
+        "addressCountry": "BR"
+      },
+      "areaServed": [
+        { "@type": "City", "name": "Lajeado" },
+        { "@type": "AdministrativeArea", "name": "Vale do Taquari" },
+        { "@type": "Country", "name": "Brasil" }
+      ],
+      "availableChannel": {
+        "@type": "ServiceChannel",
+        "name": "FonseDesk — sistema de chamados da Fonsetech",
+        "serviceUrl": "https://www.fontesetechti.com.br/login"
+      },
+      "openingHoursSpecification": {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+        "opens": "08:00",
+        "closes": "18:00"
+      },
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Serviços Fonsetech TI",
+        "itemListElement": [
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Helpdesk empresarial N1, N2 e N3", "serviceType": "Suporte técnico de TI" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Suporte técnico particular", "serviceType": "Assistência de informática" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Manutenção preventiva e corretiva de computadores", "serviceType": "Manutenção de informática" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Infraestrutura de TI, redes e backup empresarial", "serviceType": "Infraestrutura de TI" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Desenvolvimento de sites, sistemas e aplicativos", "serviceType": "Desenvolvimento de software" } }
+        ]
+      }
+    }
+  ]
+}
+</script>
 </head>
 <body>
 <div style="background: #ffffff; color: #0d1730; min-height: 100vh; min-width: 1240px;">
@@ -67,25 +226,25 @@
         </span>
       </a>
       <nav style="display: flex; align-items: center; gap: 26px;">
-        <a href="#inicio" style="font-size: 14px; font-weight: 600; color: #0d1730; padding-bottom: 5px; border-bottom: 2px solid #2f7bff;">Início</a>
-        <a class="fs-s1" href="#planos" style="font-size: 14px; font-weight: 500; color: #4a5872;">Planos &amp; Preços</a>
-        <a class="fs-s1" href="#servicos" style="font-size: 14px; font-weight: 500; color: #4a5872;">Serviços</a>
-        <a class="fs-s1" href="#solucoes" style="font-size: 14px; font-weight: 500; color: #4a5872;">Desenvolvimento</a>
-        <a class="fs-s1" href="#sobre" style="font-size: 14px; font-weight: 500; color: #4a5872;">Sobre nós</a>
-        <a class="fs-s1" href="#portfolio" style="font-size: 14px; font-weight: 500; color: #4a5872;">Portfólio</a>
-        <a class="fs-s1" href="#sobre" style="font-size: 14px; font-weight: 500; color: #4a5872;">Blog</a>
-        <a class="fs-s1" href="#contato" style="font-size: 14px; font-weight: 500; color: #4a5872;">Contato</a>
+        <a href="#inicio" style="font-size: 14px; font-weight: 600; color: #0d1730; padding-bottom: 5px; border-bottom: 2px solid #2f7bff; white-space: nowrap;">Início</a>
+        <a class="fs-s1" href="#servicos" style="font-size: 14px; font-weight: 500; color: #4a5872; white-space: nowrap;">Serviços/Dev</a>
+        <a class="fs-s1" href="#portfolio" style="font-size: 14px; font-weight: 500; color: #4a5872; white-space: nowrap;">Portfólio</a>
+        <a class="fs-s1" href="#blog" style="font-size: 14px; font-weight: 500; color: #4a5872; white-space: nowrap;">Blog</a>
+        <a class="fs-s1" href="#sobre" style="font-size: 14px; font-weight: 500; color: #4a5872; white-space: nowrap;">Sobre</a>
+        <a class="fs-s1" href="#contato" style="font-size: 14px; font-weight: 500; color: #4a5872; white-space: nowrap;">Contato</a>
         <a class="fs-s1" href="#contato" style="display: inline-flex; align-items: center; gap: 7px; font-size: 14px; font-weight: 500; color: #3a4761;">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#2f7bff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 16.5v3a2 2 0 0 1-2.2 2 19.6 19.6 0 0 1-8.5-3 19.3 19.3 0 0 1-6-6A19.6 19.6 0 0 1 1.3 4 2 2 0 0 1 3.3 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L7.6 9.6a16 16 0 0 0 6 6l1-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.5 2z"></path></svg>
           Plantão TI
         </a>
       </nav>
       <a class="fs-s2 fs-s3" href="/login" data-ripple="true" style="position: relative; overflow: hidden; display: inline-flex; align-items: center; gap: 10px; background: #1d5ff5; color: #ffffff; font-size: 14px; font-weight: 600; padding: 11px 18px; border-radius: 9px; box-shadow: 0 8px 24px rgba(29, 95, 245, 0.35); transition: background .25s ease, transform .25s ease, box-shadow .25s ease;">
-        <span style="font-size: 12.5px; font-weight: 700; letter-spacing: 0.8px;">ABRIR CHAMADO</span>
+        <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.6px; white-space: nowrap;">ABRIR CHAMADO</span>
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13"></path><path d="M12 5l7 7-7 7"></path></svg>
       </a>
     </div>
   </header>
+
+  <main>
 
   <section id="inicio" style="position: relative; overflow: hidden; border-bottom: 1px solid rgba(20, 45, 100, 0.13);">
     <div style="position: absolute; top: -180px; left: 50%; transform: translateX(-50%); width: 900px; height: 620px; background: radial-gradient(ellipse at center, rgba(29, 95, 245, 0.09) 0%, rgba(29, 95, 245, 0) 66%); pointer-events: none;"></div>
@@ -93,7 +252,7 @@
     <div style="max-width: 1240px; margin: 0 auto; padding: 140px 40px 104px; position: relative; display: flex; flex-direction: column; align-items: center; text-align: center;">
       <h1 style="margin: 0; max-width: 900px; font-size: 62px; line-height: 1.1; font-weight: 800; letter-spacing: -2.4px; color: #0d1730; text-wrap: pretty;">Suporte que resolve. Soluções que impulsionam <span style="color: #1565d8;">seu negócio.</span></h1>
 
-      <p style="margin: 30px 0 0; max-width: 700px; font-size: 17px; line-height: 1.68; color: #55637f; text-wrap: pretty;">Atendimento técnico ágil, gestão de infraestrutura de alta disponibilidade e desenvolvimento de sistemas sob medida para empresas que não podem parar.</p>
+      <p style="margin: 30px 0 0; max-width: 700px; font-size: 17px; line-height: 1.68; color: #55637f; text-wrap: pretty;">Suporte técnico de TI e desenvolvimento de sites, sistemas e aplicativos sob medida.</p>
 
       <div style="display: flex; align-items: center; justify-content: center; gap: 18px; margin-top: 42px;">
         <a class="fs-s4 fs-s3" href="#planos" data-ripple="true" data-magnet="true" style="position: relative; overflow: hidden; display: inline-flex; align-items: center; gap: 12px; background: #1d78f5; color: #ffffff; font-size: 13px; font-weight: 700; letter-spacing: 0.8px; padding: 19px 30px; border-radius: 8px; box-shadow: 0 14px 36px rgba(29, 120, 245, 0.35); transition: background .25s ease, box-shadow .25s ease, transform .35s cubic-bezier(.2,.8,.3,1); will-change: transform;">
@@ -113,7 +272,7 @@
       <div>
         <div style="font-size: 11.5px; font-weight: 700; letter-spacing: 1.4px; color: #1558d6;">HELPDESK EMPRESARIAL</div>
         <h2 style="margin: 16px 0 0; font-size: 32px; line-height: 1.22; font-weight: 700; letter-spacing: -1.1px; color: #0d1730; text-wrap: pretty;">Suporte completo para cada nível da sua empresa</h2>
-        <p style="margin: 18px 0 0; font-size: 15px; line-height: 1.62; color: #55637f; text-wrap: pretty;">Atendimento especializado em N1, N2 e N3 com foco na agilidade, eficiência e resolução.</p>
+        <p style="margin: 18px 0 0; font-size: 15px; line-height: 1.62; color: #55637f; text-wrap: pretty;">Atendimento em N1, N2 e N3, manutenção preventiva e corretiva dos equipamentos e acompanhamento da infraestrutura — com chamado registrado do primeiro contato até a solução.</p>
       </div>
       <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
 
@@ -168,7 +327,7 @@
       <div style="padding-right: 46px; border-right: 1px solid rgba(20, 45, 100, 0.14);">
         <div style="font-size: 11.5px; font-weight: 700; letter-spacing: 1.4px; color: #1558d6;">SUPORTE PARTICULAR</div>
         <h2 style="margin: 16px 0 0; font-size: 31px; line-height: 1.22; font-weight: 700; letter-spacing: -1.1px; color: #0d1730; text-wrap: pretty;">Suporte rápido para pessoas e profissionais</h2>
-        <p style="margin: 16px 0 0; font-size: 14.5px; line-height: 1.62; color: #55637f; max-width: 360px; text-wrap: pretty;">Atendimento personalizado para você resolver problemas do dia a dia com tecnologia.</p>
+        <p style="margin: 16px 0 0; font-size: 14.5px; line-height: 1.62; color: #55637f; max-width: 360px; text-wrap: pretty;">Assistência de informática para quem precisa do computador funcionando hoje: formatação, instalação de programas, Wi-Fi e recuperação de arquivos.</p>
         <ul style="margin-top: 26px; display: grid; gap: 15px;">
           
             <li style="display: flex; align-items: center; gap: 13px; font-size: 14.5px; color: #2c3853;">
@@ -230,11 +389,77 @@
       <div style="position: relative; margin-top: 44px; width: 470px; height: 300px; pointer-events: none;">
         <div style="position: absolute; inset: 0; background: radial-gradient(circle at 55% 45%, rgba(45, 90, 220, 0.22) 0%, rgba(45, 90, 220, 0) 70%);"></div>
         <div style="position: absolute; left: 0; top: 0; width: 400px; height: 258px; pointer-events: auto;">
-          <image-slot id="fs-dashboard-notebook" shape="rounded" radius="12" fit="cover" placeholder="Mockup: notebook com dashboard"></image-slot>
+          <span class="fs-img" data-slug="dashboard-notebook" style="border-radius: 12px;"><img src="./imagens/dashboard-notebook.jpg" width="800" height="516" alt="Painel do FonseDesk, sistema de chamados da Fonsetech, em um notebook" loading="lazy" /></span>
         </div>
         <div style="position: absolute; right: 6px; bottom: -8px; width: 104px; height: 200px; pointer-events: auto;">
-          <image-slot id="fs-dashboard-mobile" shape="rounded" radius="14" fit="cover" placeholder="Mockup: celular"></image-slot>
+          <span class="fs-img" data-slug="dashboard-celular" style="border-radius: 14px;"><img src="./imagens/dashboard-celular.jpg" width="320" height="615" alt="FonseDesk acessado pelo celular" loading="lazy" /></span>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="plataforma" style="border-bottom: 1px solid rgba(20, 45, 100, 0.13); position: relative; overflow: hidden;">
+    <div style="position: absolute; top: -60px; right: -120px; width: 620px; height: 520px; border-radius: 50%; background: radial-gradient(circle, rgba(29, 95, 245, 0.1) 0%, rgba(29, 95, 245, 0) 68%); pointer-events: none;"></div>
+    <div style="max-width: 1240px; margin: 0 auto; padding: 58px 40px 62px; position: relative;">
+
+      <div class="fs-plat-grid" style="display: grid; grid-template-columns: 1fr 1.02fr; gap: 48px; align-items: start;">
+        <div>
+          <div style="font-size: 11.5px; font-weight: 700; letter-spacing: 1.4px; color: #1558d6;">PLATAFORMA PRÓPRIA</div>
+          <h2 style="margin: 16px 0 0; font-size: 32px; line-height: 1.22; font-weight: 700; letter-spacing: -1.1px; color: #0d1730; text-wrap: pretty;">Seu suporte de TI num sistema de chamados, não num grupo de WhatsApp</h2>
+          <p style="margin: 18px 0 0; font-size: 15px; line-height: 1.66; color: #55637f; text-wrap: pretty;">Todo cliente Fonsetech recebe acesso ao <strong style="font-weight: 700; color: #0d1730;">FonseDesk</strong>, o sistema de chamados que desenvolvemos, onde a empresa abre a solicitação, acompanha o andamento e consulta o histórico do que já foi resolvido — com o técnico responsável e a data de cada atendimento registrados.</p>
+          <p style="margin: 14px 0 0; font-size: 15px; line-height: 1.66; color: #55637f; text-wrap: pretty;">No mesmo ambiente ficam as visitas técnicas agendadas, o inventário das máquinas, os materiais de treinamento da equipe e os programas liberados para download. Nada se perde em conversa de mensagem e ninguém precisa repetir o problema duas vezes.</p>
+
+          <div style="margin-top: 26px; display: flex; align-items: center; gap: 18px; flex-wrap: wrap;">
+            <a href="/login" data-ripple="true" data-magnet="true" style="position: relative; overflow: hidden; display: inline-flex; align-items: center; gap: 10px; background: #1d5ff5; color: #ffffff; font-size: 12.5px; font-weight: 700; letter-spacing: 0.7px; padding: 14px 22px; border-radius: 10px; box-shadow: 0 12px 28px rgba(29, 95, 245, 0.26);">
+              CONHECER A PLATAFORMA
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13"></path><path d="M12 5l7 7-7 7"></path></svg>
+            </a>
+            <span style="font-size: 13px; color: #6b7896;">Acesso incluído nos planos de suporte empresarial.</span>
+          </div>
+        </div>
+
+        <div class="fs-plat-visual" style="position: relative;">
+          <div style="position: absolute; inset: 14px 12px -14px; border-radius: 20px; background: linear-gradient(150deg, rgba(29, 95, 245, 0.16) 0%, rgba(124, 58, 237, 0.1) 100%); filter: blur(26px);"></div>
+          <div data-tilt="true" style="position: relative; border-radius: 16px; padding: 12px; background: rgba(255, 255, 255, 0.78); backdrop-filter: blur(10px); border: 1px solid rgba(20, 45, 100, 0.16); box-shadow: 0 26px 60px rgba(13, 23, 48, 0.16); will-change: transform;">
+            <div style="display: flex; align-items: center; gap: 7px; padding: 3px 4px 11px;">
+              <span style="width: 9px; height: 9px; border-radius: 50%; background: #dc2626; display: block;"></span>
+              <span style="width: 9px; height: 9px; border-radius: 50%; background: #f0a020; display: block;"></span>
+              <span style="width: 9px; height: 9px; border-radius: 50%; background: #22c07a; display: block;"></span>
+              <span style="margin-left: 8px; font-size: 11px; font-weight: 600; letter-spacing: 0.4px; color: #8a99b8;">FonseDesk · Fonsetech TI</span>
+            </div>
+            <div style="aspect-ratio: 1200 / 760; border-radius: 11px; overflow: hidden; border: 1px solid rgba(20, 45, 100, 0.12);">
+              <span class="fs-img" data-slug="plataforma-dashboard" style="border-radius: 0;"><img src="./imagens/plataforma-dashboard.jpg" width="1200" height="760" alt="Tela do FonseDesk, sistema de chamados da Fonsetech: fila com status, prioridade e histórico de atendimento" loading="lazy" /></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fs-plat-cards" style="margin-top: 34px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px;">
+
+          <div data-tilt="true" style="background: linear-gradient(160deg, #f8fafd 0%, #f2f6fc 100%); border: 1px solid rgba(20, 45, 100, 0.15); border-radius: 13px; padding: 18px 19px; will-change: transform;">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#1d5ff5" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3.5h8a2 2 0 0 1 2 2v13l-6-3-6 3v-13a2 2 0 0 1 2-2z"></path></svg>
+            <h3 style="margin: 13px 0 0; font-size: 13.5px; font-weight: 700; letter-spacing: 0.2px; color: #0d1730;">Chamados centralizados</h3>
+            <p style="margin: 7px 0 0; font-size: 13px; line-height: 1.55; color: #5c6b8a;">Abertura com prioridade, categoria e equipamento — a fila fica visível para os dois lados.</p>
+          </div>
+
+          <div data-tilt="true" style="background: linear-gradient(160deg, #f8fafd 0%, #f2f6fc 100%); border: 1px solid rgba(20, 45, 100, 0.15); border-radius: 13px; padding: 18px 19px; will-change: transform;">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#1d5ff5" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7.5V12l3 2"></path></svg>
+            <h3 style="margin: 13px 0 0; font-size: 13.5px; font-weight: 700; letter-spacing: 0.2px; color: #0d1730;">Andamento e histórico</h3>
+            <p style="margin: 7px 0 0; font-size: 13px; line-height: 1.55; color: #5c6b8a;">Cada mudança de status fica registrada, com o histórico completo dos atendimentos anteriores.</p>
+          </div>
+
+          <div data-tilt="true" style="background: linear-gradient(160deg, #f8fafd 0%, #f2f6fc 100%); border: 1px solid rgba(20, 45, 100, 0.15); border-radius: 13px; padding: 18px 19px; will-change: transform;">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#1d5ff5" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6.5l9-3 9 3-9 3-9-3z"></path><path d="M6 9v5.5c0 1.7 2.7 3 6 3s6-1.3 6-3V9"></path></svg>
+            <h3 style="margin: 13px 0 0; font-size: 13.5px; font-weight: 700; letter-spacing: 0.2px; color: #0d1730;">Treinamento da equipe</h3>
+            <p style="margin: 7px 0 0; font-size: 13px; line-height: 1.55; color: #5c6b8a;">Apostilas e materiais de capacitação liberados por empresa, mais os programas para download.</p>
+          </div>
+
+          <div data-tilt="true" style="background: linear-gradient(160deg, #f8fafd 0%, #f2f6fc 100%); border: 1px solid rgba(20, 45, 100, 0.15); border-radius: 13px; padding: 18px 19px; will-change: transform;">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#1d5ff5" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v5.5c0 4.6-3.2 8.3-8 9.5-4.8-1.2-8-4.9-8-9.5V6l8-3z"></path><path d="M8.8 11.6l2.6 2.6 3.8-4"></path></svg>
+            <h3 style="margin: 13px 0 0; font-size: 13.5px; font-weight: 700; letter-spacing: 0.2px; color: #0d1730;">Backup empresarial</h3>
+            <p style="margin: 7px 0 0; font-size: 13px; line-height: 1.55; color: #5c6b8a;">20 GB de armazenamento para os arquivos que a empresa não pode perder, no plano contratado.</p>
+          </div>
+
       </div>
     </div>
   </section>
@@ -406,80 +631,13 @@
 
       <div style="margin-top: 42px; display: grid; grid-template-columns: 1fr 1.15fr; gap: 40px; align-items: stretch;">
 
-        <div data-tilt="true" style="display: flex; flex-direction: column; background: linear-gradient(160deg, #f8fafd 0%, #f2f6fc 100%); border: 1px solid rgba(20, 45, 100, 0.15); border-radius: 16px; padding: 30px 30px 32px; will-change: transform;">
-          <div style="flex: none; width: 86px; height: 86px; border-radius: 18px; background: linear-gradient(150deg, #22c07a 0%, #1d78f5 100%); display: flex; align-items: center; justify-content: center; font-size: 30px; font-weight: 800; letter-spacing: -1px; color: #ffffff; box-shadow: 0 14px 32px rgba(29, 120, 245, 0.28);">JF</div>
-          <h3 style="margin: 26px 0 0; font-size: 25px; font-weight: 800; letter-spacing: -0.9px; color: #0d1730;">João Fonseca</h3>
-          <div style="margin-top: 9px; font-size: 14.5px; font-weight: 600; color: #1558d6;">Fundador · Helpdesk de TI &amp; Desenvolvimento de Software</div>
-          <div style="height: 1px; background: rgba(20, 45, 100, 0.14); margin: 24px 0;"></div>
-          <ul style="display: grid; gap: 16px;">
-            <li style="display: flex; align-items: center; gap: 13px; font-size: 14px; color: #55637f;">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#1558d6" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10.5c0 6-8 11.5-8 11.5S4 16.5 4 10.5a8 8 0 1 1 16 0z"></path><circle cx="12" cy="10.2" r="2.8"></circle></svg>
-              Lajeado, Rio Grande do Sul — atendimento home office e presencial
-            </li>
-            <li style="display: flex; align-items: center; gap: 13px; font-size: 14px; color: #55637f;">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#1558d6" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9.2"></circle><path d="M12 7v5.2l3.3 2"></path></svg>
-              Atendimento contínuo, com suporte remoto 24 horas
-            </li>
-            <li style="display: flex; align-items: center; gap: 13px; font-size: 14px; color: #55637f;">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#1558d6" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.2" y="5" width="17.6" height="16" rx="3"></rect><path d="M3.2 10h17.6"></path><path d="M8 3v4"></path><path d="M16 3v4"></path></svg>
-              Empresa fundada em junho de 2024
-            </li>
-          </ul>
-
-          <div style="height: 1px; background: rgba(20, 45, 100, 0.14); margin: 26px 0 24px;"></div>
-          <div style="font-size: 15px; font-weight: 700; color: #0d1730;">Nossas principais frentes</div>
-          <div style="margin-top: 20px; display: grid; gap: 18px;">
-            
-              <div>
-                <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 14px;">
-                  <span style="font-size: 14px; color: #2c3853;">Helpdesk empresarial (N1, N2 e N3)</span>
-                  <span style="font-size: 13px; font-weight: 700; color: #16a34a;">95%</span>
-                </div>
-                <div style="margin-top: 8px; height: 7px; border-radius: 4px; background: rgba(20, 45, 100, 0.1); overflow: hidden;">
-                  <div style="height: 100%; border-radius: 4px; background: linear-gradient(90deg, #22c07a, #1d78f5); width: 95%;"></div>
-                </div>
-              </div>
-            
-
-              <div>
-                <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 14px;">
-                  <span style="font-size: 14px; color: #2c3853;">Suporte particular</span>
-                  <span style="font-size: 13px; font-weight: 700; color: #16a34a;">92%</span>
-                </div>
-                <div style="margin-top: 8px; height: 7px; border-radius: 4px; background: rgba(20, 45, 100, 0.1); overflow: hidden;">
-                  <div style="height: 100%; border-radius: 4px; background: linear-gradient(90deg, #22c07a, #1d78f5); width: 92%;"></div>
-                </div>
-              </div>
-            
-
-              <div>
-                <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 14px;">
-                  <span style="font-size: 14px; color: #2c3853;">Manutenção corretiva e preventiva</span>
-                  <span style="font-size: 13px; font-weight: 700; color: #16a34a;">90%</span>
-                </div>
-                <div style="margin-top: 8px; height: 7px; border-radius: 4px; background: rgba(20, 45, 100, 0.1); overflow: hidden;">
-                  <div style="height: 100%; border-radius: 4px; background: linear-gradient(90deg, #22c07a, #1d78f5); width: 90%;"></div>
-                </div>
-              </div>
-            
-
-              <div>
-                <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 14px;">
-                  <span style="font-size: 14px; color: #2c3853;">Desenvolvimento de software, apps &amp; sites</span>
-                  <span style="font-size: 13px; font-weight: 700; color: #16a34a;">88%</span>
-                </div>
-                <div style="margin-top: 8px; height: 7px; border-radius: 4px; background: rgba(20, 45, 100, 0.1); overflow: hidden;">
-                  <div style="height: 100%; border-radius: 4px; background: linear-gradient(90deg, #22c07a, #1d78f5); width: 88%;"></div>
-                </div>
-              </div>
-            
-          </div>
-
+        <div data-tilt="true" style="display: flex; flex-direction: column; min-height: 460px; background: linear-gradient(160deg, #f8fafd 0%, #f2f6fc 100%); border: 1px solid rgba(20, 45, 100, 0.15); border-radius: 16px; overflow: hidden; will-change: transform;">
+          <span class="fs-img" data-slug="sobre-fonsetech" style="border-radius: 0;"><img src="./imagens/sobre-fonsetech.jpg" width="1040" height="1290" alt="Atendimento de suporte técnico da Fonsetech TI em Lajeado" loading="lazy" /></span>
         </div>
 
         <div style="display: flex; flex-direction: column; row-gap: 30px;">
-          <p style="margin: 0; font-size: 16px; line-height: 1.72; color: #55637f; text-wrap: pretty;">A <strong style="color: #0d1730; font-weight: 700;">Fontesetech</strong> nasceu para resolver um problema muito comum: empresas e pessoas que dependem de tecnologia no dia a dia, mas não têm um parceiro técnico de confiança para cuidar dela. Comecei atendendo <strong style="color: #0d1730; font-weight: 700;">helpdesk empresarial</strong> e <strong style="color: #0d1730; font-weight: 700;">suporte particular</strong> — e continuo fazendo isso todos os dias.</p>
-          <p style="margin: 0; font-size: 16px; line-height: 1.72; color: #55637f; text-wrap: pretty;">Com o tempo, o próximo passo natural foi criar, não só manter. Hoje a Fontesetech também desenvolve <strong style="color: #0d1730; font-weight: 700;">sites, sistemas web e aplicativos sob medida</strong>, unindo <strong style="color: #0d1730; font-weight: 700;">quem resolve o chamado</strong> com <strong style="color: #0d1730; font-weight: 700;">quem constrói o software</strong>.</p>
+          <p style="margin: 0; font-size: 16px; line-height: 1.72; color: #55637f; text-wrap: pretty;">A <strong style="color: #0d1730; font-weight: 700;">Fonsetech</strong> nasceu para resolver um problema muito comum: empresas e pessoas que dependem de tecnologia no dia a dia, mas não têm um parceiro técnico de confiança para cuidar dela. Comecei atendendo <strong style="color: #0d1730; font-weight: 700;">helpdesk empresarial</strong> e <strong style="color: #0d1730; font-weight: 700;">suporte particular</strong> — e continuo fazendo isso todos os dias.</p>
+          <p style="margin: 0; font-size: 16px; line-height: 1.72; color: #55637f; text-wrap: pretty;">Com o tempo, o próximo passo natural foi criar, não só manter. Hoje a Fonsetech também desenvolve <strong style="color: #0d1730; font-weight: 700;">sites, sistemas web e aplicativos sob medida</strong>, unindo <strong style="color: #0d1730; font-weight: 700;">quem resolve o chamado</strong> com <strong style="color: #0d1730; font-weight: 700;">quem constrói o software</strong>.</p>
           <p style="margin: 0; font-size: 16px; line-height: 1.72; color: #55637f; text-wrap: pretty;">Essa combinação muda o resultado: quem passa o dia resolvendo chamado sabe exatamente onde um sistema trava, onde o processo emperra e o que faz um usuário perder tempo.</p>
 
           <div style="margin-top: 4px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
@@ -537,7 +695,7 @@
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13"></path><path d="M12 5l7 7-7 7"></path></svg>
             </a>
           </div>
-          <div style="height: 128px; min-width: 0; width: 140px;"><image-slot id="fs-proj-gestao" shape="rounded" radius="9" fit="cover" placeholder="Mockup do sistema"></image-slot></div>
+          <div style="height: 128px; min-width: 0; width: 140px;"><span class="fs-img" data-slug="projeto-gestao" style="border-radius: 9px;"><img src="./imagens/projeto-gestao.jpg" width="420" height="384" alt="Sistema de gestão empresarial desenvolvido pela Fonsetech" loading="lazy" /></span></div>
         </article>
 
         <article data-tilt="true" style="background: linear-gradient(160deg, #f8fafd 0%, #f2f6fc 100%); border: 1px solid rgba(20, 45, 100, 0.15); border-radius: 14px; padding: 22px; will-change: transform; display: grid; grid-template-columns: minmax(0, 1fr) 140px; gap: 16px; align-items: center;">
@@ -548,7 +706,7 @@
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13"></path><path d="M12 5l7 7-7 7"></path></svg>
             </a>
           </div>
-          <div style="height: 128px; min-width: 0; width: 140px;"><image-slot id="fs-proj-delivery" shape="rounded" radius="9" fit="cover" placeholder="Mockup do app"></image-slot></div>
+          <div style="height: 128px; min-width: 0; width: 140px;"><span class="fs-img" data-slug="projeto-delivery" style="border-radius: 9px;"><img src="./imagens/projeto-delivery.jpg" width="420" height="384" alt="Aplicativo de delivery desenvolvido pela Fonsetech" loading="lazy" /></span></div>
         </article>
 
         <article data-tilt="true" style="background: linear-gradient(160deg, #f8fafd 0%, #f2f6fc 100%); border: 1px solid rgba(20, 45, 100, 0.15); border-radius: 14px; padding: 22px; will-change: transform; display: grid; grid-template-columns: minmax(0, 1fr) 140px; gap: 16px; align-items: center;">
@@ -559,7 +717,7 @@
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13"></path><path d="M12 5l7 7-7 7"></path></svg>
             </a>
           </div>
-          <div style="height: 128px; min-width: 0; width: 140px;"><image-slot id="fs-proj-site" shape="rounded" radius="9" fit="cover" placeholder="Mockup do site"></image-slot></div>
+          <div style="height: 128px; min-width: 0; width: 140px;"><span class="fs-img" data-slug="projeto-site" style="border-radius: 9px;"><img src="./imagens/projeto-site.jpg" width="420" height="384" alt="Site institucional desenvolvido pela Fonsetech" loading="lazy" /></span></div>
         </article>
 
       </div>
@@ -571,8 +729,8 @@
 
       <div style="background: linear-gradient(160deg, #eef3fe 0%, #e2ebfd 100%); border: 1px solid rgba(20, 45, 100, 0.18); border-radius: 14px; padding: 26px 24px; box-shadow: 0 0 44px rgba(29, 95, 245, 0.12) inset;">
         <div style="font-size: 11.5px; font-weight: 700; letter-spacing: 1.3px; color: #1558d6;">PRONTO PARA COMEÇAR?</div>
-        <h2 style="margin: 14px 0 0; font-size: 24px; font-weight: 700; letter-spacing: -0.8px; color: #0d1730; text-wrap: pretty;">Fale com a Fontesetech TI</h2>
-        <p style="margin: 12px 0 0; font-size: 13.5px; line-height: 1.55; color: #94a4c6;">Soluções em tecnologia com atendimento humanizado e resultados reais.</p>
+        <h2 style="margin: 14px 0 0; font-size: 24px; font-weight: 700; letter-spacing: -0.8px; color: #0d1730; text-wrap: pretty;">Fale com a Fonsetech TI</h2>
+        <p style="margin: 12px 0 0; font-size: 13.5px; line-height: 1.55; color: #94a4c6;">Conte o que está travando na sua operação e devolvemos um diagnóstico com prazo e custo, sem compromisso.</p>
         <div style="display: flex; align-items: center; gap: 12px; margin-top: 22px;">
           <a class="fs-s9 fs-s3" href="#contato" data-ripple="true" style="position: relative; overflow: hidden; display: inline-flex; align-items: center; gap: 10px; background: #1d5ff5; color: #ffffff; font-size: 14px; font-weight: 600; padding: 13px 18px; border-radius: 9px; box-shadow: 0 10px 26px rgba(29, 95, 245, 0.35); transition: background .25s ease, transform .25s ease, box-shadow .25s ease;">
             Falar com Especialista
@@ -587,9 +745,9 @@
       <div style="background: linear-gradient(160deg, #f8fafd 0%, #f2f6fc 100%); border: 1px solid rgba(20, 45, 100, 0.15); border-radius: 14px; padding: 26px 26px; display: flex; gap: 18px;">
         <svg width="34" height="30" viewBox="0 0 34 30" fill="#2f7bff" aria-hidden="true" style="flex: none; margin-top: 2px;"><path d="M0 18.5C0 9.6 5.2 3.1 13.2 0l1.6 3.4C9.9 5.7 7 9.2 6.6 13.2h5.2V29H0V18.5zm18.6 0C18.6 9.6 23.8 3.1 31.8 0l1.6 3.4c-4.9 2.3-7.8 5.8-8.2 9.8h5.2V29H18.6V18.5z"></path></svg>
         <div>
-          <p style="margin: 0; font-size: 14.5px; line-height: 1.66; color: #2c3853; text-wrap: pretty;">"A Fontesetech TI transformou nossa operação. O suporte é rápido, eficiente e sempre resolve. Super recomendo!"</p>
+          <p style="margin: 0; font-size: 14.5px; line-height: 1.66; color: #2c3853; text-wrap: pretty;">"A Fonsetech TI transformou nossa operação. O suporte é rápido, eficiente e sempre resolve. Super recomendo!"</p>
           <div style="display: flex; align-items: center; gap: 13px; margin-top: 22px;">
-            <div style="flex: none; width: 42px; height: 42px;"><image-slot id="fs-depoimento-carlos" shape="circle" fit="cover" placeholder="Foto"></image-slot></div>
+            <div style="flex: none; width: 42px; height: 42px;"><span class="fs-img" data-slug="depoimento-carlos" data-mini="true" style="border-radius: 50%;"><img src="./imagens/depoimento-carlos.jpg" width="200" height="200" alt="Carlos Mendes, cliente da Fonsetech TI" loading="lazy" /></span></div>
             <div>
               <div style="font-size: 14.5px; font-weight: 700; color: #0d1730;">Carlos Mendes</div>
               <div style="font-size: 13px; color: #5c6b8a; margin-top: 2px;">CEO, Mendes Soluções</div>
@@ -619,14 +777,14 @@
     </div>
   </section>
 
+  </main>
+
   <footer style="border-top: 1px solid rgba(20, 45, 100, 0.13);">
-    <div style="max-width: 1240px; margin: 0 auto; padding: 20px 40px; display: flex; align-items: center; justify-content: space-between; gap: 24px;">
-      <span style="font-size: 12.5px; color: #6b7896;">© 2024 Fontesetech TI. Todos os direitos reservados.</span>
-      <span style="display: inline-flex; align-items: center; gap: 7px; font-size: 12.5px; color: #6b7896;">
-        Feito com
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="#ef4444" aria-hidden="true"><path d="M12 21s-7.8-4.9-9.7-9.3C.8 8.2 2.6 4.7 6 4c2.2-.4 4.4.7 6 2.6C13.6 4.7 15.8 3.6 18 4c3.4.7 5.2 4.2 3.7 7.7C19.8 16.1 12 21 12 21z"></path></svg>
-        para impulsionar seu negócio.
-      </span>
+    <div style="max-width: 1240px; margin: 0 auto; padding: 18px 40px 34px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 7px; text-align: center;">
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 7px;">
+        <span style="font-size: 12.5px; color: #6b7896;">© 2026 Fonsetech TI. Todos os direitos reservados. Site desenvolvido por <strong style="font-weight: 700; color: #2c3853;">Fonsetech TI</strong>.</span>
+        <span style="font-size: 12.5px; color: #6b7896;">Fale com a Fonsetech para impulsionar o seu negócio.</span>
+      </div>
     </div>
   </footer>
 
@@ -1207,6 +1365,43 @@ class Component extends DCLogic {
   app.componentDidMount();
   window.addEventListener('beforeunload', function () {
     if (app.componentWillUnmount) app.componentWillUnmount();
+  });
+})();
+</script>
+<script>
+// Imagens gerenciadas pelo painel admin (/admin/configuracoes).
+// Le a tabela site_imagens pela API publica e troca o src dos espacos que tiverem
+// imagem enviada. Sem resposta (offline, banco novo, arquivo aberto direto), cada
+// espaco fica com a imagem padrao de ./imagens/ - a pagina nunca depende disto.
+(function () {
+  var base = '%VITE_SUPABASE_URL%';
+  var chave = '%VITE_SUPABASE_ANON_KEY%';
+  if (base.indexOf('%') === 0 || !base) return;
+
+  fetch(base + '/rest/v1/site_imagens?select=slug,arquivo_path,atualizado_em', {
+    headers: { apikey: chave, Authorization: 'Bearer ' + chave }
+  })
+    .then(function (r) { return r.ok ? r.json() : []; })
+    .then(function (linhas) {
+      (linhas || []).forEach(function (linha) {
+        var alvo = document.querySelector('.fs-img[data-slug="' + linha.slug + '"] img');
+        if (!alvo || !linha.arquivo_path) return;
+        var versao = linha.atualizado_em ? '?v=' + new Date(linha.atualizado_em).getTime() : '';
+        alvo.src = base + '/storage/v1/object/public/site/' + linha.arquivo_path + versao;
+      });
+    })
+    .catch(function () {});
+})();
+</script>
+<script>
+// Os botoes apontam para /login, que existe quando o site esta servido pela raiz
+// do dominio (producao) ou por npm run dev. Fora disso a SPA nao roda (app.html
+// depende do Vite para carregar /src/main.jsx), entao o link vai para o prototipo
+// estatico da tela de login, que abre sem build.
+(function () {
+  if (location.pathname === '/' || location.pathname === '/index.html') return;
+  document.querySelectorAll('a[href="/login"]').forEach(function (a) {
+    a.setAttribute('href', './design/Chamados Login.dc.html');
   });
 })();
 </script>

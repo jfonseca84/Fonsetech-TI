@@ -183,3 +183,59 @@ export async function urlAssinada(caminho, segundos = 3600) {
   if (error) throw error;
   return data.signedUrl;
 }
+
+// ---------- IMAGENS DA LANDING (Configuracoes do site) ----------
+export async function listarSiteImagens() {
+  const { data, error } = await supabase
+    .from('site_imagens')
+    .select('slug, arquivo_path, atualizado_em');
+  if (error) throw error;
+  return data || [];
+}
+
+/** URL publica servida pelo CDN, com ?v= para o navegador nao servir a antiga do cache. */
+export function urlPublicaSite(caminho, versao) {
+  const { data } = supabase.storage.from('site').getPublicUrl(caminho);
+  return data.publicUrl + (versao ? '?v=' + new Date(versao).getTime() : '');
+}
+
+/**
+ * Envia a imagem de um espaco da landing e registra o caminho.
+ * O nome inclui um sufixo de tempo: cada troca gera um arquivo novo, o que
+ * evita qualquer chance de cache velho no CDN.
+ */
+export async function salvarSiteImagem(slug, arquivo, autorId) {
+  const ext = (arquivo.name.split('.').pop() || 'jpg').toLowerCase();
+  const caminho = `${slug}-${Date.now()}.${ext}`;
+
+  const { error: erroUpload } = await supabase.storage
+    .from('site')
+    .upload(caminho, arquivo, { cacheControl: '3600', contentType: arquivo.type, upsert: false });
+  if (erroUpload) throw erroUpload;
+
+  const anterior = await supabase.from('site_imagens').select('arquivo_path').eq('slug', slug).maybeSingle();
+
+  const { data, error } = await supabase
+    .from('site_imagens')
+    .upsert({ slug, arquivo_path: caminho, atualizado_em: new Date().toISOString(), atualizado_por: autorId || null })
+    .select('slug, arquivo_path, atualizado_em')
+    .single();
+  if (error) {
+    await supabase.storage.from('site').remove([caminho]);
+    throw error;
+  }
+
+  // limpa o arquivo substituido (falha aqui nao invalida a troca)
+  if (anterior.data?.arquivo_path && anterior.data.arquivo_path !== caminho) {
+    await supabase.storage.from('site').remove([anterior.data.arquivo_path]);
+  }
+  return data;
+}
+
+/** Volta o espaco para a imagem padrao versionada no repositorio. */
+export async function removerSiteImagem(slug) {
+  const { data: atual } = await supabase.from('site_imagens').select('arquivo_path').eq('slug', slug).maybeSingle();
+  const { error } = await supabase.from('site_imagens').delete().eq('slug', slug);
+  if (error) throw error;
+  if (atual?.arquivo_path) await supabase.storage.from('site').remove([atual.arquivo_path]);
+}

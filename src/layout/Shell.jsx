@@ -3,6 +3,7 @@ import { c } from '../ui/tokens.js';
 import { Marca } from '../ui/Icone.jsx';
 import ItemNav from './ItemNav.jsx';
 import BotaoSair from './BotaoSair.jsx';
+import { PRODUTO } from '../ui/marca.js';
 import { useSessao } from '../auth/SessaoProvider.jsx';
 
 /**
@@ -12,7 +13,7 @@ import { useSessao } from '../auth/SessaoProvider.jsx';
  */
 const VARIANTES = {
   cliente: {
-    fundo: c.sidebarCliente, navInativa: c.navCliente, eyebrow: 'CENTRAL DE CHAMADOS',
+    fundo: c.sidebarCliente, navInativa: c.navCliente, eyebrow: 'CHAMADOS DE TI',
     marca: '#8fc0ff', selo: 'rgba(88, 150, 255, 0.22)', seloBorda: 'rgba(140, 185, 255, 0.34)',
     rodapeBg: 'rgba(30, 70, 150, 0.42)', rodapeBorda: 'rgba(140, 185, 255, 0.2)', eyebrowCor: '#7ba7e8'
   },
@@ -45,7 +46,7 @@ export default function Shell({ variante, itens, rodape, cabecalho }) {
             <Marca cor={v.marca} />
           </span>
           <span style={{ display: 'block', lineHeight: 1 }}>
-            <span style={{ display: 'block', fontSize: 17, fontWeight: 800, letterSpacing: '-0.3px', color: c.branco }}>FONSETECH</span>
+            <span style={{ display: 'block', fontSize: 17, fontWeight: 800, letterSpacing: '-0.3px', color: c.branco }}>{PRODUTO.marca}</span>
             <span style={{ display: 'block', fontSize: 8.5, fontWeight: 700, letterSpacing: '2px', color: v.eyebrowCor, marginTop: 5 }}>{v.eyebrow}</span>
           </span>
         </div>
@@ -68,6 +69,10 @@ export default function Shell({ variante, itens, rodape, cabecalho }) {
             </div>
           )}
           <BotaoSair aoSair={sair} corInativa={v.navInativa} />
+          <div style={{
+            marginTop: 14, fontSize: 9.5, letterSpacing: 0.5, textAlign: 'center',
+            color: variante === 'cliente' ? 'rgba(147, 174, 212, 0.7)' : 'rgba(168, 156, 203, 0.7)'
+          }}>{PRODUTO.assinatura}</div>
         </div>
       </aside>
 

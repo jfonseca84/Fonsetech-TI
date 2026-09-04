@@ -29,7 +29,9 @@ const P = {
   escudo: <><path d="M12 3l8 3v5.5c0 4.6-3.2 8.3-8 9.5-4.8-1.2-8-4.9-8-9.5V6l8-3z"/><path d="M8.8 11.6l2.6 2.6 3.8-4"/></>,
   usuario: <><circle cx="12" cy="8.5" r="3.6"/><path d="M5.5 20a6.5 6.5 0 0 1 13 0"/></>,
   cadeado: <><rect x="4.5" y="10.5" width="15" height="9.5" rx="2.2"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/></>,
-  losango: <><path d="M12 2.6L21.4 12 12 21.4 2.6 12 12 2.6z"/></>
+  losango: <><path d="M12 2.6L21.4 12 12 21.4 2.6 12 12 2.6z"/></>,
+  engrenagem: <><circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v2.6M12 18.6v2.6M4.5 7.8l2.25 1.3M17.25 14.9l2.25 1.3M4.5 16.2l2.25-1.3M17.25 9.1l2.25-1.3"/></>,
+  imagem: <><rect x="3.2" y="4.5" width="17.6" height="15" rx="2.4"/><circle cx="8.6" cy="10" r="1.7"/><path d="M3.8 17l4.6-4.3 3.4 3 3-2.6 5.4 4.6"/></>
 };
 
 export default function Icone({ nome, tamanho = 18, cor = 'currentColor', largura = 1.8, style }) {

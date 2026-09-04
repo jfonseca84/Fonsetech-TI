@@ -1,5 +1,7 @@
+import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import Shell from './Shell.jsx';
+import { titulo as tituloAba } from '../ui/marca.js';
 import Cabecalho from './Cabecalho.jsx';
 import { useSessao } from '../auth/SessaoProvider.jsx';
 
@@ -31,6 +33,8 @@ export default function LayoutCliente() {
   const plano = perfil?.empresas?.plano || '—';
   const chave = pathname.replace(/\/+$/, '') || '/dashboard';
   const [titulo, subtitulo] = CABECALHOS[chave] || CABECALHOS['/dashboard'];
+
+  useEffect(() => { document.title = tituloAba(titulo); }, [titulo]);
 
   return (
     <Shell

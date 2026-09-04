@@ -1,6 +1,8 @@
-# Fonsetech — Central de Chamados
+# FonseDesk — sistema de chamados
 
-Sistema de helpdesk com portal do cliente e painel administrativo.
+Produto da Fonsetech TI: helpdesk com portal do cliente e painel administrativo.
+O nome do produto vive em `src/ui/marca.js`; a landing page publica (`index.html`)
+continua sendo o site institucional da **Fonsetech TI**.
 Arquitetura de produção: **GitHub → Railway (frontend) → Supabase (PostgreSQL + Auth + RLS)**.
 
 ```

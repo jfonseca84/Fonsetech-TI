@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase.js';
 import { c } from '../ui/tokens.js';
 import Icone, { Aspas } from '../ui/Icone.jsx';
+import { PRODUTO } from '../ui/marca.js';
 
 const DESTAQUES = [
   { icone: 'ticket',  titulo: 'Abertura de Chamados',   texto: 'Registre o problema com categoria, prioridade e anexos.' },
@@ -103,8 +104,8 @@ export default function Login() {
             <Icone nome="losango" tamanho={20} cor="#8fc0ff" largura={1.8} />
           </span>
           <span style={{ display: 'block', lineHeight: 1 }}>
-            <span style={{ display: 'block', fontSize: 21, fontWeight: 800, letterSpacing: '-0.4px', color: c.branco }}>FONSETECH</span>
-            <span style={{ display: 'block', fontSize: 9, fontWeight: 700, letterSpacing: '2.2px', color: '#7ba7e8', marginTop: 5 }}>SUPORTE E SOLUÇÕES</span>
+            <span style={{ display: 'block', fontSize: 21, fontWeight: 800, letterSpacing: '-0.4px', color: c.branco }}>{PRODUTO.marca}</span>
+            <span style={{ display: 'block', fontSize: 9, fontWeight: 700, letterSpacing: '2.2px', color: '#7ba7e8', marginTop: 5 }}>CHAMADOS DE TI</span>
           </span>
         </div>
 
@@ -118,7 +119,7 @@ export default function Login() {
             margin: 'clamp(14px, 2.2vh, 22px) 0 0', maxWidth: 460,
             fontSize: 'clamp(13px, 1.05vw, 15.5px)', lineHeight: 1.62, color: c.navCliente, textWrap: 'pretty'
           }}>
-            A central de chamados da Fonsetech reúne abertura, acompanhamento e agendamentos
+            O FonseDesk reúne abertura de chamados, acompanhamento e agendamentos
             em um só lugar, com prazo de resposta definido.
           </p>
 
@@ -181,7 +182,7 @@ export default function Login() {
             fontWeight: 800, letterSpacing: '-1px', color: c.tinta
           }}>Bem-vindo de volta!</h2>
           <p style={{ margin: '9px 0 0', textAlign: 'center', fontSize: 13, color: c.texto3 }}>
-            Faça login para acessar a Central de Chamados
+            Faça login para acessar o {PRODUTO.nome}
           </p>
 
           <form onSubmit={entrar} style={{ marginTop: 'clamp(18px, 2.8vh, 28px)', display: 'grid', gap: 11 }}>
@@ -309,7 +310,7 @@ export default function Login() {
               gap: 8, fontSize: 12, fontWeight: 600, color: c.texto3
             }}>
               <Icone nome="losango" tamanho={12} largura={1.8} />
-              Fonsetech - Suporte e Soluções
+              {PRODUTO.nome} — {PRODUTO.assinatura}
             </div>
             <div style={{ marginTop: 6, fontSize: 11, color: c.texto5, textAlign: 'center' }}>
               © 2026 Todos os direitos reservados.

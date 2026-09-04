@@ -1,0 +1,11 @@
+# Fonsetech TI - https://www.fontesetechti.com.br
+User-agent: *
+Allow: /
+
+# Areas autenticadas: nada a indexar (o app tambem envia noindex no HTML)
+Disallow: /login
+Disallow: /dashboard
+Disallow: /admin
+Disallow: /design/
+
+Sitemap: https://www.fontesetechti.com.br/sitemap.xml

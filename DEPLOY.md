@@ -1,5 +1,7 @@
 # Deploy — GitHub → Railway → Supabase
 
+Site institucional **Fonsetech TI** em `/` · sistema de chamados **FonseDesk** em `/login`.
+
 Ordem obrigatória: **Supabase primeiro** (o app não sobe sem banco), depois GitHub, depois Railway.
 
 Rotas do sistema:
@@ -23,6 +25,12 @@ Rotas do sistema:
    bucket de Storage. É idempotente (`create ... if not exists`,
    `drop policy if exists`) e não contém nenhum comando destrutivo — pode ser
    executado de novo sem perder dados.
+2b. **SQL Editor → New query** → cole e execute também:
+   `supabase/migrations/002_site_imagens.sql`
+
+   Cria a tabela `site_imagens` e o bucket público `site`, usados pela tela
+   **Configurações do site** do painel admin para trocar as imagens da landing
+   sem republicar o projeto. Também idempotente.
 3. **Authentication → Providers → Email**: mantenha habilitado e **desative "Enable email signup"**
    (não existe cadastro público neste sistema).
 4. **Authentication → Users → Add user**: crie o seu acesso de administrador
@@ -118,6 +126,39 @@ No navegador:
 - `/admin` abre a visão geral; recarregar não dá 404
 - crie um usuário cliente vinculado a uma empresa e confirme que ele **não** enxerga
   dados de outra empresa — esse é o teste que valida o RLS
+
+---
+
+## SEO — trocar o domínio
+
+Os arquivos de SEO assumem `https://www.fontesetechti.com.br`. **Se o domínio final
+for outro**, troque em três lugares antes do deploy:
+
+- `index.html` → `<link rel="canonical">`, `og:url`, `og:image`, `twitter:image` e o
+  bloco `application/ld+json`
+- `public/robots.txt` → linha `Sitemap:`
+- `public/sitemap.xml` → `<loc>`
+
+Depois do primeiro deploy: cadastre o site no **Google Search Console**, envie
+`https://<domínio>/sitemap.xml` e crie o perfil no **Google Meu Negócio** com o
+endereço de Lajeado — é o que mais move buscas locais do tipo "suporte de TI em Lajeado".
+
+As áreas autenticadas (`/login`, `/dashboard`, `/admin`) têm `noindex` no HTML e
+`Disallow` no robots.txt.
+
+---
+
+## Trocar as imagens do site
+
+Depois do deploy, as imagens são trocadas **pelo painel admin**: `/admin` →
+**Configurações do site** → *Enviar imagem*. O upload vai para o bucket público
+`site` do Supabase e aparece no site na hora, sem republicar. *Usar padrão* volta
+para a imagem versionada no repositório.
+
+Isso exige o passo 1.2b (migration `002_site_imagens.sql`).
+
+As imagens padrão continuam em `public/imagens/` — elas são o que o visitante vê
+enquanto um espaço nunca recebeu upload. Detalhes e tamanhos: `public/imagens/LEIA-ME.md`.
 
 ---
 

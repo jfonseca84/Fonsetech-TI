@@ -19,6 +19,7 @@ import ChamadosAdmin from './telas/admin/ChamadosAdmin.jsx';
 import Clientes from './telas/admin/Clientes.jsx';
 import AgendaAdmin from './telas/admin/AgendaAdmin.jsx';
 import Maquinas from './telas/admin/Maquinas.jsx';
+import ConfiguracoesSite from './telas/admin/ConfiguracoesSite.jsx';
 
 import { Carregando } from './ui/Estado.jsx';
 
@@ -80,6 +81,7 @@ export default function App() {
           <Route path="clientes" element={<Clientes />} />
           <Route path="agenda" element={<AgendaAdmin />} />
           <Route path="maquinas" element={<Maquinas />} />
+          <Route path="configuracoes" element={<ConfiguracoesSite />} />
           <Route path="*" element={<Navigate to="/admin" replace />} />
         </Route>
 

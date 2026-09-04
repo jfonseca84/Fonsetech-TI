@@ -1,5 +1,5 @@
 -- =====================================================================
--- FONSETECH - Central de Chamados
+-- FONSEDESK - sistema de chamados da Fonsetech TI
 -- 001_setup_completo.sql  ·  schema + RLS + storage, em UM script
 --
 -- Consolida (e substitui) os antigos 001_initial_schema / 002_rls_policies
