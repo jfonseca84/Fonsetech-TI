@@ -15,18 +15,19 @@ function limparUrl(val) {
 // 2. Variaveis de build do Vite (import.meta.env.VITE_* ou SUPABASE_*)
 // 3. Fallback seguro padrao do projeto
 const configWindow = typeof window !== 'undefined' ? (window.__FONSETTECH_CONFIG__ || {}) : {};
+const metaEnv = (typeof import.meta !== 'undefined' && import.meta && import.meta.env) ? import.meta.env : {};
 
 export const url = limparUrl(
   configWindow.supabaseUrl ||
-  import.meta.env.VITE_SUPABASE_URL ||
-  import.meta.env.SUPABASE_URL ||
+  metaEnv.VITE_SUPABASE_URL ||
+  metaEnv.SUPABASE_URL ||
   'https://vceeaqswgasjsonixvqs.supabase.co'
 );
 
 export const anonKey = limparValor(
   configWindow.supabaseAnonKey ||
-  import.meta.env.VITE_SUPABASE_ANON_KEY ||
-  import.meta.env.SUPABASE_ANON_KEY ||
+  metaEnv.VITE_SUPABASE_ANON_KEY ||
+  metaEnv.SUPABASE_ANON_KEY ||
   'sb_publishable_p7Oeenc-vd0_DF6BguRPCw_iUCcAdwP'
 );
 
@@ -122,11 +123,20 @@ export async function fazerLogin({ email, password }) {
 
     if (dados.session) {
       // Sincroniza a sessao com o cliente Supabase no browser
-      const { data: setRes, error: setErr } = await supabase.auth.setSession(dados.session);
+      const { data: setRes, error: setErr } = await supabase.auth.setSession({
+        access_token: dados.session.access_token,
+        refresh_token: dados.session.refresh_token
+      });
       if (setErr) {
         console.warn('[FonseDesk] Aviso ao aplicar sessao:', setErr);
       }
-      return { data: setRes || dados, error: null };
+      return {
+        data: {
+          session: setRes?.session || dados.session,
+          user: setRes?.user || dados.user || dados.session?.user
+        },
+        error: null
+      };
     }
 
     return { data: dados, error: null };
@@ -134,29 +144,65 @@ export async function fazerLogin({ email, password }) {
     console.error('[FonseDesk] Falha no fallback de autenticacao:', proxyErr);
     return {
       data: null,
-      error: amigavel('Não foi possível conectar ao servidor de autenticação. Verifique sua conexão com a internet ou as variáveis de ambiente no Railway.')
+      error: amigavel('Não foi possível conectar ao serviço de autenticação. Tente novamente em alguns instantes.')
     };
   }
 }
 
 // Le o perfil do usuario logado (define se e cliente ou admin, e de qual empresa).
-export async function carregarPerfil() {
-  const { data: { user }, error: userError } = await supabase.auth.getUser();
-  if (userError) {
-    console.error('[carregarPerfil] Erro ao obter usuario do Auth:', userError);
-    throw userError;
+// Aceita opcionalmente o usuario ou ID ja obtido (do signInWithPassword ou do evento de auth)
+// para evitar chamadas redundantes e perigosas a supabase.auth.getUser().
+export async function carregarPerfil(usuarioOuId = null) {
+  let userId = null;
+
+  if (typeof usuarioOuId === 'string' && usuarioOuId.trim()) {
+    userId = usuarioOuId.trim();
+  } else if (usuarioOuId && typeof usuarioOuId === 'object') {
+    userId = usuarioOuId.id || usuarioOuId.user?.id || null;
   }
-  if (!user) return null;
+
+  // 1. Se nao recebeu o ID diretamente, tenta obter da sessao ativa com getSession()
+  if (!userId) {
+    try {
+      const { data: { session } = {} } = await supabase.auth.getSession();
+      if (session?.user?.id) {
+        userId = session.user.id;
+      }
+    } catch (sessionErr) {
+      console.warn('[carregarPerfil] Aviso ao consultar getSession:', sessionErr?.message || sessionErr);
+    }
+  }
+
+  // 2. Se ainda nao encontrou, tenta getUser() de forma segura sem quebrar a sessao
+  if (!userId) {
+    try {
+      const { data: { user } = {}, error: userError } = await supabase.auth.getUser();
+      if (!userError && user?.id) {
+        userId = user.id;
+      }
+    } catch (userErr) {
+      // Ignora erro de sessao ausente aqui (nao ha usuario conectado)
+      const msg = userErr?.message || '';
+      if (!/session missing/i.test(msg)) {
+        console.warn('[carregarPerfil] Aviso ao consultar getUser:', msg);
+      }
+    }
+  }
+
+  // Se nao ha usuario autenticado identificado, retorna null graciosamente sem estourar excecao
+  if (!userId) {
+    return null;
+  }
 
   const { data, error } = await supabase
     .from('profiles')
     .select('id, nome, role, ativo, empresa_id, empresas(id, razao_social, plano)')
-    .eq('id', user.id)
+    .eq('id', userId)
     .single();
 
   if (error) {
     console.error('[carregarPerfil] Erro ao consultar perfil na tabela profiles:', {
-      userId: user.id,
+      userId,
       code: error.code,
       message: error.message,
       details: error.details,
@@ -165,16 +211,16 @@ export async function carregarPerfil() {
     // PGRST116 = nenhuma linha retornada: o usuario existe no Auth mas nao
     // tem perfil vinculado, entao nao ha papel nem empresa para trabalhar.
     if (error.code === 'PGRST116') {
-      throw amigavel('Usuário autenticado no Supabase Auth, mas seu perfil ainda não foi registrado na tabela "profiles". Um administrador deve vincular o perfil.');
+      throw amigavel('Sua conta não possui permissões cadastradas no sistema. Entre em contato com o administrador.');
     }
     throw error;
   }
 
   if (!data.role) {
-    throw amigavel('Seu acesso está sem papel (role) definido na tabela profiles.');
+    throw amigavel('Sua conta não possui nível de acesso configurado. Entre em contato com o administrador.');
   }
   if (!data.ativo) {
-    throw amigavel('Seu acesso está desativado (ativo = false). Solicite a ativação ao administrador.');
+    throw amigavel('Sua conta está inativa. Entre em contato com o administrador do sistema.');
   }
   return data;
 }

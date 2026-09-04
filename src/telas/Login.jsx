@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase, estaConfigurado, carregarPerfil, fazerLogin } from '../lib/supabase.js';
+import { useSessao } from '../auth/SessaoProvider.jsx';
+import { supabase } from '../lib/supabase.js';
 import { c } from '../ui/tokens.js';
 import Icone, { Aspas } from '../ui/Icone.jsx';
 import { PRODUTO } from '../ui/marca.js';
@@ -21,11 +22,95 @@ const campoFoco = {
   borderColor: c.azul, boxShadow: '0 0 0 3px rgba(29, 95, 245, 0.12)', background: c.branco
 };
 
+function traduzirErroAuth(authError) {
+  if (!authError) return '';
+  if (authError.amigavel && authError.message) {
+    return authError.message;
+  }
+
+  const msg = (authError.message || '').toLowerCase();
+  const status = authError.status || authError.statusCode;
+
+  // 1. Falha de conexao com o servico
+  if (
+    msg.includes('failed to fetch') ||
+    msg.includes('networkerror') ||
+    msg.includes('network request failed') ||
+    msg.includes('connection refused') ||
+    msg.includes('conexão') ||
+    msg.includes('timeout') ||
+    status === 502 ||
+    status === 503 ||
+    status === 504
+  ) {
+    return 'Não foi possível conectar ao serviço de autenticação. Tente novamente em alguns instantes.';
+  }
+
+  // 2. Credenciais invalidas (email ou senha incorretos)
+  if (
+    msg.includes('invalid login credentials') ||
+    msg.includes('invalid_credentials') ||
+    msg.includes('invalid credentials') ||
+    (status === 400 && (msg.includes('credential') || msg.includes('login')))
+  ) {
+    return 'E-mail ou senha incorretos.';
+  }
+
+  // Confirmacao de e-mail pendente
+  if (msg.includes('email not confirmed')) {
+    return 'Este e-mail ainda não foi confirmado. Verifique sua caixa de entrada ou solicite a liberação ao administrador.';
+  }
+
+  // Limite de requisicoes excedido
+  if (msg.includes('too many requests') || status === 429) {
+    return 'Muitas tentativas em pouco tempo. Aguarde alguns minutos antes de tentar novamente.';
+  }
+
+  // 3. Usuario nao autorizado
+  if (
+    msg.includes('not authorized') ||
+    msg.includes('unauthorized') ||
+    msg.includes('user not found') ||
+    status === 401 ||
+    status === 403
+  ) {
+    return 'Acesso não autorizado. Verifique suas credenciais ou solicite acesso.';
+  }
+
+  // 4. Conta sem perfil / permissao
+  if (msg.includes('perfil') || msg.includes('permiss') || msg.includes('pgrst116')) {
+    return 'Sua conta não possui permissões cadastradas no sistema. Entre em contato com o administrador.';
+  }
+
+  // 5. Sessao
+  if (msg.includes('session missing') || msg.includes('auth session missing')) {
+    return 'Não foi possível validar sua sessão. Tente novamente.';
+  }
+
+  // Mensagem segura generica (nunca expor chaves, tokens, JWTs ou dados de infraestrutura)
+  return 'Não foi possível realizar o login. Verifique seus dados ou tente novamente mais tarde.';
+}
+
 export default function Login() {
-  const [email, setEmail] = useState('');
+  const { entrar: autenticar } = useSessao();
+  // "Lembrar de mim" seguro: armazena estritamente o email em localStorage se autorizado pelo usuario.
+  // A senha NUNCA e armazenada nem preenchida automaticamente.
+  const [email, setEmail] = useState(() => {
+    try {
+      return localStorage.getItem('fs_lembrar_email') || '';
+    } catch {
+      return '';
+    }
+  });
   const [senha, setSenha] = useState('');
   const [verSenha, setVerSenha] = useState(false);
-  const [lembrar, setLembrar] = useState(true);
+  const [lembrar, setLembrar] = useState(() => {
+    try {
+      return Boolean(localStorage.getItem('fs_lembrar_email'));
+    } catch {
+      return false;
+    }
+  });
   const [carregando, setCarregando] = useState(false);
   const [erro, setErro] = useState('');
   const [aviso, setAviso] = useState('');
@@ -36,52 +121,47 @@ export default function Login() {
   async function entrar(e) {
     e.preventDefault();
     setAviso('');
-    if (!email.trim() || !senha) {
+    const emailLimpo = email.trim();
+    if (!emailLimpo || !senha) {
       setErro('Informe e-mail e senha para continuar.');
       return;
     }
     setCarregando(true);
     setErro('');
 
-    const { error: authError } = await fazerLogin({
-      email: email.trim(),
+    try {
+      if (lembrar) {
+        localStorage.setItem('fs_lembrar_email', emailLimpo);
+      } else {
+        localStorage.removeItem('fs_lembrar_email');
+      }
+    } catch {
+      // Ignora erro em ambientes com storage restrito
+    }
+
+    const { perfil, error: authError } = await autenticar({
+      email: emailLimpo,
       password: senha
     });
 
     if (authError) {
       setCarregando(false);
-      console.error('[Login] Erro ao autenticar no Supabase Auth:', authError);
-      const msg = (authError.message || '').toLowerCase();
-      if (authError.amigavel) {
-        setErro(authError.message);
-      } else if (msg.includes('email not confirmed')) {
-        setErro('E-mail não confirmado no Supabase. No painel do Supabase, vá em Authentication > Users, localize seu usuário e clique nos três pontinhos (...) > "Confirm email", ou desative a confirmação de e-mail em Authentication > Providers > Email.');
-      } else if (msg.includes('invalid login credentials') || msg.includes('invalid_credentials')) {
-        setErro('E-mail ou senha incorretos.');
-      } else if (msg.includes('failed to fetch') || msg.includes('networkerror')) {
-        setErro('Não foi possível conectar ao servidor de autenticação. Verifique sua conexão com a internet ou as variáveis no Railway.');
-      } else {
-        setErro(authError.message || 'Erro ao realizar login.');
-      }
+      console.error('[Login] Falha de autenticação:', authError.message || authError);
+      setErro(traduzirErroAuth(authError));
       return;
     }
 
-    try {
-      const perfil = await carregarPerfil();
+    if (!perfil) {
       setCarregando(false);
-      if (!perfil) {
-        setErro('Usuário autenticado no Supabase Auth, mas nenhum registro correspondente foi encontrado na tabela "profiles".');
-        return;
-      }
-      if (perfil.role === 'admin') {
-        navegar('/admin', { replace: true });
-      } else {
-        navegar('/dashboard', { replace: true });
-      }
-    } catch (perfilErro) {
-      setCarregando(false);
-      console.error('[Login] Erro ao consultar perfil após autenticação:', perfilErro);
-      setErro(perfilErro.message || 'Erro ao verificar as permissões do seu perfil.');
+      setErro('Sua conta não possui permissões cadastradas no sistema. Entre em contato com o administrador.');
+      return;
+    }
+
+    setCarregando(false);
+    if (perfil.role === 'admin') {
+      navegar('/admin', { replace: true });
+    } else {
+      navegar('/dashboard', { replace: true });
     }
   }
 
@@ -237,43 +317,6 @@ export default function Login() {
           <p style={{ margin: '9px 0 0', textAlign: 'center', fontSize: 13, color: c.texto3 }}>
             Faça login para acessar o {PRODUTO.nome}
           </p>
-
-          {!estaConfigurado && (
-            <div style={{
-              background: '#f0f6ff', border: '1px solid #bfdbfe', borderRadius: 10,
-              padding: '12px 14px', marginTop: 14, textAlign: 'left'
-            }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: '#1e40af', display: 'flex', alignItems: 'center', gap: 6 }}>
-                <Icone nome="info" tamanho={14} cor="#2563eb" />
-                Modo Demonstração (banco local)
-              </div>
-              <div style={{ fontSize: 11.5, color: '#4b5563', margin: '4px 0 10px' }}>
-                Selecione um perfil para testar o sistema:
-              </div>
-              <div style={{ display: 'flex', gap: 8 }}>
-                <button
-                  type="button"
-                  onClick={() => { setEmail('admin@fonsetech.com.br'); setSenha('admin123'); }}
-                  style={{
-                    flex: 1, padding: '7px 10px', fontSize: 11.5, fontWeight: 700,
-                    background: '#1d5ff5', color: '#fff', border: 0, borderRadius: 7, cursor: 'pointer'
-                  }}
-                >
-                  Entrar como Admin
-                </button>
-                <button
-                  type="button"
-                  onClick={() => { setEmail('marina@empresa.com.br'); setSenha('cliente123'); }}
-                  style={{
-                    flex: 1, padding: '7px 10px', fontSize: 11.5, fontWeight: 700,
-                    background: '#ffffff', color: '#1d5ff5', border: '1px solid #93c5fd', borderRadius: 7, cursor: 'pointer'
-                  }}
-                >
-                  Entrar como Cliente
-                </button>
-              </div>
-            </div>
-          )}
 
           <form onSubmit={entrar} style={{ marginTop: 'clamp(18px, 2.8vh, 28px)', display: 'grid', gap: 11 }}>
             <label style={{ position: 'relative', display: 'block' }}>
