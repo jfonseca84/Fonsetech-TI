@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Fonsetech — Central de Chamados</title>
+    <meta name="description" content="Central de chamados Fonsetech: abertura, acompanhamento e agendamentos." />
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <style>
+      html, body { margin: 0; padding: 0; background: #f4f7fc; }
+      body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+      * { box-sizing: border-box; }
+      a { color: #1558d6; }
+      a:hover { color: #0f47b0; }
+
+      /* Pares de coluna das telas colapsam antes de apertar o conteudo. */
+      @media (max-width: 900px) {
+        .fs-grid-2 { grid-template-columns: minmax(0, 1fr) !important; }
+      }
+
+      /* Sidebar vira barra superior com nav rolavel na horizontal. */
+      @media (max-width: 1024px) {
+        .fs-shell { grid-template-columns: minmax(0, 1fr) !important; }
+        .fs-shell-aside {
+          position: static !important;
+          height: auto !important;
+          padding: 18px 20px !important;
+        }
+        .fs-shell-nav {
+          margin-top: 18px !important;
+          display: flex !important;
+          gap: 8px !important;
+          overflow-x: auto;
+          padding-bottom: 4px;
+          scrollbar-width: none;
+        }
+        .fs-shell-nav::-webkit-scrollbar { display: none; }
+        .fs-shell-nav > a { flex: none; white-space: nowrap; }
+        .fs-shell-rodape { margin-top: 18px !important; padding-top: 0 !important; }
+        .fs-shell-main { padding: 22px 20px 36px !important; }
+      }
+      @media (max-width: 620px) {
+        .fs-shell-cartao { display: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

@@ -87,9 +87,8 @@ No painel do Supabase, crie um projeto e escolha a região mais próxima
 **Opção A — painel web (mais simples):**
 abra **SQL Editor** e execute, nesta ordem, o conteúdo de:
 
-1. `supabase/migrations/001_initial_schema.sql` — tabelas, tipos, índices, triggers
-2. `supabase/migrations/002_rls_policies.sql` — Row Level Security
-3. `supabase/migrations/003_storage.sql` — bucket privado das apostilas
+1. `supabase/migrations/001_setup_completo.sql` — tabelas, tipos, índices, triggers,
+   Row Level Security e o bucket privado das apostilas, em um único script idempotente
 
 **Opção B — CLI:**
 ```bash
@@ -117,7 +116,8 @@ perfil correspondente:
 ```sql
 -- admin da Fonsetech
 insert into public.profiles (id, nome, role, ativo)
-values ('<uuid-do-auth-user>', 'Rafael Mendes', 'admin', true);
+values ('<uuid-do-auth-user>', 'Rafael Mendes', 'admin', true)
+on conflict (id) do update set role = 'admin', ativo = true;
 
 -- cliente vinculado a uma empresa
 insert into public.profiles (id, empresa_id, nome, role, ativo)
@@ -233,10 +233,12 @@ Cada `push` na branch principal dispara um novo deploy.
 
 ### SPA e refresh de página
 
-O `server.js` responde `index.html` para qualquer rota não encontrada, então
-`/login`, `/dashboard`, `/admin`, `/clientes` e `/configuracoes` continuam
-funcionando ao recarregar a página — sem 404. Os arquivos de `/assets` (com hash no
-nome) são servidos com cache longo; o `index.html`, sem cache agressivo.
+A rota `/` responde `dist/index.html` (landing page pública, HTML estático).
+Qualquer outra rota responde `dist/app.html`, o shell da SPA — então `/login`,
+`/dashboard/chamados` e `/admin/maquinas` continuam funcionando ao recarregar a
+página, sem 404. Em `npm run dev` o middleware `fonsetech-spa-fallback` do
+`vite.config.js` faz o mesmo. Os arquivos de `/assets` (com hash no nome) são
+servidos com cache longo; os HTML, sem cache agressivo.
 
 ---
 
@@ -290,7 +292,8 @@ railway up
 
 ```
 /
-├── index.html                       entrypoint do Vite
+├── index.html                       landing page pública (rota /)
+├── app.html                         shell da SPA (login, /dashboard, /admin)
 ├── design/                          protótipos HTML (referência visual, NÃO servido)
 │   ├── Chamados Login.dc.html
 │   ├── Chamados Dashboard Cliente.dc.html
@@ -325,9 +328,7 @@ railway up
 │   └── lib/supabase.js              cliente Supabase + carregarPerfil()
 ├── supabase/
 │   ├── migrations/
-│   │   ├── 001_initial_schema.sql
-│   │   ├── 002_rls_policies.sql
-│   │   └── 003_storage.sql
+│   │   └── 001_setup_completo.sql   schema + RLS + storage (idempotente)
 │   └── seed.sql
 ├── scripts/
 │   └── check-secrets.js             varredura de segredos (Node, multiplataforma)

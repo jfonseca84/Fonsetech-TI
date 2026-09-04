@@ -1,6 +1,7 @@
 import { Navigate } from 'react-router-dom';
 import { useSessao } from './SessaoProvider.jsx';
-import { Carregando, Erro } from '../ui/Estado.jsx';
+import SemAcesso from './SemAcesso.jsx';
+import { Carregando } from '../ui/Estado.jsx';
 
 /**
  * Guarda de rota por papel.
@@ -10,17 +11,12 @@ import { Carregando, Erro } from '../ui/Estado.jsx';
  * retornam apenas o que a policy autoriza.
  */
 export default function RotaProtegida({ papel, children }) {
-  const { carregando, perfil, erro } = useSessao();
+  const { carregando, autenticado, perfil, erro } = useSessao();
 
   if (carregando) return <Carregando altura="100vh" texto="Verificando acesso..." />;
 
-  if (erro && !perfil) {
-    return (
-      <div style={{ display: 'grid', placeItems: 'center', minHeight: '100vh', padding: 30 }}>
-        <div style={{ maxWidth: 420 }}><Erro mensagem={erro} /></div>
-      </div>
-    );
-  }
+  // autenticado sem perfil valido: tela com saida (sair da conta / voltar ao site)
+  if (autenticado && !perfil) return <SemAcesso mensagem={erro} />;
 
   if (!perfil) return <Navigate to="/login" replace />;
 

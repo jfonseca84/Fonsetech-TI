@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { SessaoProvider, useSessao } from './auth/SessaoProvider.jsx';
 import RotaProtegida from './auth/RotaProtegida.jsx';
+import SemAcesso from './auth/SemAcesso.jsx';
 import LayoutCliente from './layout/LayoutCliente.jsx';
 import LayoutAdmin from './layout/LayoutAdmin.jsx';
 import Login from './telas/Login.jsx';
@@ -21,19 +22,27 @@ import Maquinas from './telas/admin/Maquinas.jsx';
 
 import { Carregando } from './ui/Estado.jsx';
 
-/** Decide o destino conforme o papel carregado do perfil. */
+/**
+ * Destino conforme o papel do perfil.
+ * A landing page publica NAO passa por aqui: em "/" o servidor entrega o
+ * index.html estatico (landing). Esta rota so e alcancada por navegacao
+ * interna da SPA, por exemplo logo apos o login.
+ */
 function Raiz() {
-  const { carregando, perfil } = useSessao();
+  const { carregando, autenticado, perfil, erro } = useSessao();
   if (carregando) return <Carregando altura="100vh" texto="Verificando acesso..." />;
+  if (autenticado && !perfil) return <SemAcesso mensagem={erro} />;
   if (!perfil) return <Navigate to="/login" replace />;
   return <Navigate to={perfil.role === 'admin' ? '/admin' : '/dashboard'} replace />;
 }
 
 /** Quem já está autenticado não volta ao login. */
 function LoginOuPainel() {
-  const { carregando, perfil } = useSessao();
+  const { carregando, autenticado, perfil, erro } = useSessao();
   if (carregando) return <Carregando altura="100vh" texto="Verificando acesso..." />;
   if (perfil) return <Navigate to={perfil.role === 'admin' ? '/admin' : '/dashboard'} replace />;
+  // logado, mas sem perfil valido: mostra a saida em vez de repetir o formulario
+  if (autenticado && erro) return <SemAcesso mensagem={erro} />;
   return <Login />;
 }
 

@@ -18,6 +18,13 @@ export const supabase = createClient(url, anonKey, {
   }
 });
 
+/** Erro com texto ja pronto para o usuario (traduzir() nao mexe nele). */
+function amigavel(mensagem) {
+  const e = new Error(mensagem);
+  e.amigavel = true;
+  return e;
+}
+
 // Le o perfil do usuario logado (define se e cliente ou admin, e de qual empresa).
 export async function carregarPerfil() {
   const { data: { user } } = await supabase.auth.getUser();
@@ -31,15 +38,15 @@ export async function carregarPerfil() {
     // PGRST116 = nenhuma linha retornada: o usuario existe no Auth mas nao
     // tem perfil vinculado, entao nao ha papel nem empresa para trabalhar.
     if (error.code === 'PGRST116') {
-      throw new Error('Seu acesso ainda nao foi liberado. Fale com o administrador da Fonsetech.');
+      throw amigavel('Seu acesso ainda não foi liberado. Fale com o administrador da Fonsetech.');
     }
     throw error;
   }
   if (!data.role) {
-    throw new Error('Seu acesso esta sem perfil definido. Fale com o administrador da Fonsetech.');
+    throw amigavel('Seu acesso está sem perfil definido. Fale com o administrador da Fonsetech.');
   }
   if (!data.ativo) {
-    throw new Error('Seu acesso esta desativado. Fale com o administrador da Fonsetech.');
+    throw amigavel('Seu acesso está desativado. Fale com o administrador da Fonsetech.');
   }
   return data;
 }

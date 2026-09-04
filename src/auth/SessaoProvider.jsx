@@ -1,18 +1,28 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { supabase, carregarPerfil } from '../lib/supabase.js';
+import { traduzir } from '../dados/usarDados.js';
 
 const Ctx = createContext(null);
 export const useSessao = () => useContext(Ctx);
 
+const INICIAL = { carregando: true, autenticado: false, perfil: null, erro: '' };
+
 export function SessaoProvider({ children }) {
-  const [estado, setEstado] = useState({ carregando: true, perfil: null, erro: '' });
+  const [estado, setEstado] = useState(INICIAL);
 
   const sincronizar = useCallback(async () => {
+    let autenticado = false;
     try {
+      const { data: { session } } = await supabase.auth.getSession();
+      autenticado = !!session;
+      if (!session) {
+        setEstado({ carregando: false, autenticado: false, perfil: null, erro: '' });
+        return;
+      }
       const perfil = await carregarPerfil();
-      setEstado({ carregando: false, perfil, erro: '' });
+      setEstado({ carregando: false, autenticado: true, perfil, erro: '' });
     } catch (e) {
-      setEstado({ carregando: false, perfil: null, erro: e.message });
+      setEstado({ carregando: false, autenticado, perfil: null, erro: traduzir(e) });
     }
   }, []);
 
@@ -27,7 +37,7 @@ export function SessaoProvider({ children }) {
 
   async function sair() {
     await supabase.auth.signOut();
-    setEstado({ carregando: false, perfil: null, erro: '' });
+    setEstado({ carregando: false, autenticado: false, perfil: null, erro: '' });
   }
 
   return (

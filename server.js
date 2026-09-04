@@ -40,6 +40,9 @@ app.use((req, res, next) => {
   next();
 });
 
+// "/" e a landing page publica (index.html estatico da pasta dist/)
+app.get('/', (req, res) => res.sendFile(path.join(dist, 'index.html')));
+
 // assets com hash no nome podem ser cacheados por muito tempo
 app.use('/assets', express.static(path.join(dist, 'assets'), {
   immutable: true, maxAge: '1y'
@@ -48,9 +51,10 @@ app.use('/assets', express.static(path.join(dist, 'assets'), {
 // demais arquivos estaticos, sem cache agressivo
 app.use(express.static(dist, { index: false, maxAge: '1h' }));
 
-// SPA fallback: /login, /dashboard, /admin, /clientes... respondem o index.html
+// SPA fallback: /login, /dashboard, /admin/... respondem o shell da SPA (app.html).
+// Recarregar qualquer rota profunda funciona; a landing continua so em "/".
 app.get('*', (req, res) => {
-  res.sendFile(path.join(dist, 'index.html'));
+  res.sendFile(path.join(dist, 'app.html'));
 });
 
 app.listen(port, () => {

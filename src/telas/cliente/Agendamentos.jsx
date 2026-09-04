@@ -15,6 +15,12 @@ const TONS_AG = {
   'Cancelado':  { fg: '#b91c1c', bg: 'rgba(220, 38, 38, 0.09)' }
 };
 
+/** Data de hoje em AAAA-MM-DD no fuso do usuario (nao usar toISOString: ela converte para UTC). */
+function hojeISO() {
+  const d = new Date();
+  return [d.getFullYear(), String(d.getMonth() + 1).padStart(2, '0'), String(d.getDate()).padStart(2, '0')].join('-');
+}
+
 function Cabeca({ icone, cor, fundo, titulo, texto }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
@@ -34,6 +40,7 @@ function Cabeca({ icone, cor, fundo, titulo, texto }) {
 
 export default function Agendamentos() {
   const { perfil } = useSessao();
+  const hoje = hojeISO();
   const { dados, recarregar } = usarDados(listarAgendamentos, [], []);
   const [visita, setVisita] = useState({ data: '', hora: '', assunto: '', endereco: '' });
   const [reuniao, setReuniao] = useState({ data: '', hora: '', assunto: '', formato: 'Online' });
@@ -46,6 +53,10 @@ export default function Agendamentos() {
     setOk('');
     if (!dados_.data || !dados_.hora || !dados_.assunto.trim()) {
       setErro('Informe data, horário e assunto.');
+      return;
+    }
+    if (dados_.data < hoje) {
+      setErro('A data precisa ser de hoje em diante.');
       return;
     }
     setEnviando(true);
@@ -95,7 +106,7 @@ export default function Agendamentos() {
             titulo="Visita técnica" texto="Atendimento presencial na sua empresa"
           />
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
-            <Campo label="Data" type="date" compacto value={visita.data} onChange={(e) => setVisita((s) => ({ ...s, data: e.target.value }))} />
+            <Campo label="Data" type="date" min={hoje} compacto value={visita.data} onChange={(e) => setVisita((s) => ({ ...s, data: e.target.value }))} />
             <Campo label="Horário" type="time" compacto value={visita.hora} onChange={(e) => setVisita((s) => ({ ...s, hora: e.target.value }))} />
           </div>
           <Campo label="Assunto" compacto placeholder="Ex.: instalação de pontos de rede" value={visita.assunto} onChange={(e) => setVisita((s) => ({ ...s, assunto: e.target.value }))} />
@@ -112,7 +123,7 @@ export default function Agendamentos() {
             titulo="Reunião" texto="Alinhamento online ou presencial"
           />
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
-            <Campo label="Data" type="date" compacto value={reuniao.data} onChange={(e) => setReuniao((s) => ({ ...s, data: e.target.value }))} />
+            <Campo label="Data" type="date" min={hoje} compacto value={reuniao.data} onChange={(e) => setReuniao((s) => ({ ...s, data: e.target.value }))} />
             <Campo label="Horário" type="time" compacto value={reuniao.hora} onChange={(e) => setReuniao((s) => ({ ...s, hora: e.target.value }))} />
           </div>
           <Campo label="Assunto" compacto placeholder="Ex.: revisão do plano de suporte" value={reuniao.assunto} onChange={(e) => setReuniao((s) => ({ ...s, assunto: e.target.value }))} />
