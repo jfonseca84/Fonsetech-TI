@@ -219,22 +219,25 @@ export default function Login() {
           </span>
         </div>
 
-        <div style={{ position: 'relative', marginTop: 'clamp(28px, 9vh, 88px)' }}>
+        <div style={{
+          position: 'relative', marginTop: 'clamp(28px, 9vh, 88px)',
+          display: 'flex', flexDirection: 'column', flex: '1 1 auto', minHeight: 0
+        }}>
           <h1 style={{
-            margin: 0, maxWidth: 460, fontSize: 'clamp(28px, 3.2vw, 42px)', lineHeight: 1.14,
+            margin: 0, maxWidth: 500, fontSize: 'clamp(28px, 3.2vw, 52px)', lineHeight: 1.14,
             fontWeight: 800, letterSpacing: '-1.6px', color: c.branco, textWrap: 'pretty'
           }}>Suporte técnico que resolve.</h1>
           <div style={{ width: 54, height: 4, borderRadius: 3, background: c.ciano, marginTop: 'clamp(14px, 2.2vh, 22px)' }} />
           <p style={{
-            margin: 'clamp(14px, 2.2vh, 22px) 0 0', maxWidth: 460,
-            fontSize: 'clamp(13px, 1.05vw, 15.5px)', lineHeight: 1.62, color: c.navCliente, textWrap: 'pretty'
+            margin: 'clamp(14px, 2.2vh, 22px) 0 0', maxWidth: 500,
+            fontSize: 'clamp(13px, 1.05vw, 17.5px)', lineHeight: 1.62, color: c.navCliente, textWrap: 'pretty'
           }}>
             O FonseDesk reúne abertura de chamados, acompanhamento e agendamentos
             em um só lugar, com prazo de resposta definido.
           </p>
 
           <div style={{
-            marginTop: 'clamp(40px, 9vh, 96px)', display: 'grid',
+            marginTop: 'auto', display: 'grid',
             gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: 'clamp(22px, 2.6vw, 34px)'
           }}>
             {DESTAQUES.map((d) => (
