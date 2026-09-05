@@ -219,7 +219,7 @@ export default function Login() {
           </span>
         </div>
 
-        <div style={{ position: 'relative', marginTop: 'auto', paddingTop: 'clamp(12px, 2vh, 24px)' }}>
+        <div style={{ position: 'relative', marginTop: 'clamp(28px, 9vh, 88px)' }}>
           <h1 style={{
             margin: 0, maxWidth: 460, fontSize: 'clamp(28px, 3.2vw, 42px)', lineHeight: 1.14,
             fontWeight: 800, letterSpacing: '-1.6px', color: c.branco, textWrap: 'pretty'
@@ -235,7 +235,7 @@ export default function Login() {
 
           <div style={{
             marginTop: 'clamp(40px, 9vh, 96px)', display: 'grid',
-            gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: 'clamp(12px, 1.4vw, 20px)'
+            gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: 'clamp(22px, 2.6vw, 34px)'
           }}>
             {DESTAQUES.map((d) => (
               <div key={d.titulo}>
