@@ -21,25 +21,23 @@
         .fs-grid-2 { grid-template-columns: minmax(0, 1fr) !important; }
       }
 
-      /* Sidebar vira barra superior com nav rolavel na horizontal. */
+      /* Sidebar vira barra superior; a nav some por padrao e abre como
+         lista suspensa ao tocar no botao de menu (.fs-shell-menu-btn). */
       @media (max-width: 1024px) {
         .fs-shell { grid-template-columns: minmax(0, 1fr) !important; }
         .fs-shell-aside {
           position: static !important;
           height: auto !important;
-          padding: 18px 20px !important;
+          padding: 16px 20px !important;
         }
+        .fs-shell-menu-btn { display: inline-flex !important; }
         .fs-shell-nav {
-          margin-top: 18px !important;
-          display: flex !important;
-          gap: 8px !important;
-          overflow-x: auto;
-          padding-bottom: 4px;
-          scrollbar-width: none;
+          display: none !important;
+          margin-top: 14px !important;
+          gap: 3px !important;
         }
-        .fs-shell-nav::-webkit-scrollbar { display: none; }
-        .fs-shell-nav > a { flex: none; white-space: nowrap; }
-        .fs-shell-rodape { margin-top: 18px !important; padding-top: 0 !important; }
+        .fs-shell-nav.fs-shell-nav-aberto { display: grid !important; }
+        .fs-shell-rodape { margin-top: 14px !important; padding-top: 0 !important; }
         .fs-shell-main { padding: 22px 20px 36px !important; }
       }
       @media (max-width: 620px) {

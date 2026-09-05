@@ -17,6 +17,7 @@ const P = {
   busca: <><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></>,
   olho: <><path d="M2.5 12S6 5.8 12 5.8 21.5 12 21.5 12 18 18.2 12 18.2 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></>,
   fechar: <><path d="M6 6l12 12"/><path d="M18 6L6 18"/></>,
+  menu: <><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></>,
   relogio: <><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 2"/></>,
   telaCheia: <><path d="M4 9V4h5"/><path d="M20 9V4h-5"/><path d="M4 15v5h5"/><path d="M20 15v5h-5"/></>,
   pdf: <><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5z"/><path d="M14 3v5h5"/><path d="M9 13.5h6"/><path d="M9 17h4"/></>,
