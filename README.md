@@ -91,6 +91,8 @@ abra **SQL Editor** e execute, nesta ordem, o conteúdo de:
 
 1. `supabase/migrations/001_setup_completo.sql` — tabelas, tipos, índices, triggers,
    Row Level Security e o bucket privado das apostilas, em um único script idempotente
+2. `supabase/migrations/002_cifra_acesso_remoto.sql` — cifra a senha de acesso remoto
+   (Vault + `pgcrypto`) e cria as RPCs `salvar_acesso_remoto`/`obter_senha_acesso_remoto`
 
 **Opção B — CLI:**
 ```bash
@@ -294,6 +296,7 @@ railway up
 
 ```
 /
+├── .github/workflows/ci.yml         lint + testes + check:secrets + build no push/PR
 ├── index.html                       landing page pública (rota /)
 ├── app.html                         shell da SPA (login, /dashboard, /admin)
 ├── design/                          protótipos HTML (referência visual, NÃO servido)
@@ -317,20 +320,25 @@ railway up
 │   │   └── BotaoSair.jsx
 │   ├── ui/                          primitivos (tokens dos protótipos)
 │   │   ├── tokens.js  Icone.jsx  Campo.jsx  Botao.jsx
-│   │   └── Chip.jsx  Modal.jsx  Estado.jsx  Kpi.jsx
+│   │   ├── Chip.jsx  Modal.jsx  Estado.jsx  Kpi.jsx
+│   │   └── tokens.test.js           testes dos formatadores (Vitest)
 │   ├── dados/
 │   │   ├── consultas.js             todas as queries do Supabase
-│   │   └── usarDados.js             hook loading/erro + tradução de erros
+│   │   ├── usarDados.js             hook loading/erro + tradução de erros
+│   │   └── usarDados.test.js        testes da tradução de erros (Vitest)
 │   ├── telas/
 │   │   ├── Login.jsx
 │   │   ├── cliente/                 VisaoGeral, MeusChamados, AbrirChamado,
 │   │   │                            Agendamentos, Cursos, Downloads, MinhaEmpresa
 │   │   └── admin/                   VisaoGeralAdmin, ChamadosAdmin, Clientes,
 │   │                                AgendaAdmin, Maquinas
-│   └── lib/supabase.js              cliente Supabase + carregarPerfil()
+│   └── lib/
+│       ├── supabase.js              cliente Supabase + carregarPerfil()
+│       └── monitoramento.js         captura erros globais -> /api/client-log
 ├── supabase/
 │   ├── migrations/
-│   │   └── 001_setup_completo.sql   schema + RLS + storage (idempotente)
+│   │   ├── 001_setup_completo.sql        schema + RLS + storage (idempotente)
+│   │   └── 002_cifra_acesso_remoto.sql   Vault + pgcrypto p/ senha de acesso remoto
 │   └── seed.sql
 ├── scripts/
 │   └── check-secrets.js             varredura de segredos (Node, multiplataforma)
@@ -340,6 +348,7 @@ railway up
 ├── railway.json
 ├── server.js
 ├── vite.config.js
+├── vitest.config.js
 └── README.md
 ```
 
@@ -450,11 +459,14 @@ não lê nada — todas as tabelas têm RLS ativo e nenhuma policy para `anon`.
       `grep -r "service_role" dist/` — deve retornar vazio
 - [ ] RLS habilitado em **todas** as tabelas (o Supabase alerta em Database → Tables)
 - [ ] Cadastro público de e-mail desabilitado no Auth
-- [ ] Senhas de acesso remoto apenas em `maquinas_acesso_remoto`, nunca em `maquinas`
+- [ ] Senhas de acesso remoto apenas em `maquinas_acesso_remoto`, nunca em `maquinas`,
+      e sempre gravadas via a RPC `salvar_acesso_remoto` (nunca por `insert`/`update` direto)
 - [ ] `design/` não acessível em produção: `curl -I https://<dominio>/design/` → 404
 - [ ] Nenhum `import.meta.env` fora de `src/lib/supabase.js`
 - [ ] Teste de isolamento: logue como cliente da empresa A e confirme que
       `select * from maquinas` retorna somente as máquinas dela
+- [ ] Teste de escalonamento: logue como cliente e tente `update profiles set role='admin'`
+      e `update empresas set situacao_financeira='Em dia'` pela API — RLS/trigger devem barrar
 - [ ] URLs de redirect do Auth apontando para o domínio da Railway
 - [ ] `npm run audit:prod` sem vulnerabilidades altas/críticas
 - [ ] Sem `localhost` no código de produção
@@ -462,14 +474,51 @@ não lê nada — todas as tabelas têm RLS ativo e nenhuma policy para `anon`.
 
 ---
 
+## Segurança — resumo do que já está garantido e por quem
+
+| Preocupação | Quem resolve | Como verificar |
+|---|---|---|
+| Senha de usuário em texto puro | **Supabase Auth** (GoTrue) faz hash com bcrypt; o app nunca vê nem grava senha de login | não há tabela própria de senha de usuário no schema |
+| Rotas de API sem autenticação | Não existe rota privilegiada no `server.js` — ele só reencaminha para o Supabase Auth (`/api/auth/login`) e serve `dist/`. Toda leitura/escrita de dado passa pelo Supabase com RLS | ver `server.js`; nenhuma rota usa `SUPABASE_SERVICE_ROLE_KEY` |
+| Força bruta no login | `express-rate-limit` em `/api/auth/login` (10 tentativas / 15 min por IP) somado ao rate limit nativo do Supabase Auth | `server.js`, `limiteLogin` |
+| Cliente virar admin | `profiles_atualiza_proprio` (RLS) exige que `role`/`ativo`/`empresa_id` permaneçam iguais; não existe policy de `insert` para não-admin | tentar `update profiles set role='admin'` logado como cliente — deve falhar |
+| Ver senha/dado sensível pelo F12 | RLS filtra no Postgres, não no navegador: a chave anônima é pública por design, quem decide o que cada usuário vê é a policy. `maquinas_acesso_remoto.senha_cifrada` fica cifrada (Vault + `pgcrypto`, migration 004) mesmo para o admin, e só é revelada por RPC sob demanda | inspecionar a resposta de rede com F12 — nunca deve aparecer senha em texto puro |
+| Cliente sobrescrever dado interno da própria empresa (financeiro, plano, notas do admin) | Trigger `protege_campos_empresa` (migration 004) força de volta ao valor anterior qualquer coluna fora do formulário "Minha empresa" | tentar `update empresas set valor_mensal=0` logado como cliente — deve continuar com o valor antigo |
+| Log de auditoria forjado em nome de outro usuário | Trigger `preenche_auditoria` (migration 004) ignora `usuario_id`/`usuario_nome` enviados pelo cliente e usa sempre a sessão autenticada | inspecionar `auditoria_logs.usuario_id` após um insert manual com outro id |
+
+**Aplique a migration 004** (`supabase/migrations/004_hardening_seguranca.sql`) no SQL Editor —
+ela não roda sozinha, é preciso colar e executar como as demais.
+
+**Dependências com vulnerabilidade conhecida** (`npm audit`):
+`react-router`/`react-router-dom` têm dois avisos moderados (redirect aberto e injeção de
+construtor via SSR — este último não se aplica aqui, o app não usa SSR) cuja correção exige
+subir para a v7, uma major com mudanças de API. Não apliquei essa migração porque é uma
+mudança de estrutura maior do que o pedido, mas fica registrado para decisão consciente.
+
+---
+
 ## Pendências
 
-1. **Implementar a interface em React** — os `.dc.html` são a referência visual
-2. **Definir a cifragem das senhas de acesso remoto** — a coluna `senha_cifrada` é
-   `bytea`; use `pgsodium`/Vault do Supabase ou cifre na Edge Function. Não grave em texto puro
+1. ~~Implementar a interface em React~~ — concluído, telas convertidas dos `.dc.html`
+2. ~~Definir a cifragem das senhas de acesso remoto~~ — concluído no código: veja
+   `supabase/migrations/002_cifra_acesso_remoto.sql` (Vault + `pgcrypto`) e
+   `salvarAcessoRemoto`/`obterSenhaAcessoRemoto` em `src/dados/consultas.js`.
+   **Falta apenas rodar essa migration no projeto Supabase** (SQL Editor ou `supabase db push`)
 3. **Fluxo de convite de cliente** — precisa de rota de servidor com `service_role`
    (`auth.admin.inviteUserByEmail`), pois a chave anônima não cria usuários
 4. **Upload das apostilas** no bucket `materiais` e preenchimento de `arquivo_path`
 5. **Links reais do Google Drive** em `materiais.link_externo` (hoje vazios — o botão
    fica como "Em breve")
 6. **Notificações por e-mail** ao abrir/responder chamado, se desejado
+
+## Qualidade e observabilidade
+
+- **CI** (`.github/workflows/ci.yml`): a cada push/PR na `main`, roda lint, testes,
+  `check:secrets`, build e confere que nenhuma credencial vazou para `dist/`
+- **Testes unitários** (`npm run test`, Vitest): cobrem a tradução de erros do
+  Supabase para mensagens de usuário (`src/dados/usarDados.js`) e os formatadores
+  de `src/ui/tokens.js`. Ficam em arquivos `*.test.js` ao lado do código testado
+- **Log de erros do navegador** (`src/lib/monitoramento.js`): captura exceções e
+  promises rejeitadas não tratadas e envia um resumo (mensagem, stack, rota — sem
+  dado de formulário) para `/api/client-log`, logado de forma estruturada no
+  servidor. Sem dependência de provedor externo

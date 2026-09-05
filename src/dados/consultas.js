@@ -389,6 +389,30 @@ export async function criarMaquina(campos, acesso) {
   return data;
 }
 
+/**
+ * Grava (ou atualiza) o acesso remoto com a senha ja cifrada no banco via
+ * RPC — a senha em texto puro trafega apenas nesta chamada e nunca fica
+ * armazenada sem cifra. Ver supabase/migrations/002_cifra_acesso_remoto.sql.
+ */
+export async function salvarAcessoRemoto({ maquinaId, ferramenta, host, login, senha, observacoes }) {
+  const { error } = await supabase.rpc('salvar_acesso_remoto', {
+    p_maquina_id: maquinaId,
+    p_ferramenta: ferramenta || 'AnyDesk',
+    p_host: host || null,
+    p_login: login || null,
+    p_senha: senha || null,
+    p_observacoes: observacoes || null
+  });
+  if (error) throw error;
+}
+
+/** Somente admin: revela a senha decifrada sob demanda (nunca em listagens). */
+export async function obterSenhaAcessoRemoto(maquinaId) {
+  const { data, error } = await supabase.rpc('obter_senha_acesso_remoto', { p_maquina_id: maquinaId });
+  if (error) throw error;
+  return data;
+}
+
 // ---------- AGENDAMENTOS ----------
 export async function listarAgendamentos() {
   const { data, error } = await supabase

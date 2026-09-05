@@ -1,5 +1,6 @@
 import express from 'express';
 import compression from 'compression';
+import rateLimit from 'express-rate-limit';
 import path from 'node:path';
 import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -15,8 +16,32 @@ if (!fs.existsSync(dist)) {
 
 const app = express();
 app.disable("x-powered-by");
+// Railway fica atras de um unico proxy reverso: confia so no primeiro hop
+// do X-Forwarded-For, para o rate limit contar por IP real do visitante
+// e nao pelo IP do proxy (que seria igual para todo mundo).
+app.set('trust proxy', 1);
 app.use(compression());
 app.use(express.json());
+
+// Trava por tentativas de login: nao substitui o rate limit do proprio
+// Supabase Auth, mas barra brute-force na nossa camada antes de gastar a
+// cota deles, e funciona mesmo se o fallback de rede (linha 89) for usado.
+const limiteLogin = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: { message: 'Muitas tentativas de login. Aguarde alguns minutos e tente novamente.' } }
+});
+
+// Limite generoso para nao travar log legitimo de erro em uso normal,
+// so para impedir que o endpoint vire uma forma barata de flood no log.
+const limiteClientLog = rateLimit({
+  windowMs: 5 * 60 * 1000,
+  limit: 60,
+  standardHeaders: true,
+  legacyHeaders: false
+});
 
 // Sanitizacao segura de configuracoes publicas
 function limparValor(val) {
@@ -82,11 +107,25 @@ app.get('/api/config', (req, res) => {
   res.json(obterConfigPublica());
 });
 
+// Log estruturado de erros nao tratados do navegador (sem provedor externo).
+// Aceita apenas os campos esperados, com tamanho limitado, para nao virar
+// um jeito de gravar lixo arbitrario no log do servidor.
+app.post('/api/client-log', limiteClientLog, (req, res) => {
+  const corpo = req.body || {};
+  const tipo = corpo.tipo === 'promise_rejeitada' ? 'promise_rejeitada' : 'erro';
+  const mensagem = String(corpo.mensagem || 'Erro desconhecido').slice(0, 500);
+  const pilha = corpo.pilha ? String(corpo.pilha).slice(0, 2000) : null;
+  const rota = String(corpo.rota || '').slice(0, 200);
+
+  console.error('[client-log]', JSON.stringify({ tipo, mensagem, rota, pilha, em: new Date().toISOString() }));
+  res.status(204).end();
+});
+
 // Proxy de autenticacao resiliente:
 // Usado quando o navegador do cliente sofre bloqueio de rede direto para *.supabase.co
 // (ex: adblockers, firewalls corporativos ou restricoes de DNS no browser).
 // Utiliza estritamente a Anon Key publica, preservando total seguranca.
-app.post('/api/auth/login', async (req, res) => {
+app.post('/api/auth/login', limiteLogin, async (req, res) => {
   const { email, password } = req.body || {};
   if (!email || !password) {
     return res.status(400).json({ error: { message: 'Informe e-mail e senha.' } });

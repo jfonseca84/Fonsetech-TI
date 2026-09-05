@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Testes unitários
+        run: npm run test
+
+      - name: Varredura de segredos
+        run: npm run check:secrets
+
+      - name: Build de produção
+        run: npm run build
+
+      - name: Confere que nenhuma credencial vazou para o bundle
+        run: |
+          if grep -rE "service_role|postgres://" dist/; then
+            echo "Credencial sensível encontrada em dist/ — abortando." >&2
+            exit 1
+          fi

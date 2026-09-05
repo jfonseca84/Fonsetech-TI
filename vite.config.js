@@ -45,6 +45,29 @@ const fallbackDaSpa = {
         return res.end(JSON.stringify(obterConfigPublica()));
       }
 
+      if (rota === '/api/client-log' && req.method === 'POST') {
+        let corpo = '';
+        req.on('data', chunk => { corpo += chunk; });
+        req.on('end', () => {
+          try {
+            const dados = JSON.parse(corpo || '{}');
+            const tipo = dados.tipo === 'promise_rejeitada' ? 'promise_rejeitada' : 'erro';
+            console.error('[client-log]', JSON.stringify({
+              tipo,
+              mensagem: String(dados.mensagem || 'Erro desconhecido').slice(0, 500),
+              rota: String(dados.rota || '').slice(0, 200),
+              pilha: dados.pilha ? String(dados.pilha).slice(0, 2000) : null,
+              em: new Date().toISOString()
+            }));
+          } catch {
+            // corpo invalido: ignora silenciosamente, nao e critico
+          }
+          res.statusCode = 204;
+          res.end();
+        });
+        return;
+      }
+
       if (rota === '/api/supabase-status' && req.method === 'GET') {
         const { supabaseUrl, supabaseAnonKey } = obterConfigPublica();
         try {
