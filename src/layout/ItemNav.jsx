@@ -11,9 +11,9 @@ export default function ItemNav({ para, icone, rotulo, corInativa, fim }) {
       onMouseEnter={() => setH(true)}
       onMouseLeave={() => setH(false)}
       style={({ isActive }) => ({
-        display: 'flex', alignItems: 'center', gap: 12, width: '100%',
-        textAlign: 'left', padding: '12px 14px', border: 0, borderRadius: 10,
-        fontSize: 13.5, fontWeight: 600, textDecoration: 'none',
+        display: 'flex', alignItems: 'center', gap: 10, width: '100%',
+        textAlign: 'left', padding: '9px 12px', border: 0, borderRadius: 9,
+        fontSize: 12, fontWeight: 600, textDecoration: 'none', lineHeight: 1.2,
         transition: 'background .2s ease, color .2s ease',
         ...(isActive
           ? { background: 'rgba(255, 255, 255, 0.14)', color: '#ffffff' }
@@ -22,8 +22,8 @@ export default function ItemNav({ para, icone, rotulo, corInativa, fim }) {
             : { background: 'transparent', color: corInativa })
       })}
     >
-      <span style={{ display: 'flex', width: 18, height: 18, flex: 'none' }}>
-        <Icone nome={icone} tamanho={18} />
+      <span style={{ display: 'flex', width: 16, height: 16, flex: 'none' }}>
+        <Icone nome={icone} tamanho={16} />
       </span>
       {rotulo}
     </NavLink>

@@ -34,43 +34,43 @@ export default function Shell({ variante, itens, rodape, cabecalho }) {
       minHeight: '100vh', background: c.fundo, color: c.tinta
     }}>
       <aside className="fs-shell-aside" style={{
-        background: v.fundo, padding: '26px 20px', display: 'flex', flexDirection: 'column',
+        background: v.fundo, padding: '18px 16px', display: 'flex', flexDirection: 'column',
         position: 'sticky', top: 0, height: '100vh', overflowY: 'auto'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 11 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
           <span style={{
-            flex: 'none', width: 38, height: 38, borderRadius: 10, background: v.selo,
+            flex: 'none', width: 32, height: 32, borderRadius: 9, background: v.selo,
             border: '1px solid ' + v.seloBorda, display: 'flex',
             alignItems: 'center', justifyContent: 'center'
           }}>
             <Marca cor={v.marca} />
           </span>
           <span style={{ display: 'block', lineHeight: 1 }}>
-            <span style={{ display: 'block', fontSize: 17, fontWeight: 800, letterSpacing: '-0.3px', color: c.branco }}>{PRODUTO.marca}</span>
-            <span style={{ display: 'block', fontSize: 8.5, fontWeight: 700, letterSpacing: '2px', color: v.eyebrowCor, marginTop: 5 }}>{v.eyebrow}</span>
+            <span style={{ display: 'block', fontSize: 15, fontWeight: 800, letterSpacing: '-0.3px', color: c.branco }}>{PRODUTO.marca}</span>
+            <span style={{ display: 'block', fontSize: 8, fontWeight: 700, letterSpacing: '1.6px', color: v.eyebrowCor, marginTop: 4 }}>{v.eyebrow}</span>
           </span>
         </div>
 
-        <nav className="fs-shell-nav" style={{ marginTop: 34, display: 'grid', gap: 5 }}>
+        <nav className="fs-shell-nav" style={{ marginTop: 20, display: 'grid', gap: 2 }}>
           {itens.map((i) => (
             <ItemNav key={i.para} para={i.para} fim={i.fim} icone={i.icone} rotulo={i.rotulo} corInativa={v.navInativa} />
           ))}
         </nav>
 
-        <div className="fs-shell-rodape" style={{ marginTop: 'auto', paddingTop: 26 }}>
+        <div className="fs-shell-rodape" style={{ marginTop: 'auto', paddingTop: 16 }}>
           {rodape && (
             <div className="fs-shell-cartao" style={{
-              padding: '15px 16px', borderRadius: 12,
+              padding: '11px 13px', borderRadius: 11,
               background: v.rodapeBg, border: '1px solid ' + v.rodapeBorda
             }}>
-              <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.2, color: v.eyebrowCor }}>{rodape.rotulo}</div>
-              <div style={{ marginTop: 8, fontSize: 14.5, fontWeight: 700, color: c.branco }}>{rodape.valor}</div>
-              <div style={{ marginTop: 4, fontSize: 12, color: variante === 'cliente' ? '#93aed4' : '#7f9ecb' }}>{rodape.dica}</div>
+              <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: 1.1, color: v.eyebrowCor }}>{rodape.rotulo}</div>
+              <div style={{ marginTop: 5, fontSize: 13, fontWeight: 700, color: c.branco }}>{rodape.valor}</div>
+              <div style={{ marginTop: 3, fontSize: 11, color: variante === 'cliente' ? '#93aed4' : '#7f9ecb' }}>{rodape.dica}</div>
             </div>
           )}
           <BotaoSair aoSair={sair} corInativa={v.navInativa} />
           <div style={{
-            marginTop: 14, fontSize: 9.5, letterSpacing: 0.5, textAlign: 'center',
+            marginTop: 10, fontSize: 9, letterSpacing: 0.4, textAlign: 'center',
             color: variante === 'cliente' ? 'rgba(147, 174, 212, 0.7)' : 'rgba(127, 158, 203, 0.7)'
           }}>{PRODUTO.assinatura}</div>
         </div>
