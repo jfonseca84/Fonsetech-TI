@@ -1,10 +1,14 @@
 import { useMemo, useRef, useState } from 'react';
 import { c, card } from '../../ui/tokens.js';
-import { listarSiteImagens, salvarSiteImagem, removerSiteImagem, urlPublicaSite } from '../../dados/consultas.js';
+import {
+  listarSiteImagens, salvarSiteImagem, removerSiteImagem, urlPublicaSite,
+  obterConfigSite, salvarConfigSite
+} from '../../dados/consultas.js';
 import { usarDados, traduzir } from '../../dados/usarDados.js';
 import { ESPACOS, TIPOS_ACEITOS, TAMANHO_MAXIMO } from '../../dados/espacosImagem.js';
 import { useSessao } from '../../auth/SessaoProvider.jsx';
 import Botao from '../../ui/Botao.jsx';
+import Campo from '../../ui/Campo.jsx';
 import { Carregando, Erro, Aviso } from '../../ui/Estado.jsx';
 import Icone from '../../ui/Icone.jsx';
 import { Painel } from './partes.jsx';
@@ -12,6 +16,7 @@ import { Painel } from './partes.jsx';
 export default function ConfiguracoesSite() {
   const { perfil } = useSessao();
   const { dados, carregando, erro, recarregar } = usarDados(listarSiteImagens, [], []);
+  const videoCfg = usarDados(() => obterConfigSite('video_apresentacao'), [], '');
   const [msg, setMsg] = useState(null);
 
   const porSlug = useMemo(() => {
@@ -35,6 +40,16 @@ export default function ConfiguracoesSite() {
 
       {msg && <div style={{ marginTop: 18 }}><Aviso tom={msg.tom}>{msg.texto}</Aviso></div>}
       {erro && <div style={{ marginTop: 18 }}><Erro mensagem={erro} aoTentar={recarregar} /></div>}
+
+      {!videoCfg.carregando && (
+        <div style={{ marginTop: 20 }}>
+          <CartaoVideo
+            valorAtual={videoCfg.dados}
+            autorId={perfil?.id}
+            aoTerminar={(texto, tom = 'ok') => { setMsg({ tom, texto }); videoCfg.recarregar(); }}
+          />
+        </div>
+      )}
 
       {carregando ? (
         <div style={{ marginTop: 20 }}><Carregando /></div>
@@ -164,6 +179,77 @@ function CartaoEspaco({ espaco, registro, autorId, aoTerminar }) {
           </Botao>
         )}
       </div>
+    </div>
+  );
+}
+
+/** Extrai o ID do vídeo de qualquer formato comum de URL do YouTube. */
+function extrairYoutubeId(url) {
+  const m = String(url || '').match(
+    /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([\w-]{11})/
+  );
+  return m ? m[1] : '';
+}
+
+function CartaoVideo({ valorAtual, autorId, aoTerminar }) {
+  const [url, setUrl] = useState(valorAtual || '');
+  const [salvando, setSalvando] = useState(false);
+  const [erro, setErro] = useState('');
+
+  const id = extrairYoutubeId(url);
+
+  async function salvar() {
+    if (url.trim() && !id) {
+      setErro('Não reconheci esse link como um vídeo do YouTube. Copie o link da barra de endereço ao assistir o vídeo.');
+      return;
+    }
+    setErro('');
+    setSalvando(true);
+    try {
+      await salvarConfigSite('video_apresentacao', url.trim(), autorId);
+      aoTerminar(url.trim() ? 'Vídeo atualizado no botão "Conhecer a plataforma".' : 'Vídeo removido — o botão volta a levar direto para o login.');
+    } catch (err) {
+      setErro(traduzir(err));
+    } finally {
+      setSalvando(false);
+    }
+  }
+
+  return (
+    <div style={{ ...card, padding: '20px 22px 22px' }}>
+      <h3 style={{ margin: 0, fontSize: 14.5, fontWeight: 700, color: c.tinta }}>Vídeo de apresentação</h3>
+      <p style={{ margin: '5px 0 0', fontSize: 12, color: c.texto3 }}>
+        Cole aqui o link de um vídeo do YouTube explicando o FonseDesk. Com um link cadastrado, o
+        botão &ldquo;Conhecer a plataforma&rdquo; da landing page abre esse vídeo num popup, em vez de ir
+        direto para o login. Deixe em branco para voltar ao comportamento padrão.
+      </p>
+
+      <div style={{ marginTop: 14, display: 'grid', gridTemplateColumns: '1fr auto', gap: 10, alignItems: 'end' }}>
+        <Campo
+          rotulo="Link do YouTube"
+          valor={url}
+          onChange={(v) => { setUrl(v); setErro(''); }}
+          placeholder="https://www.youtube.com/watch?v=..."
+        />
+        <Botao tipo="roxo" disabled={salvando} onClick={salvar} style={{ padding: '12px 18px', fontSize: 13, height: 48 }}>
+          {salvando ? 'Salvando...' : 'Salvar'}
+        </Botao>
+      </div>
+
+      {erro && <div style={{ marginTop: 10 }}><Aviso tom="erro">{erro}</Aviso></div>}
+
+      {id && (
+        <div style={{
+          marginTop: 16, aspectRatio: '16/9', maxWidth: 360, borderRadius: 11, overflow: 'hidden',
+          border: '1px solid ' + c.borda2
+        }}>
+          <img
+            src={`https://img.youtube.com/vi/${id}/hqdefault.jpg`}
+            alt="Capa do vídeo"
+            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+          />
+        </div>
+      )}
     </div>
   );
 }

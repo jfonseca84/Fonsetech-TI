@@ -551,3 +551,17 @@ export async function removerSiteImagem(slug) {
   if (error) throw error;
   if (atual?.arquivo_path) await supabase.storage.from('site').remove([atual.arquivo_path]);
 }
+
+// ---------- CONFIGURACOES DE TEXTO DA LANDING (chave/valor) ----------
+export async function obterConfigSite(chave) {
+  const { data, error } = await supabase.from('site_config').select('valor').eq('chave', chave).maybeSingle();
+  if (error) throw error;
+  return data?.valor || '';
+}
+
+export async function salvarConfigSite(chave, valor, autorId) {
+  const { error } = await supabase
+    .from('site_config')
+    .upsert({ chave, valor: valor || null, atualizado_em: new Date().toISOString(), atualizado_por: autorId || null });
+  if (error) throw error;
+}

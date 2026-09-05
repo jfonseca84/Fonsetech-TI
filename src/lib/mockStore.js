@@ -708,6 +708,7 @@ export class MockStorage {
         this.financeiro_lancamentos = parsed.financeiro_lancamentos || FINANCEIRO_LANCAMENTOS_INICIAIS;
         this.auditoria_logs = parsed.auditoria_logs || AUDITORIA_INICIAL;
         this.site_imagens = parsed.site_imagens || [];
+        this.site_config = parsed.site_config || [];
         return;
       }
     } catch {
@@ -726,6 +727,7 @@ export class MockStorage {
     this.financeiro_lancamentos = [...FINANCEIRO_LANCAMENTOS_INICIAIS];
     this.auditoria_logs = [...AUDITORIA_INICIAL];
     this.site_imagens = [];
+    this.site_config = [];
   }
 
   salvar() {
@@ -743,7 +745,8 @@ export class MockStorage {
         crm_propostas: this.crm_propostas,
         financeiro_lancamentos: this.financeiro_lancamentos,
         auditoria_logs: this.auditoria_logs,
-        site_imagens: this.site_imagens
+        site_imagens: this.site_imagens,
+        site_config: this.site_config
       }));
     } catch {
       // Quota cheia ignorada
@@ -765,6 +768,7 @@ export class MockStorage {
     if (nome === 'financeiro_lancamentos') return this.financeiro_lancamentos;
     if (nome === 'auditoria_logs') return this.auditoria_logs;
     if (nome === 'site_imagens') return this.site_imagens;
+    if (nome === 'site_config') return this.site_config;
     return [];
   }
 }

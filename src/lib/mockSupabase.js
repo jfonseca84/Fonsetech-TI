@@ -147,7 +147,11 @@ class MockQueryBuilder {
 
     if (this.operacao === 'upsert') {
       const item = this.dadosOperacao;
-      const idx = colecao.findIndex(i => (item.slug && i.slug === item.slug) || (item.id && i.id === item.id));
+      const idx = colecao.findIndex(i =>
+        (item.slug && i.slug === item.slug) ||
+        (item.chave && i.chave === item.chave) ||
+        (item.id && i.id === item.id)
+      );
       if (idx >= 0) {
         colecao[idx] = { ...colecao[idx], ...item };
       } else {

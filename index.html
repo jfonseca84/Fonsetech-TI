@@ -405,12 +405,13 @@
       <div class="fs-plat-grid" style="display: grid; grid-template-columns: 1fr 1.02fr; gap: 48px; align-items: start;">
         <div>
           <div style="font-size: 11.5px; font-weight: 700; letter-spacing: 1.4px; color: #1d4fa8;">PLATAFORMA PRÓPRIA</div>
-          <h2 style="margin: 16px 0 0; font-size: 32px; line-height: 1.22; font-weight: 700; letter-spacing: -1.1px; color: #0d1730; text-wrap: pretty;">Seu suporte de TI num sistema de chamados, não num grupo de WhatsApp</h2>
-          <p style="margin: 18px 0 0; font-size: 15px; line-height: 1.66; color: #55637f; text-wrap: pretty;">Todo cliente Fonsetech recebe acesso ao <strong style="font-weight: 700; color: #0d1730;">FonseDesk</strong>, o sistema de chamados que desenvolvemos, onde a empresa abre a solicitação, acompanha o andamento e consulta o histórico do que já foi resolvido — com o técnico responsável e a data de cada atendimento registrados.</p>
-          <p style="margin: 14px 0 0; font-size: 15px; line-height: 1.66; color: #55637f; text-wrap: pretty;">No mesmo ambiente ficam as visitas técnicas agendadas, o inventário das máquinas, os materiais de treinamento da equipe e os programas liberados para download. Nada se perde em conversa de mensagem e ninguém precisa repetir o problema duas vezes.</p>
+          <h2 style="margin: 16px 0 0; font-size: 32px; line-height: 1.22; font-weight: 700; letter-spacing: -1.1px; color: #0d1730; text-wrap: pretty;">Seu suporte de TI em um sistema de chamados.</h2>
+          <p style="margin: 18px 0 0; font-size: 15px; line-height: 1.66; color: #55637f; text-wrap: pretty;">Todo cliente Fonsetech tem acesso ao <strong style="font-weight: 700; color: #0d1730;">FonseDesk</strong>, nossa plataforma própria de gestão de suporte técnico. É por lá que sua empresa abre chamados, agenda visitas técnicas, acompanha cada atendimento em tempo real e consulta todo o histórico de solicitações.</p>
+          <p style="margin: 14px 0 0; font-size: 15px; line-height: 1.66; color: #55637f; text-wrap: pretty;">E o suporte não para nos chamados. No mesmo ambiente, você tem acesso a um inventário de equipamentos, materiais de qualificação para sua equipe e programas autorizados para download. Tudo organizado em um único lugar, com histórico e rastreabilidade.</p>
+          <p style="margin: 14px 0 0; font-size: 15px; line-height: 1.66; color: #55637f; text-wrap: pretty;">Com o <strong style="font-weight: 700; color: #0d1730;">FonseDesk</strong>, o suporte de TI deixa de ser uma conversa espalhada no WhatsApp e passa a ser um processo organizado, profissional e acompanhado do início ao fim.</p>
 
           <div style="margin-top: 26px; display: flex; align-items: center; gap: 18px; flex-wrap: wrap;">
-            <a href="/login" data-ripple="true" data-magnet="true" style="position: relative; overflow: hidden; display: inline-flex; align-items: center; gap: 10px; background: linear-gradient(150deg, #1e3e8c 0%, #2650af 46%, #1c3773 100%); color: #ffffff; font-size: 12.5px; font-weight: 700; letter-spacing: 0.7px; padding: 14px 22px; border-radius: 10px; box-shadow: 0 12px 28px rgba(29, 95, 245, 0.26);">
+            <a id="fs-btn-video" href="/login" data-ripple="true" data-magnet="true" style="position: relative; overflow: hidden; display: inline-flex; align-items: center; gap: 10px; background: linear-gradient(150deg, #1e3e8c 0%, #2650af 46%, #1c3773 100%); color: #ffffff; font-size: 12.5px; font-weight: 700; letter-spacing: 0.7px; padding: 14px 22px; border-radius: 10px; box-shadow: 0 12px 28px rgba(29, 95, 245, 0.26);">
               CONHECER A PLATAFORMA
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13"></path><path d="M12 5l7 7-7 7"></path></svg>
             </a>
@@ -1406,6 +1407,78 @@ class Component extends DCLogic {
         if (!alvo || !linha.arquivo_path) return;
         var versao = linha.atualizado_em ? '?v=' + new Date(linha.atualizado_em).getTime() : '';
         alvo.src = base + '/storage/v1/object/public/site/' + linha.arquivo_path + versao;
+      });
+    })
+    .catch(function () {});
+})();
+</script>
+<script>
+// Video de apresentacao (painel admin > Configuracoes do site). Se houver um
+// link do YouTube cadastrado, o botao "Conhecer a plataforma" abre um popup
+// com o video em vez de ir direto para o login. Sem link cadastrado, o botao
+// mantem o comportamento padrao (href="/login") — a pagina nunca depende disto.
+(function () {
+  var base = '%VITE_SUPABASE_URL%';
+  var chave = '%VITE_SUPABASE_ANON_KEY%';
+  if (base.indexOf('%') === 0 || !base) {
+    base = 'https://vceeaqswgasjsonixvqs.supabase.co';
+    chave = 'sb_publishable_p7Oeenc-vd0_DF6BguRPCw_iUCcAdwP';
+  }
+  base = (base || '').replace(/\/+$/, '');
+
+  function extrairId(url) {
+    var m = String(url || '').match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([\w-]{11})/);
+    return m ? m[1] : '';
+  }
+
+  function montarModal(id) {
+    var overlay = document.createElement('div');
+    overlay.id = 'fs-video-modal';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;padding:24px;background:rgba(8,14,32,0.82);backdrop-filter:blur(4px);';
+    overlay.innerHTML =
+      '<div style="position:relative;width:100%;max-width:920px;">' +
+        '<button type="button" aria-label="Fechar video" style="position:absolute;top:-42px;right:0;width:34px;height:34px;border-radius:9px;border:1px solid rgba(255,255,255,0.28);background:rgba(255,255,255,0.08);color:#fff;font-size:20px;line-height:1;cursor:pointer;">&times;</button>' +
+        '<div style="position:relative;width:100%;aspect-ratio:16/9;border-radius:14px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,0.5);background:#000;">' +
+          '<iframe style="position:absolute;inset:0;width:100%;height:100%;border:0;" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>' +
+        '</div>' +
+      '</div>';
+    document.body.appendChild(overlay);
+
+    var iframe = overlay.querySelector('iframe');
+    var fechar = overlay.querySelector('button');
+
+    function abrir() {
+      iframe.src = 'https://www.youtube.com/embed/' + id + '?autoplay=1&rel=0';
+      overlay.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+    function fecharModal() {
+      overlay.style.display = 'none';
+      iframe.src = '';
+      document.body.style.overflow = '';
+    }
+    fechar.addEventListener('click', fecharModal);
+    overlay.addEventListener('click', function (e) { if (e.target === overlay) fecharModal(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') fecharModal(); });
+
+    return abrir;
+  }
+
+  fetch(base + '/rest/v1/site_config?chave=eq.video_apresentacao&select=valor', {
+    headers: { apikey: chave, Authorization: 'Bearer ' + chave }
+  })
+    .then(function (r) { return r.ok ? r.json() : []; })
+    .then(function (linhas) {
+      var id = extrairId(linhas && linhas[0] && linhas[0].valor);
+      if (!id) return;
+      var botao = document.getElementById('fs-btn-video');
+      if (!botao) return;
+      var abrir = montarModal(id);
+      botao.addEventListener('click', function (e) {
+        e.preventDefault();
+        abrir();
       });
     })
     .catch(function () {});
