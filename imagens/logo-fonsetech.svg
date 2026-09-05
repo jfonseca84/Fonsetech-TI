@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 88">
-  <rect x="0" y="6" width="76" height="76" rx="18" fill="#f2f6fc" stroke="rgba(20,45,100,0.24)" stroke-width="1.5"/>
-  <path d="M38 16 L66 44 L38 72 L10 44 Z" fill="none" stroke="#2f6bef" stroke-width="6" stroke-linejoin="round"/>
-  <circle cx="38" cy="44" r="11" fill="#2f6bef"/>
-  <text x="96" y="60" font-family="'Plus Jakarta Sans', Arial, sans-serif" font-weight="800" font-size="44" letter-spacing="-1">
-    <tspan fill="#0d1730">Fonse</tspan><tspan fill="#2f6bef">tech</tspan>
-  </text>
-</svg>

@@ -125,11 +125,7 @@ function CartaoEspaco({ espaco, registro, autorId, aoTerminar }) {
         display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative'
       }}>
         {url ? (
-          <img src={url} alt="" style={{
-            width: '100%', height: '100%', display: 'block',
-            objectFit: espaco.slug === 'logo' ? 'contain' : 'cover',
-            background: espaco.slug === 'logo' ? c.branco : undefined
-          }} />
+          <img src={url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
         ) : (
           <div style={{ textAlign: 'center', padding: 16 }}>
             <Icone nome="monitor" tamanho={22} cor="#a9b6d0" largura={1.7} />
