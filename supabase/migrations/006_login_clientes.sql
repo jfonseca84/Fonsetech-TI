@@ -1,37 +1,24 @@
 -- =====================================================================
--- 005_login_clientes.sql
+-- 006_login_clientes.sql
 -- Conserta e completa o cadastro de login para usuarios de uma empresa
 -- (aba Clientes > perfil da empresa > "Novo usuario", e o convite de
--- colaborador em "Minha empresa" do lado do cliente). Tres problemas
+-- colaborador em "Minha empresa" do lado do cliente). Depende da
+-- migration 005 (papel 'cliente_admin') ja commitada. Dois problemas
 -- represados desde a evolucao multitenant (migration 003):
 --
 -- 1. profiles.email / .cargo / .whatsapp nunca existiram na tabela —
 --    listarUsuariosEmpresa() e criarUsuarioEmpresa() (src/dados/consultas.js)
 --    ja liam/gravavam essas colunas, entao qualquer uso falhava com
---    "column profiles.email does not exist".
--- 2. O papel 'cliente_admin' ("Admin da Empresa") e usado em Clientes.jsx,
---    PerfilEmpresa360.jsx e MinhaEmpresa.jsx, mas o enum papel_usuario
---    (migration 001) so tem 'cliente' e 'admin' — gravar 'cliente_admin'
---    sempre estourava "invalid input value for enum papel_usuario".
---    A constraint cliente_tem_empresa tambem precisa aceitar esse papel.
--- 3. Criar so a linha em "profiles" nunca criou um LOGIN de verdade: sem
+--    "column profiles.email does not exist". A constraint
+--    cliente_tem_empresa tambem precisa aceitar 'cliente_admin'.
+-- 2. Criar so a linha em "profiles" nunca criou um LOGIN de verdade: sem
 --    um usuario em auth.users com senha, ninguem consegue entrar. Isso so
 --    pode ser feito com a service_role key, nunca pelo navegador — dai a
 --    RPC abaixo, chamada pela rota /api/admin/criar-usuario (server.js)
 --    que ja roda com essa chave.
 --
--- IMPORTANTE: rode o bloco "ALTER TYPE" abaixo sozinho primeiro (selecione
--- so essas duas linhas e clique Run) se o restante do script reclamar de
--- "unsafe use of new value of enum type" — o Postgres exige que um valor
--- de enum novo seja commitado antes de ser usado em outra instrucao da
--- mesma transacao. Colar o arquivo inteiro de uma vez normalmente funciona
--- (o SQL Editor do Supabase roda cada statement como uma transacao própria),
--- mas depende da versao; rodar em duas etapas sempre funciona.
---
 -- Idempotente, sem DROP nem DELETE.
 -- =====================================================================
-
-alter type papel_usuario add value if not exists 'cliente_admin';
 
 alter table public.profiles
   add column if not exists email citext,

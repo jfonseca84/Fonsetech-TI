@@ -97,9 +97,12 @@ abra **SQL Editor** e execute, nesta ordem, o conteúdo de:
 4. `supabase/migrations/004_hardening_seguranca.sql` — cifra a senha de acesso remoto
    (Vault + `pgcrypto`, RPCs `salvar_acesso_remoto`/`obter_senha_acesso_remoto`) e fecha
    duas brechas de RLS encontradas na 003 (campos internos de `empresas` e `auditoria_logs`)
-5. `supabase/migrations/005_login_clientes.sql` — corrige colunas que faltavam em `profiles`
-   (`email`/`cargo`/`whatsapp`), adiciona o papel `cliente_admin` e cria a RPC
-   `criar_perfil_cliente`, usada por `/api/admin/criar-usuario` para o cadastro de login
+5. `supabase/migrations/005_papel_cliente_admin.sql` — adiciona o papel `cliente_admin`
+   ao enum `papel_usuario` (isolado num arquivo próprio: um valor de enum novo não pode
+   ser usado na mesma transação em que é criado — rodar junto com a 006 dá erro 55P04)
+6. `supabase/migrations/006_login_clientes.sql` — corrige colunas que faltavam em `profiles`
+   (`email`/`cargo`/`whatsapp`) e cria a RPC `criar_perfil_cliente`, usada por
+   `/api/admin/criar-usuario` para o cadastro de login
 
 **Opção B — CLI:**
 ```bash
@@ -348,7 +351,8 @@ railway up
 │   │   ├── 002_site_imagens.sql                imagens da landing trocaveis pelo painel
 │   │   ├── 003_fonsedesk_evolucao_multitenant.sql  planos, CRM, financeiro, auditoria
 │   │   ├── 004_hardening_seguranca.sql         Vault + pgcrypto, correcoes de RLS
-│   │   └── 005_login_clientes.sql              login de cliente (usuario + senha reais)
+│   │   ├── 005_papel_cliente_admin.sql         enum cliente_admin (isolado, ver 006)
+│   │   └── 006_login_clientes.sql              login de cliente (usuario + senha reais)
 │   └── seed.sql
 ├── scripts/
 │   └── check-secrets.js             varredura de segredos (Node, multiplataforma)
@@ -516,15 +520,17 @@ mudança de estrutura maior do que o pedido, mas fica registrado para decisão c
 3. ~~Fluxo de convite de cliente~~ — concluído: `/api/admin/criar-usuario` (server.js)
    usa `auth.admin.createUser` com a `service_role` para criar login (e-mail + senha
    definida pelo admin) e vincula o perfil via RPC `criar_perfil_cliente`
-   (`supabase/migrations/005_login_clientes.sql`). Cadastre `SUPABASE_SERVICE_ROLE_KEY`
-   na Railway para habilitar.
+   (`supabase/migrations/005_papel_cliente_admin.sql` + `006_login_clientes.sql`).
+   Cadastre `SUPABASE_SERVICE_ROLE_KEY` na Railway para habilitar.
 4. **Upload das apostilas** no bucket `materiais` e preenchimento de `arquivo_path`
 5. **Links reais do Google Drive** em `materiais.link_externo` (hoje vazios — o botão
    fica como "Em breve")
 6. **Notificações por e-mail** ao abrir/responder chamado, se desejado
 
-**Rode as migrations pendentes** (SQL Editor do Supabase, uma vez cada, na ordem):
-`004_hardening_seguranca.sql` e `005_login_clientes.sql` (a 005 precisa da 001+003 já aplicadas).
+**Rode as migrations pendentes** (SQL Editor do Supabase, uma vez cada, nesta ordem):
+`004_hardening_seguranca.sql`, depois `005_papel_cliente_admin.sql`, depois
+`006_login_clientes.sql`. A 005 precisa ficar sozinha (não colar junto com a 006) —
+um valor de enum novo não pode ser usado na mesma transação em que é criado.
 
 ## Qualidade e observabilidade
 

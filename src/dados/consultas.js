@@ -121,7 +121,7 @@ export async function listarUsuariosEmpresa(empresaId) {
  * vinculado, via rota de servidor — o navegador nunca tem a service_role
  * key, entao criar um usuario com senha so pode acontecer no backend.
  * Ver POST /api/admin/criar-usuario em server.js e a RPC
- * criar_perfil_cliente em supabase/migrations/005_login_clientes.sql.
+ * criar_perfil_cliente em supabase/migrations/006_login_clientes.sql.
  */
 export async function criarUsuarioEmpresa(dados) {
   const { data: { session } } = await supabase.auth.getSession();
