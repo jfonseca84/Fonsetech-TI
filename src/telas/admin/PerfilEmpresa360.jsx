@@ -27,7 +27,7 @@ export default function PerfilEmpresa360({ empresa, emFechar, emAtualizar }) {
 
   // Estados de formulário de novo usuário
   const [mostrarModalNovoUsuario, setMostrarModalNovoUsuario] = useState(false);
-  const [novoUsuario, setNovoUsuario] = useState({ nome: '', email: '', telefone: '', whatsapp: '', cargo: '', role: 'cliente' });
+  const [novoUsuario, setNovoUsuario] = useState({ nome: '', email: '', password: '', telefone: '', whatsapp: '', cargo: '', role: 'cliente' });
   const [salvandoUsuario, setSalvandoUsuario] = useState(false);
   const [mensagemSucesso, setMensagemSucesso] = useState('');
   const [erroUsuario, setErroUsuario] = useState('');
@@ -67,6 +67,10 @@ export default function PerfilEmpresa360({ empresa, emFechar, emAtualizar }) {
       setErroUsuario('Nome e E-mail são obrigatórios.');
       return;
     }
+    if (!novoUsuario.password || novoUsuario.password.length < 8) {
+      setErroUsuario('Defina uma senha com pelo menos 8 caracteres.');
+      return;
+    }
     setSalvandoUsuario(true);
     setErroUsuario('');
     try {
@@ -77,7 +81,7 @@ export default function PerfilEmpresa360({ empresa, emFechar, emAtualizar }) {
         recurso: 'Usuários'
       });
       setMensagemSucesso(`Usuário ${novoUsuario.nome} adicionado com sucesso!`);
-      setNovoUsuario({ nome: '', email: '', telefone: '', whatsapp: '', cargo: '', role: 'cliente' });
+      setNovoUsuario({ nome: '', email: '', password: '', telefone: '', whatsapp: '', cargo: '', role: 'cliente' });
       setMostrarModalNovoUsuario(false);
       carregarDados();
       setTimeout(() => setMensagemSucesso(''), 4000);
@@ -520,6 +524,7 @@ export default function PerfilEmpresa360({ empresa, emFechar, emAtualizar }) {
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 12 }}>
                     <Campo rotulo="Nome do Usuário" valor={novoUsuario.nome} onChange={v => setNovoUsuario({ ...novoUsuario, nome: v })} obrigatorio />
                     <Campo rotulo="E-mail de Acesso" tipo="email" valor={novoUsuario.email} onChange={v => setNovoUsuario({ ...novoUsuario, email: v })} obrigatorio />
+                    <Campo rotulo="Senha de Acesso" tipo="password" valor={novoUsuario.password} onChange={v => setNovoUsuario({ ...novoUsuario, password: v })} obrigatorio dica="Mínimo de 8 caracteres" />
                     <Campo rotulo="Cargo / Função" valor={novoUsuario.cargo} onChange={v => setNovoUsuario({ ...novoUsuario, cargo: v })} />
                     <Campo rotulo="Telefone" valor={novoUsuario.telefone} onChange={v => setNovoUsuario({ ...novoUsuario, telefone: v })} />
                     <Campo rotulo="WhatsApp" valor={novoUsuario.whatsapp} onChange={v => setNovoUsuario({ ...novoUsuario, whatsapp: v })} />

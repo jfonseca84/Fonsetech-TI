@@ -147,6 +147,98 @@ const fallbackDaSpa = {
         return;
       }
 
+      if (rota === '/api/admin/criar-usuario' && req.method === 'POST') {
+        let corpo = '';
+        req.on('data', chunk => { corpo += chunk; });
+        req.on('end', async () => {
+          res.setHeader('Content-Type', 'application/json');
+          const serviceRoleKey = limparValor(process.env.SUPABASE_SERVICE_ROLE_KEY);
+          if (!serviceRoleKey) {
+            res.statusCode = 501;
+            return res.end(JSON.stringify({
+              error: { message: 'SUPABASE_SERVICE_ROLE_KEY não configurada no .env local.' }
+            }));
+          }
+          const token = (req.headers.authorization || '').replace(/^Bearer /, '');
+          if (!token) {
+            res.statusCode = 401;
+            return res.end(JSON.stringify({ error: { message: 'Sessão ausente.' } }));
+          }
+          try {
+            const { nome, email, password, telefone, whatsapp, cargo, empresaId, role } = JSON.parse(corpo || '{}');
+            if (!nome || !email || !password || !empresaId) {
+              res.statusCode = 400;
+              return res.end(JSON.stringify({ error: { message: 'Informe nome, e-mail, senha e empresa.' } }));
+            }
+            if (String(password).length < 8) {
+              res.statusCode = 400;
+              return res.end(JSON.stringify({ error: { message: 'A senha precisa ter pelo menos 8 caracteres.' } }));
+            }
+            const { supabaseUrl, supabaseAnonKey } = obterConfigPublica();
+
+            const respUsuario = await fetch(`${supabaseUrl}/auth/v1/user`, {
+              headers: { apikey: supabaseAnonKey, Authorization: `Bearer ${token}` }
+            });
+            if (!respUsuario.ok) {
+              res.statusCode = 401;
+              return res.end(JSON.stringify({ error: { message: 'Sessão inválida ou expirada.' } }));
+            }
+            const usuarioChamador = await respUsuario.json();
+
+            const respPerfil = await fetch(
+              `${supabaseUrl}/rest/v1/profiles?id=eq.${usuarioChamador.id}&select=role,ativo,empresa_id`,
+              { headers: { apikey: supabaseAnonKey, Authorization: `Bearer ${token}` } }
+            );
+            const perfis = respPerfil.ok ? await respPerfil.json() : [];
+            const perfilChamador = perfis[0];
+            const ehAdminFonsetech = perfilChamador?.role === 'admin' && perfilChamador?.ativo;
+            const ehAdminDaEmpresa = perfilChamador?.role === 'cliente_admin' && perfilChamador?.ativo;
+            if (!ehAdminFonsetech && !ehAdminDaEmpresa) {
+              res.statusCode = 403;
+              return res.end(JSON.stringify({ error: { message: 'Apenas administradores podem cadastrar login de clientes.' } }));
+            }
+            const empresaFinal = ehAdminFonsetech ? empresaId : perfilChamador.empresa_id;
+            const roleFinal = role === 'cliente_admin' ? 'cliente_admin' : 'cliente';
+            if (!empresaFinal) {
+              res.statusCode = 400;
+              return res.end(JSON.stringify({ error: { message: 'Empresa não identificada.' } }));
+            }
+
+            const respCriar = await fetch(`${supabaseUrl}/auth/v1/admin/users`, {
+              method: 'POST',
+              headers: { apikey: serviceRoleKey, Authorization: `Bearer ${serviceRoleKey}`, 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email: String(email).trim(), password: String(password), email_confirm: true, user_metadata: { nome } })
+            });
+            const dadosCriados = await respCriar.json();
+            if (!respCriar.ok) {
+              res.statusCode = respCriar.status;
+              return res.end(JSON.stringify({ error: { message: dadosCriados.msg || dadosCriados.message || 'Não foi possível criar o usuário no Supabase Auth.' } }));
+            }
+
+            const respPerfilNovo = await fetch(`${supabaseUrl}/rest/v1/rpc/criar_perfil_cliente`, {
+              method: 'POST',
+              headers: { apikey: serviceRoleKey, Authorization: `Bearer ${serviceRoleKey}`, 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                p_id: dadosCriados.id, p_nome: nome, p_email: email, p_telefone: telefone || null,
+                p_whatsapp: whatsapp || null, p_cargo: cargo || null, p_empresa_id: empresaFinal,
+                p_role: roleFinal
+              })
+            });
+            if (!respPerfilNovo.ok) {
+              res.statusCode = 502;
+              return res.end(JSON.stringify({ error: { message: 'Login criado, mas houve um erro ao salvar o perfil. Contate o suporte técnico com o e-mail: ' + email } }));
+            }
+
+            res.statusCode = 201;
+            return res.end(JSON.stringify({ id: dadosCriados.id, email: dadosCriados.email }));
+          } catch (err) {
+            res.statusCode = 502;
+            return res.end(JSON.stringify({ error: { message: 'Erro ao contatar o Supabase: ' + err.message } }));
+          }
+        });
+        return;
+      }
+
       const aceitaHtml = (req.headers.accept || '').includes('text/html');
       const ehArquivo = rota.includes('.') || rota.startsWith('/@') || rota.startsWith('/src/') || rota.startsWith('/node_modules/');
       if (req.method === 'GET' && aceitaHtml && !ehArquivo && rota !== '/') {

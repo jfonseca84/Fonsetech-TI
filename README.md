@@ -91,8 +91,15 @@ abra **SQL Editor** e execute, nesta ordem, o conteúdo de:
 
 1. `supabase/migrations/001_setup_completo.sql` — tabelas, tipos, índices, triggers,
    Row Level Security e o bucket privado das apostilas, em um único script idempotente
-2. `supabase/migrations/002_cifra_acesso_remoto.sql` — cifra a senha de acesso remoto
-   (Vault + `pgcrypto`) e cria as RPCs `salvar_acesso_remoto`/`obter_senha_acesso_remoto`
+2. `supabase/migrations/002_site_imagens.sql` — imagens da landing page trocáveis pelo painel
+3. `supabase/migrations/003_fonsedesk_evolucao_multitenant.sql` — planos, CRM, financeiro,
+   auditoria e campos extras de `empresas`/`chamados`/`agendamentos`
+4. `supabase/migrations/004_hardening_seguranca.sql` — cifra a senha de acesso remoto
+   (Vault + `pgcrypto`, RPCs `salvar_acesso_remoto`/`obter_senha_acesso_remoto`) e fecha
+   duas brechas de RLS encontradas na 003 (campos internos de `empresas` e `auditoria_logs`)
+5. `supabase/migrations/005_login_clientes.sql` — corrige colunas que faltavam em `profiles`
+   (`email`/`cargo`/`whatsapp`), adiciona o papel `cliente_admin` e cria a RPC
+   `criar_perfil_cliente`, usada por `/api/admin/criar-usuario` para o cadastro de login
 
 **Opção B — CLI:**
 ```bash
@@ -200,7 +207,7 @@ Supabase: a chave identifica o projeto, a policy decide o que cada usuário vê.
 
 | Variável | Finalidade | Quando cadastrar |
 |---|---|---|
-| `SUPABASE_SERVICE_ROLE_KEY` | Ignora todo o RLS. Necessária só para convidar usuário / resetar senha via rota de servidor ou Edge Function. | Apenas quando esse fluxo existir |
+| `SUPABASE_SERVICE_ROLE_KEY` | Ignora todo o RLS. Necessária para `/api/admin/criar-usuario` (cadastro de login de cliente, aba Clientes → perfil da empresa → "Novo usuário"). Sem ela, o botão funciona mas devolve erro explicando o que falta. | **Obrigatória** para usar esse cadastro; pegue em Supabase → Settings → API → service_role |
 | `DATABASE_URL` | Conexão Postgres direta (migrations, scripts). Contém senha. | Apenas se rodar migrations pela Railway |
 | `PORT` | Porta do Express. **A Railway injeta sozinha** — não cadastre. | — |
 
@@ -337,8 +344,11 @@ railway up
 │       └── monitoramento.js         captura erros globais -> /api/client-log
 ├── supabase/
 │   ├── migrations/
-│   │   ├── 001_setup_completo.sql        schema + RLS + storage (idempotente)
-│   │   └── 002_cifra_acesso_remoto.sql   Vault + pgcrypto p/ senha de acesso remoto
+│   │   ├── 001_setup_completo.sql              schema + RLS + storage (idempotente)
+│   │   ├── 002_site_imagens.sql                imagens da landing trocaveis pelo painel
+│   │   ├── 003_fonsedesk_evolucao_multitenant.sql  planos, CRM, financeiro, auditoria
+│   │   ├── 004_hardening_seguranca.sql         Vault + pgcrypto, correcoes de RLS
+│   │   └── 005_login_clientes.sql              login de cliente (usuario + senha reais)
 │   └── seed.sql
 ├── scripts/
 │   └── check-secrets.js             varredura de segredos (Node, multiplataforma)
@@ -501,15 +511,20 @@ mudança de estrutura maior do que o pedido, mas fica registrado para decisão c
 
 1. ~~Implementar a interface em React~~ — concluído, telas convertidas dos `.dc.html`
 2. ~~Definir a cifragem das senhas de acesso remoto~~ — concluído no código: veja
-   `supabase/migrations/002_cifra_acesso_remoto.sql` (Vault + `pgcrypto`) e
+   `supabase/migrations/004_hardening_seguranca.sql` (Vault + `pgcrypto`) e
    `salvarAcessoRemoto`/`obterSenhaAcessoRemoto` em `src/dados/consultas.js`.
-   **Falta apenas rodar essa migration no projeto Supabase** (SQL Editor ou `supabase db push`)
-3. **Fluxo de convite de cliente** — precisa de rota de servidor com `service_role`
-   (`auth.admin.inviteUserByEmail`), pois a chave anônima não cria usuários
+3. ~~Fluxo de convite de cliente~~ — concluído: `/api/admin/criar-usuario` (server.js)
+   usa `auth.admin.createUser` com a `service_role` para criar login (e-mail + senha
+   definida pelo admin) e vincula o perfil via RPC `criar_perfil_cliente`
+   (`supabase/migrations/005_login_clientes.sql`). Cadastre `SUPABASE_SERVICE_ROLE_KEY`
+   na Railway para habilitar.
 4. **Upload das apostilas** no bucket `materiais` e preenchimento de `arquivo_path`
 5. **Links reais do Google Drive** em `materiais.link_externo` (hoje vazios — o botão
    fica como "Em breve")
 6. **Notificações por e-mail** ao abrir/responder chamado, se desejado
+
+**Rode as migrations pendentes** (SQL Editor do Supabase, uma vez cada, na ordem):
+`004_hardening_seguranca.sql` e `005_login_clientes.sql` (a 005 precisa da 001+003 já aplicadas).
 
 ## Qualidade e observabilidade
 

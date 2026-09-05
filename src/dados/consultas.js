@@ -1,4 +1,4 @@
-import { supabase } from '../lib/supabase.js';
+import { supabase, amigavel } from '../lib/supabase.js';
 
 /**
  * Camada de acesso. Nenhuma consulta filtra por empresa manualmente:
@@ -116,23 +116,42 @@ export async function listarUsuariosEmpresa(empresaId) {
   return data || [];
 }
 
+/**
+ * Cria o login de verdade (usuario + senha no Supabase Auth) e o perfil
+ * vinculado, via rota de servidor — o navegador nunca tem a service_role
+ * key, entao criar um usuario com senha so pode acontecer no backend.
+ * Ver POST /api/admin/criar-usuario em server.js e a RPC
+ * criar_perfil_cliente em supabase/migrations/005_login_clientes.sql.
+ */
 export async function criarUsuarioEmpresa(dados) {
-  const { data, error } = await supabase
-    .from('profiles')
-    .insert({
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session?.access_token) {
+    throw amigavel('Sua sessão expirou. Entre novamente para cadastrar o usuário.');
+  }
+
+  const resposta = await fetch('/api/admin/criar-usuario', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${session.access_token}`
+    },
+    body: JSON.stringify({
       nome: dados.nome,
       email: dados.email,
+      password: dados.password,
       telefone: dados.telefone || null,
       whatsapp: dados.whatsapp || null,
       cargo: dados.cargo || null,
-      role: dados.role || 'cliente',
-      empresa_id: dados.empresa_id,
-      ativo: true
+      empresaId: dados.empresa_id,
+      role: dados.role || 'cliente'
     })
-    .select()
-    .single();
-  if (error) throw error;
-  return data;
+  });
+
+  const corpo = await resposta.json().catch(() => ({}));
+  if (!resposta.ok) {
+    throw amigavel(corpo.error?.message || 'Não foi possível criar o usuário.');
+  }
+  return corpo;
 }
 
 export async function atualizarUsuarioEmpresa(id, campos) {
@@ -242,20 +261,10 @@ export async function converterLeadEmCliente(leadId, dadosExtras = {}) {
     probabilidade: 100
   }).eq('id', leadId);
 
-  // 3. Se houver e-mail de contato, cria o usuário cliente_admin correspondente
-  if (lead.email) {
-    await supabase.from('profiles').insert({
-      nome: lead.nome,
-      email: lead.email,
-      telefone: lead.telefone,
-      whatsapp: lead.whatsapp,
-      role: 'cliente_admin',
-      cargo: 'Responsável',
-      empresa_id: novaEmpresa.id,
-      ativo: true
-    });
-  }
-
+  // O login do responsavel (usuario + senha) e criado depois, na tela da
+  // empresa ("Novo usuario") — criar_usuario_empresa exige uma senha e so
+  // pode ser feito via /api/admin/criar-usuario (precisa da service_role
+  // key), o que essa conversao automatica de lead nao tem como fornecer.
   return novaEmpresa;
 }
 

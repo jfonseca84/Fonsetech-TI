@@ -43,6 +43,15 @@ const limiteClientLog = rateLimit({
   legacyHeaders: false
 });
 
+// Criacao de usuario e mais sensivel (usa a service_role): limite mais
+// apertado que os outros, ainda generoso para uso administrativo normal.
+const limiteCriarUsuario = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 20,
+  standardHeaders: true,
+  legacyHeaders: false
+});
+
 // Sanitizacao segura de configuracoes publicas
 function limparValor(val) {
   if (!val) return '';
@@ -177,6 +186,133 @@ app.post('/api/auth/login', limiteLogin, async (req, res) => {
         message: 'Não foi possível conectar ao servidor de autenticação do Supabase. Verifique sua conexão com a internet.'
       }
     });
+  }
+});
+
+// Cria o login (usuario + senha no Supabase Auth) e o perfil vinculado
+// para um contato de empresa. So funciona com SUPABASE_SERVICE_ROLE_KEY
+// configurada — sem ela, retorna 501 explicando o que falta.
+//
+// Fluxo:
+//   1. Confere que quem chamou tem um token valido e e admin ativo
+//      (usando a ANON key, respeitando RLS — nao precisamos da
+//      service_role so para ler o proprio papel de quem pediu).
+//   2. Com a service_role, cria o usuario no Supabase Auth com a senha
+//      informada (email_confirm:true — sem precisar de link por e-mail).
+//   3. Vincula o perfil via RPC criar_perfil_cliente (migration 005).
+app.post('/api/admin/criar-usuario', limiteCriarUsuario, async (req, res) => {
+  const { supabaseUrl, supabaseAnonKey } = obterConfigPublica();
+  const serviceRoleKey = limparValor(process.env.SUPABASE_SERVICE_ROLE_KEY);
+
+  if (!serviceRoleKey) {
+    return res.status(501).json({
+      error: { message: 'SUPABASE_SERVICE_ROLE_KEY não configurada no servidor. Cadastre essa variável na Railway (Supabase → Settings → API → service_role) para habilitar a criação de login de clientes.' }
+    });
+  }
+
+  const tokenCabecalho = req.headers.authorization || '';
+  const token = tokenCabecalho.startsWith('Bearer ') ? tokenCabecalho.slice(7) : '';
+  if (!token) {
+    return res.status(401).json({ error: { message: 'Sessão ausente.' } });
+  }
+
+  const { nome, email, password, telefone, whatsapp, cargo, empresaId, role } = req.body || {};
+  if (!nome || !email || !password || !empresaId) {
+    return res.status(400).json({ error: { message: 'Informe nome, e-mail, senha e empresa.' } });
+  }
+  if (String(password).length < 8) {
+    return res.status(400).json({ error: { message: 'A senha precisa ter pelo menos 8 caracteres.' } });
+  }
+
+  try {
+    // 1. Quem esta chamando precisa ser admin ativo — verificado com a
+    // ANON key + o token da propria sessao, respeitando RLS de verdade
+    // (nao confiamos em nada que o cliente diga sobre si mesmo).
+    const respUsuario = await fetch(`${supabaseUrl}/auth/v1/user`, {
+      headers: { apikey: supabaseAnonKey, Authorization: `Bearer ${token}` }
+    });
+    if (!respUsuario.ok) {
+      return res.status(401).json({ error: { message: 'Sessão inválida ou expirada.' } });
+    }
+    const usuarioChamador = await respUsuario.json();
+
+    const respPerfil = await fetch(
+      `${supabaseUrl}/rest/v1/profiles?id=eq.${usuarioChamador.id}&select=role,ativo,empresa_id`,
+      { headers: { apikey: supabaseAnonKey, Authorization: `Bearer ${token}` } }
+    );
+    const perfis = respPerfil.ok ? await respPerfil.json() : [];
+    const perfilChamador = perfis[0];
+    const ehAdminFonsetech = perfilChamador?.role === 'admin' && perfilChamador?.ativo;
+    const ehAdminDaEmpresa = perfilChamador?.role === 'cliente_admin' && perfilChamador?.ativo;
+    if (!ehAdminFonsetech && !ehAdminDaEmpresa) {
+      return res.status(403).json({ error: { message: 'Apenas administradores podem cadastrar login de clientes.' } });
+    }
+
+    // Um admin da Fonsetech pode cadastrar para qualquer empresa e decidir
+    // se o novo usuario tambem sera "admin da empresa". Um admin de empresa
+    // (cliente_admin) so cadastra dentro da propria empresa, e nunca cria
+    // outro admin da Fonsetech — o valor enviado pelo cliente para
+    // empresaId/role e ignorado nesse caso, sempre o da propria sessao.
+    const empresaFinal = ehAdminFonsetech ? empresaId : perfilChamador.empresa_id;
+    const roleFinal = role === 'cliente_admin' ? 'cliente_admin' : 'cliente';
+    if (!empresaFinal) {
+      return res.status(400).json({ error: { message: 'Empresa não identificada.' } });
+    }
+
+    // 2. Cria o usuario de fato no Supabase Auth, com a service_role.
+    const respCriar = await fetch(`${supabaseUrl}/auth/v1/admin/users`, {
+      method: 'POST',
+      headers: {
+        apikey: serviceRoleKey,
+        Authorization: `Bearer ${serviceRoleKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        email: String(email).trim(),
+        password: String(password),
+        email_confirm: true,
+        user_metadata: { nome }
+      })
+    });
+    const dadosCriados = await respCriar.json();
+    if (!respCriar.ok) {
+      return res.status(respCriar.status).json({
+        error: { message: dadosCriados.msg || dadosCriados.message || 'Não foi possível criar o usuário no Supabase Auth.' }
+      });
+    }
+
+    // 3. Vincula o perfil (nome/telefone/empresa/role) ao usuario recem-criado.
+    const respPerfilNovo = await fetch(`${supabaseUrl}/rest/v1/rpc/criar_perfil_cliente`, {
+      method: 'POST',
+      headers: {
+        apikey: serviceRoleKey,
+        Authorization: `Bearer ${serviceRoleKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        p_id: dadosCriados.id,
+        p_nome: nome,
+        p_email: email,
+        p_telefone: telefone || null,
+        p_whatsapp: whatsapp || null,
+        p_cargo: cargo || null,
+        p_empresa_id: empresaFinal,
+        p_role: roleFinal
+      })
+    });
+    if (!respPerfilNovo.ok) {
+      const erroPerfil = await respPerfilNovo.json().catch(() => ({}));
+      // O login ja foi criado no Auth; avisa claramente em vez de deixar orfao e silencioso.
+      console.error('[server.js] Usuario criado no Auth mas falhou ao vincular perfil:', erroPerfil);
+      return res.status(502).json({
+        error: { message: 'Login criado, mas houve um erro ao salvar o perfil. Contate o suporte técnico com o e-mail: ' + email }
+      });
+    }
+
+    return res.status(201).json({ id: dadosCriados.id, email: dadosCriados.email });
+  } catch (err) {
+    console.error('[server.js] Erro ao criar usuario de cliente:', err);
+    return res.status(502).json({ error: { message: 'Erro ao contatar o Supabase. Tente novamente.' } });
   }
 });
 

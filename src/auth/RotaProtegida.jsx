@@ -10,6 +10,15 @@ import { Carregando } from '../ui/Estado.jsx';
  * forcasse /admin veria as telas vazias, porque as consultas
  * retornam apenas o que a policy autoriza.
  */
+// 'cliente_admin' e uma variante de 'cliente' (gerencia a equipe da propria
+// empresa), nao uma area separada — a guarda de /dashboard (papel="cliente")
+// precisa aceitar os dois. Comparar com !== deixava cliente_admin preso num
+// loop: barrado em /dashboard, redirecionado para... /dashboard.
+const PAPEIS_PERMITIDOS = {
+  cliente: ['cliente', 'cliente_admin'],
+  admin: ['admin']
+};
+
 export default function RotaProtegida({ papel, children }) {
   const { carregando, autenticado, perfil, erro } = useSessao();
 
@@ -20,7 +29,7 @@ export default function RotaProtegida({ papel, children }) {
 
   if (!perfil) return <Navigate to="/login" replace />;
 
-  if (papel && perfil.role !== papel) {
+  if (papel && !PAPEIS_PERMITIDOS[papel]?.includes(perfil.role)) {
     return <Navigate to={perfil.role === 'admin' ? '/admin' : '/dashboard'} replace />;
   }
 

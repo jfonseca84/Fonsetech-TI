@@ -26,7 +26,7 @@ export default function MinhaEmpresa() {
   // Equipe / Usuários da Empresa
   const [usuarios, setUsuarios] = useState([]);
   const [modalNovoColaborador, setModalNovoColaborador] = useState(false);
-  const [novoColab, setNovoColab] = useState({ nome: '', email: '', telefone: '', cargo: '', role: 'cliente' });
+  const [novoColab, setNovoColab] = useState({ nome: '', email: '', password: '', telefone: '', cargo: '', role: 'cliente' });
   const [salvandoColab, setSalvandoColab] = useState(false);
 
   const eAdminCliente = perfil?.role === 'cliente_admin' || perfil?.role === 'admin';
@@ -103,6 +103,10 @@ export default function MinhaEmpresa() {
       alert('Nome e e-mail são obrigatórios.');
       return;
     }
+    if (!novoColab.password || novoColab.password.length < 8) {
+      alert('Defina uma senha com pelo menos 8 caracteres.');
+      return;
+    }
     setSalvandoColab(true);
     try {
       await criarUsuarioEmpresa({
@@ -111,7 +115,7 @@ export default function MinhaEmpresa() {
       });
       setOk(`Colaborador ${novoColab.nome} adicionado com sucesso!`);
       setModalNovoColaborador(false);
-      setNovoColab({ nome: '', email: '', telefone: '', cargo: '', role: 'cliente' });
+      setNovoColab({ nome: '', email: '', password: '', telefone: '', cargo: '', role: 'cliente' });
       carregarEquipe(perfil.empresa_id);
     } catch (err) {
       alert('Erro ao cadastrar colaborador: ' + err.message);
@@ -290,6 +294,7 @@ export default function MinhaEmpresa() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 12 }}>
               <Campo label="Nome Completo" value={novoColab.nome} onChange={e => setNovoColab({ ...novoColab, nome: e.target.value })} required />
               <Campo label="E-mail Corporativo" type="email" value={novoColab.email} onChange={e => setNovoColab({ ...novoColab, email: e.target.value })} required />
+              <Campo label="Senha de Acesso" type="password" value={novoColab.password} onChange={e => setNovoColab({ ...novoColab, password: e.target.value })} required dica="Mínimo de 8 caracteres" />
               <Campo label="Cargo / Setor" value={novoColab.cargo} onChange={e => setNovoColab({ ...novoColab, cargo: e.target.value })} placeholder="Ex: Financeiro" />
               <Campo label="Telefone / WhatsApp" value={novoColab.telefone} onChange={e => setNovoColab({ ...novoColab, telefone: e.target.value })} />
               <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
