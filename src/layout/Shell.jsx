@@ -19,8 +19,8 @@ const VARIANTES = {
   },
   admin: {
     fundo: c.sidebarAdmin, navInativa: c.navAdmin, eyebrow: 'PAINEL ADMINISTRATIVO',
-    marca: '#c4b5fd', selo: 'rgba(124, 58, 237, 0.28)', seloBorda: 'rgba(167, 139, 250, 0.4)',
-    rodapeBg: 'rgba(70, 40, 140, 0.36)', rodapeBorda: 'rgba(167, 139, 250, 0.22)', eyebrowCor: '#a78bfa'
+    marca: '#7ba7e0', selo: 'rgba(60, 110, 200, 0.22)', seloBorda: 'rgba(100, 145, 220, 0.3)',
+    rodapeBg: 'rgba(15, 40, 90, 0.42)', rodapeBorda: 'rgba(100, 145, 220, 0.18)', eyebrowCor: '#5f8ac0'
   }
 };
 
@@ -65,13 +65,13 @@ export default function Shell({ variante, itens, rodape, cabecalho }) {
             }}>
               <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.2, color: v.eyebrowCor }}>{rodape.rotulo}</div>
               <div style={{ marginTop: 8, fontSize: 14.5, fontWeight: 700, color: c.branco }}>{rodape.valor}</div>
-              <div style={{ marginTop: 4, fontSize: 12, color: variante === 'cliente' ? '#93aed4' : '#a89ccb' }}>{rodape.dica}</div>
+              <div style={{ marginTop: 4, fontSize: 12, color: variante === 'cliente' ? '#93aed4' : '#7f9ecb' }}>{rodape.dica}</div>
             </div>
           )}
           <BotaoSair aoSair={sair} corInativa={v.navInativa} />
           <div style={{
             marginTop: 14, fontSize: 9.5, letterSpacing: 0.5, textAlign: 'center',
-            color: variante === 'cliente' ? 'rgba(147, 174, 212, 0.7)' : 'rgba(168, 156, 203, 0.7)'
+            color: variante === 'cliente' ? 'rgba(147, 174, 212, 0.7)' : 'rgba(127, 158, 203, 0.7)'
           }}>{PRODUTO.assinatura}</div>
         </div>
       </aside>

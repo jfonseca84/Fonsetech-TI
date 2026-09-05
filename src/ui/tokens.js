@@ -6,9 +6,9 @@ export const c = {
   branco: '#ffffff', fundo: '#f4f7fc', fundoCampo: '#f7f9fd', cardAlt: '#f8fafd',
   borda: 'rgba(20, 45, 100, 0.1)', borda2: 'rgba(20, 45, 100, 0.14)', borda3: 'rgba(20, 45, 100, 0.16)',
   sidebarCliente: 'linear-gradient(170deg, #0d2a6b 0%, #0b1f52 100%)',
-  sidebarAdmin: 'linear-gradient(170deg, #1b1442 0%, #140f31 100%)',
+  sidebarAdmin: 'linear-gradient(170deg, #091c47 0%, #050f2c 100%)',
   loginPainel: 'linear-gradient(150deg, #0d2a6b 0%, #123a8f 46%, #0b1f52 100%)',
-  navCliente: '#b9cdec', navAdmin: '#b6a9e4',
+  navCliente: '#b9cdec', navAdmin: '#8aa6d4',
   ciano: '#3fd0e0', verde: '#22c07a', verdeTexto: '#14804a'
 };
 
