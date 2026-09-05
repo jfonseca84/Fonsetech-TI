@@ -709,6 +709,7 @@ export class MockStorage {
         this.auditoria_logs = parsed.auditoria_logs || AUDITORIA_INICIAL;
         this.site_imagens = parsed.site_imagens || [];
         this.site_config = parsed.site_config || [];
+        this.chamado_anexos = parsed.chamado_anexos || [];
         return;
       }
     } catch {
@@ -728,6 +729,7 @@ export class MockStorage {
     this.auditoria_logs = [...AUDITORIA_INICIAL];
     this.site_imagens = [];
     this.site_config = [];
+    this.chamado_anexos = [];
   }
 
   salvar() {
@@ -746,7 +748,8 @@ export class MockStorage {
         financeiro_lancamentos: this.financeiro_lancamentos,
         auditoria_logs: this.auditoria_logs,
         site_imagens: this.site_imagens,
-        site_config: this.site_config
+        site_config: this.site_config,
+        chamado_anexos: this.chamado_anexos
       }));
     } catch {
       // Quota cheia ignorada
@@ -769,6 +772,7 @@ export class MockStorage {
     if (nome === 'auditoria_logs') return this.auditoria_logs;
     if (nome === 'site_imagens') return this.site_imagens;
     if (nome === 'site_config') return this.site_config;
+    if (nome === 'chamado_anexos') return this.chamado_anexos;
     return [];
   }
 }

@@ -118,7 +118,7 @@ class MockQueryBuilder {
           obj.aberto_em = obj.aberto_em || new Date().toISOString();
           obj.status = obj.status || 'Aberto';
         }
-        if (this.tabela === 'chamado_historico') {
+        if (this.tabela === 'chamado_historico' || this.tabela === 'chamado_anexos') {
           obj.criado_em = obj.criado_em || new Date().toISOString();
         }
         colecao.unshift(obj);
@@ -227,7 +227,13 @@ class MockQueryBuilder {
 
     if (this.tabela === 'chamados') {
       const empresa = mockStorage.empresas.find(e => e.id === clone.empresa_id);
-      clone.empresas = empresa ? { id: empresa.id, razao_social: empresa.razao_social } : null;
+      clone.empresas = empresa ? {
+        id: empresa.id, razao_social: empresa.razao_social, telefone: empresa.telefone,
+        whatsapp: empresa.whatsapp, endereco: empresa.endereco, cidade: empresa.cidade,
+        estado: empresa.estado, plano: empresa.plano, status_cliente: empresa.status_cliente,
+        responsavel_nome: empresa.responsavel_nome, responsavel_cargo: empresa.responsavel_cargo,
+        responsavel_email: empresa.responsavel_email, responsavel_whatsapp: empresa.responsavel_whatsapp
+      } : null;
 
       const maquina = mockStorage.maquinas.find(m => m.id === clone.maquina_id);
       clone.maquinas = maquina ? { id: maquina.id, nome: maquina.nome, usuario: maquina.usuario } : null;

@@ -10,7 +10,10 @@ const CAMPOS_CHAMADO = `
   id, numero, titulo, categoria, descricao, prioridade, status,
   aberto_em, resolvido_em, usuario_equipamento, equipamento_livre,
   empresa_id, maquina_id, responsavel_id,
-  empresas ( id, razao_social ),
+  empresas (
+    id, razao_social, telefone, whatsapp, endereco, cidade, estado, plano, status_cliente,
+    responsavel_nome, responsavel_cargo, responsavel_email, responsavel_whatsapp
+  ),
   maquinas ( id, nome, usuario ),
   responsavel:profiles!chamados_responsavel_id_fkey ( id, nome ),
   autor:profiles!chamados_aberto_por_fkey ( id, nome )
@@ -55,6 +58,43 @@ export async function comentar(chamadoId, autorId, autorNome, texto, interno = f
     .single();
   if (error) throw error;
   return data;
+}
+
+// ---------- ANEXOS DO CHAMADO ----------
+export async function listarAnexosChamado(chamadoId) {
+  const { data, error } = await supabase
+    .from('chamado_anexos')
+    .select('id, arquivo_path, nome_original, tamanho, tipo, criado_em')
+    .eq('chamado_id', chamadoId)
+    .order('criado_em');
+  if (error) throw error;
+  return data || [];
+}
+
+/** Envia um arquivo para o bucket privado e registra o anexo do chamado. */
+export async function enviarAnexoChamado(chamadoId, arquivo, autorId) {
+  const nomeSeguro = arquivo.name.replace(/[^\w.-]+/g, '_');
+  const caminho = `${chamadoId}/${Date.now()}-${nomeSeguro}`;
+
+  const { error: erroUpload } = await supabase.storage.from('chamados-anexos').upload(caminho, arquivo);
+  if (erroUpload) throw erroUpload;
+
+  const { error } = await supabase.from('chamado_anexos').insert({
+    chamado_id: chamadoId,
+    arquivo_path: caminho,
+    nome_original: arquivo.name,
+    tamanho: arquivo.size,
+    tipo: arquivo.type,
+    enviado_por: autorId
+  });
+  if (error) throw error;
+}
+
+/** URL assinada temporaria do bucket privado de anexos de chamado. */
+export async function urlAnexoChamado(caminho, segundos = 3600) {
+  const { data, error } = await supabase.storage.from('chamados-anexos').createSignedUrl(caminho, segundos);
+  if (error) throw error;
+  return data.signedUrl;
 }
 
 /** Ultimas movimentacoes de todos os chamados (painel admin). */
@@ -371,6 +411,18 @@ export async function listarMaquinas() {
   const { data, error } = await supabase
     .from('maquinas')
     .select('id, nome, usuario, setor, modelo, cpu, memoria, disco, sistema, rede, ip, mascara, gateway, dns, ativo, empresa_id, empresas ( id, razao_social )')
+    .eq('ativo', true)
+    .order('nome');
+  if (error) throw error;
+  return data || [];
+}
+
+/** Máquinas de uma única empresa — usado no painel lateral do chamado. */
+export async function listarMaquinasEmpresa(empresaId) {
+  const { data, error } = await supabase
+    .from('maquinas')
+    .select('id, nome, usuario, setor')
+    .eq('empresa_id', empresaId)
     .eq('ativo', true)
     .order('nome');
   if (error) throw error;

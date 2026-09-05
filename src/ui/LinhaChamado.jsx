@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { c, TONS, PRIO_FG, mono, dataBR } from './tokens.js';
+import { c, TONS, PRIO_FG, mono, horaBR } from './tokens.js';
 
 /** Linha de chamado usada no cliente e no admin. */
 export default function LinhaChamado({ chamado, aoAbrir, mostrarEmpresa }) {
   const [h, setH] = useState(false);
   const tom = TONS[chamado.status] || TONS['Aberto'];
   const maquina = chamado.maquinas?.nome || chamado.equipamento_livre;
+  const empresa = mostrarEmpresa ? chamado.empresas?.razao_social : null;
 
   return (
     <button
@@ -32,12 +33,14 @@ export default function LinhaChamado({ chamado, aoAbrir, mostrarEmpresa }) {
           </span>
         )}
       </div>
-      <div style={{ fontSize: 14, fontWeight: 700, color: c.tinta, textWrap: 'pretty' }}>{chamado.titulo}</div>
+      <div style={{ fontSize: 14, fontWeight: 700, color: c.tinta, textWrap: 'pretty' }}>
+        {empresa && <span style={{ color: c.roxo }}>{empresa}: </span>}
+        {chamado.titulo}
+      </div>
       <div style={{ fontSize: 11.5, color: c.texto4 }}>
-        {mostrarEmpresa && chamado.empresas?.razao_social ? chamado.empresas.razao_social + ' · ' : ''}
         {chamado.categoria}
         {maquina ? ' · ' + maquina : ''}
-        {' · '}{dataBR(chamado.aberto_em)}
+        {' · '}{horaBR(chamado.aberto_em)}
       </div>
     </button>
   );

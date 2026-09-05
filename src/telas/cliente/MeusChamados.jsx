@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import { c, TONS, mono, horaBR, STATUS } from '../../ui/tokens.js';
 import { usarDados, traduzir } from '../../dados/usarDados.js';
-import { listarChamados, listarHistorico, comentar } from '../../dados/consultas.js';
+import { listarChamados, listarHistorico, comentar, listarAnexosChamado, urlAnexoChamado } from '../../dados/consultas.js';
 import { useSessao } from '../../auth/SessaoProvider.jsx';
 import { Carregando, Erro, Vazio } from '../../ui/Estado.jsx';
 import Chip from '../../ui/Chip.jsx';
 import Modal, { BotaoFechar } from '../../ui/Modal.jsx';
 import Botao from '../../ui/Botao.jsx';
 import { Campo } from '../../ui/Campo.jsx';
+import Icone from '../../ui/Icone.jsx';
 import LinhaChamado from '../../ui/LinhaChamado.jsx';
 
 const FILTROS = ['Todos', ...STATUS];
@@ -19,6 +20,7 @@ export default function MeusChamados() {
   const [detalhe, setDetalhe] = useState(null);
   const [hist, setHist] = useState([]);
   const [carHist, setCarHist] = useState(false);
+  const [anexos, setAnexos] = useState([]);
   const [texto, setTexto] = useState('');
   const [enviando, setEnviando] = useState(false);
   const [erroForm, setErroForm] = useState('');
@@ -28,12 +30,23 @@ export default function MeusChamados() {
     setTexto('');
     setErroForm('');
     setCarHist(true);
+    setAnexos([]);
     try {
       setHist(await listarHistorico(ch.id));
+      setAnexos(await listarAnexosChamado(ch.id));
     } catch (e) {
       setErroForm(traduzir(e));
     } finally {
       setCarHist(false);
+    }
+  }
+
+  async function abrirAnexo(anexo) {
+    try {
+      const url = await urlAnexoChamado(anexo.arquivo_path);
+      window.open(url, '_blank', 'noopener');
+    } catch (e) {
+      setErroForm(traduzir(e));
     }
   }
 
@@ -112,6 +125,28 @@ export default function MeusChamados() {
 
             <div style={{ padding: '24px 26px' }}>
               <p style={{ margin: 0, fontSize: 14, lineHeight: 1.7, color: c.texto2, textWrap: 'pretty' }}>{detalhe.descricao}</p>
+
+              {anexos.length > 0 && (
+                <>
+                  <h3 style={{ margin: '22px 0 0', fontSize: 12, fontWeight: 700, letterSpacing: 1, color: c.texto3 }}>ANEXOS</h3>
+                  <div style={{ marginTop: 10, display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                    {anexos.map((a) => (
+                      <button
+                        key={a.id} type="button" onClick={() => abrirAnexo(a)}
+                        style={{
+                          display: 'flex', alignItems: 'center', gap: 7, padding: '7px 11px', borderRadius: 8,
+                          background: c.fundoCampo, border: '1px solid ' + c.borda, cursor: 'pointer',
+                          fontSize: 12, color: c.azulEscuro, fontFamily: 'inherit', maxWidth: 220
+                        }}
+                        title={a.nome_original}
+                      >
+                        <Icone nome="documento" tamanho={13} style={{ flex: 'none' }} />
+                        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{a.nome_original}</span>
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
 
               <h3 style={{ margin: '26px 0 0', fontSize: 12, fontWeight: 700, letterSpacing: 1, color: c.texto3 }}>HISTÓRICO</h3>
               {carHist ? <Carregando altura={120} texto="Carregando histórico..." /> : (

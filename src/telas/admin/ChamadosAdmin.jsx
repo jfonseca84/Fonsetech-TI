@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { c, card, TONS, mono, horaBR, STATUS, PRIORIDADES } from '../../ui/tokens.js';
 import { usarDados, traduzir } from '../../dados/usarDados.js';
-import { listarChamados, atualizarChamado, listarHistorico, comentar, listarAdmins, listarEmpresas } from '../../dados/consultas.js';
+import { listarChamados, atualizarChamado, listarHistorico, comentar, listarAdmins, listarEmpresas, listarAnexosChamado, urlAnexoChamado, listarMaquinasEmpresa } from '../../dados/consultas.js';
 import { useSessao } from '../../auth/SessaoProvider.jsx';
 import { Carregando, Erro, Vazio, Aviso } from '../../ui/Estado.jsx';
 import Modal, { BotaoFechar } from '../../ui/Modal.jsx';
@@ -23,6 +23,8 @@ export default function ChamadosAdmin() {
   const [detalhe, setDetalhe] = useState(null);
   const [hist, setHist] = useState([]);
   const [carHist, setCarHist] = useState(false);
+  const [anexos, setAnexos] = useState([]);
+  const [maquinasEmpresa, setMaquinasEmpresa] = useState([]);
   const [resposta, setResposta] = useState('');
   const [interno, setInterno] = useState(false);
   const [salvando, setSalvando] = useState(false);
@@ -36,12 +38,25 @@ export default function ChamadosAdmin() {
     setErroForm('');
     setOkForm('');
     setCarHist(true);
+    setAnexos([]);
+    setMaquinasEmpresa([]);
     try {
       setHist(await listarHistorico(x.id));
+      setAnexos(await listarAnexosChamado(x.id));
+      if (x.empresa_id) setMaquinasEmpresa(await listarMaquinasEmpresa(x.empresa_id));
     } catch (e) {
       setErroForm(traduzir(e));
     } finally {
       setCarHist(false);
+    }
+  }
+
+  async function abrirAnexo(anexo) {
+    try {
+      const url = await urlAnexoChamado(anexo.arquivo_path);
+      window.open(url, '_blank', 'noopener');
+    } catch (e) {
+      setErroForm(traduzir(e));
     }
   }
 
@@ -132,7 +147,7 @@ export default function ChamadosAdmin() {
         </div>
       )}
 
-      <Modal aberto={!!detalhe} aoFechar={() => setDetalhe(null)} largura={680}>
+      <Modal aberto={!!detalhe} aoFechar={() => setDetalhe(null)} largura={960}>
         {detalhe && (
           <>
             <div style={{
@@ -161,7 +176,8 @@ export default function ChamadosAdmin() {
               <BotaoFechar onClick={() => setDetalhe(null)} />
             </div>
 
-            <div style={{ padding: '24px 26px' }}>
+            <div style={{ display: 'flex', alignItems: 'flex-start' }}>
+            <div style={{ flex: '1 1 auto', minWidth: 0, padding: '24px 26px' }}>
               <div style={{
                 display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))', gap: 14,
                 padding: '18px 20px', borderRadius: 12, background: c.fundoCampo, border: '1px solid ' + c.borda
@@ -184,6 +200,28 @@ export default function ChamadosAdmin() {
               </div>
 
               <p style={{ margin: '22px 0 0', fontSize: 14, lineHeight: 1.7, color: c.texto2, textWrap: 'pretty' }}>{detalhe.descricao}</p>
+
+              {anexos.length > 0 && (
+                <>
+                  <h3 style={{ margin: '22px 0 0', fontSize: 12, fontWeight: 700, letterSpacing: 1, color: c.texto3 }}>ANEXOS</h3>
+                  <div style={{ marginTop: 10, display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                    {anexos.map((a) => (
+                      <button
+                        key={a.id} type="button" onClick={() => abrirAnexo(a)}
+                        style={{
+                          display: 'flex', alignItems: 'center', gap: 7, padding: '7px 11px', borderRadius: 8,
+                          background: c.fundoCampo, border: '1px solid ' + c.borda, cursor: 'pointer',
+                          fontSize: 12, color: c.azulEscuro, fontFamily: 'inherit', maxWidth: 220
+                        }}
+                        title={a.nome_original}
+                      >
+                        <Icone nome="documento" tamanho={13} style={{ flex: 'none' }} />
+                        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{a.nome_original}</span>
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
 
               <h3 style={{ margin: '26px 0 0', fontSize: 12, fontWeight: 700, letterSpacing: 1, color: c.texto3 }}>HISTÓRICO</h3>
               {carHist ? <Carregando altura={120} texto="Carregando histórico..." /> : (
@@ -240,6 +278,87 @@ export default function ChamadosAdmin() {
                 </div>
               </form>
             </div>
+
+            <div style={{
+              flex: 'none', width: 260, padding: '24px 22px', alignSelf: 'stretch',
+              borderLeft: '1px solid ' + c.borda, background: c.fundoCampo
+            }}>
+              <h3 style={{ margin: 0, fontSize: 12, fontWeight: 700, letterSpacing: 1, color: c.texto3 }}>EMPRESA</h3>
+              <div style={{ marginTop: 10, fontSize: 14, fontWeight: 700, color: c.tinta, textWrap: 'pretty' }}>
+                {detalhe.empresas?.razao_social}
+              </div>
+              <div style={{ marginTop: 6, display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                {detalhe.empresas?.plano && (
+                  <span style={{ fontSize: 10.5, fontWeight: 700, padding: '3px 8px', borderRadius: 999, color: c.roxo, background: 'rgba(124, 58, 237, 0.1)' }}>
+                    {detalhe.empresas.plano}
+                  </span>
+                )}
+                {detalhe.empresas?.status_cliente && (
+                  <span style={{ fontSize: 10.5, fontWeight: 700, padding: '3px 8px', borderRadius: 999, color: c.verdeTexto, background: 'rgba(34, 192, 122, 0.12)' }}>
+                    {detalhe.empresas.status_cliente}
+                  </span>
+                )}
+              </div>
+
+              {(detalhe.empresas?.responsavel_nome) && (
+                <div style={{ marginTop: 18 }}>
+                  <div style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: 0.6, color: c.texto4 }}>RESPONSÁVEL</div>
+                  <div style={{ marginTop: 5, fontSize: 12.5, fontWeight: 600, color: '#2c3853' }}>{detalhe.empresas.responsavel_nome}</div>
+                  {detalhe.empresas.responsavel_cargo && (
+                    <div style={{ fontSize: 11.5, color: c.texto4 }}>{detalhe.empresas.responsavel_cargo}</div>
+                  )}
+                  {detalhe.empresas.responsavel_email && (
+                    <div style={{ marginTop: 4, fontSize: 11.5, color: c.texto3, overflowWrap: 'anywhere' }}>{detalhe.empresas.responsavel_email}</div>
+                  )}
+                  {detalhe.empresas.responsavel_whatsapp && (
+                    <div style={{ fontSize: 11.5, color: c.texto3 }}>{detalhe.empresas.responsavel_whatsapp}</div>
+                  )}
+                </div>
+              )}
+
+              {(detalhe.empresas?.telefone || detalhe.empresas?.whatsapp) && (
+                <div style={{ marginTop: 16 }}>
+                  <div style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: 0.6, color: c.texto4 }}>CONTATO DA EMPRESA</div>
+                  {detalhe.empresas.telefone && <div style={{ marginTop: 5, fontSize: 11.5, color: c.texto3 }}>{detalhe.empresas.telefone}</div>}
+                  {detalhe.empresas.whatsapp && <div style={{ fontSize: 11.5, color: c.texto3 }}>{detalhe.empresas.whatsapp}</div>}
+                </div>
+              )}
+
+              {(detalhe.empresas?.endereco || detalhe.empresas?.cidade) && (
+                <div style={{ marginTop: 16 }}>
+                  <div style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: 0.6, color: c.texto4 }}>ENDEREÇO</div>
+                  {detalhe.empresas.endereco && (
+                    <div style={{ marginTop: 5, fontSize: 11.5, lineHeight: 1.5, color: c.texto3 }}>{detalhe.empresas.endereco}</div>
+                  )}
+                  {(detalhe.empresas.cidade || detalhe.empresas.estado) && (
+                    <div style={{ fontSize: 11.5, color: c.texto3 }}>
+                      {[detalhe.empresas.cidade, detalhe.empresas.estado].filter(Boolean).join(' / ')}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              <div style={{ marginTop: 16 }}>
+                <div style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: 0.6, color: c.texto4 }}>
+                  MÁQUINAS ({maquinasEmpresa.length})
+                </div>
+                {maquinasEmpresa.length === 0 ? (
+                  <div style={{ marginTop: 5, fontSize: 11.5, color: c.texto4 }}>Nenhuma cadastrada.</div>
+                ) : (
+                  <div style={{ marginTop: 6, display: 'grid', gap: 3 }}>
+                    {maquinasEmpresa.slice(0, 6).map((m) => (
+                      <div key={m.id} style={{ fontSize: 11.5, color: c.texto3, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {m.nome}{m.usuario ? ' — ' + m.usuario : ''}
+                      </div>
+                    ))}
+                    {maquinasEmpresa.length > 6 && (
+                      <div style={{ fontSize: 11, color: c.texto4 }}>+{maquinasEmpresa.length - 6} outra(s)</div>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
           </>
         )}
       </Modal>
