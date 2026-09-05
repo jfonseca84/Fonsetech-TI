@@ -19,6 +19,7 @@ republica sozinha). Mantenha as duas cópias em sincronia: `public/imagens/`
 
 | Arquivo | Onde aparece | Tamanho recomendado |
 |---|---|---|
+| `logo-fonsetech.svg` | logo no cabeçalho do site | 360 × 88 px — PNG com fundo transparente (o padrão é SVG, mas o upload pelo painel aceita apenas JPG/PNG/WebP) |
 | `dashboard-notebook.jpg` | mockup grande do hero | 800 × 516 px |
 | `dashboard-celular.jpg` | mockup do celular, no hero | 320 × 615 px |
 | `plataforma-dashboard.jpg` | moldura da seção "Plataforma própria" | 1200 × 760 px |

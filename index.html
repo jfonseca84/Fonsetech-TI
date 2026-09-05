@@ -37,6 +37,9 @@
   .fs-img { position: relative; width: 100%; height: 100%; border-radius: inherit; overflow: hidden;
             background: #eef2f9; display: flex; align-items: center; justify-content: center; }
   .fs-img > img { position: relative; z-index: 1; width: 100%; height: 100%; object-fit: cover; display: block; }
+  /* A logo nunca deve ser cortada como uma foto: cabe inteira, sem fundo. */
+  .fs-img-logo { background: transparent; }
+  .fs-img-logo > img { object-fit: contain; }
 
   /* Suporte para scroll suave via Lenis com fallback elegante */
   html:not(.lenis) { scroll-behavior: smooth; }
@@ -220,15 +223,8 @@
   <header style="position: sticky; top: 0; z-index: 50; background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(14px); border-bottom: 1px solid rgba(20, 45, 100, 0.13);">
     <div style="max-width: 1240px; margin: 0 auto; padding: 0 40px; height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 32px;">
       <a href="#inicio" style="display: flex; align-items: center; gap: 12px; color: #0d1730;">
-        <span style="flex: none; width: 38px; height: 38px; border-radius: 10px; background: #f2f6fc; border: 1px solid rgba(20, 45, 100, 0.24); display: flex; align-items: center; justify-content: center;">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M12 2.6L21.4 12 12 21.4 2.6 12 12 2.6z" stroke="#2f7bff" stroke-width="1.7" stroke-linejoin="round"></path>
-            <circle cx="12" cy="12" r="3.4" fill="#2f7bff"></circle>
-          </svg>
-        </span>
-        <span style="display: block; line-height: 1;">
-          <span style="display: block; font-size: 19px; font-weight: 800; letter-spacing: -0.4px;">Fonse<span style="color: #2f7bff;">tech</span></span>
-          <span style="display: block; font-size: 9px; font-weight: 600; letter-spacing: 1.6px; color: #6b7896; margin-top: 4px;">SUPORTE E SOLUÇÕES</span>
+        <span class="fs-img fs-img-logo" data-slug="logo" style="flex: none; display: block; width: 148px; height: 36px;">
+          <img src="./imagens/logo-fonsetech.svg" width="360" height="88" alt="Fonsetech TI" loading="eager" />
         </span>
       </a>
       <nav style="display: flex; align-items: center; gap: 26px;">

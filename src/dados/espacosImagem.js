@@ -5,6 +5,13 @@
  */
 export const ESPACOS = [
   {
+    slug: 'logo',
+    titulo: 'Logo da Fonsetech',
+    onde: 'Cabeçalho do site público',
+    tamanho: '360 × 88 px (PNG com fundo transparente)',
+    proporcao: '360 / 88'
+  },
+  {
     slug: 'dashboard-notebook',
     titulo: 'Mockup do notebook (topo)',
     onde: 'Seção inicial, imagem grande do dashboard',
