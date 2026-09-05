@@ -206,16 +206,11 @@ export default function Login() {
         }} />
 
         <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: 13 }}>
-          <span style={{
-            width: 42, height: 42, borderRadius: 12, display: 'flex',
-            alignItems: 'center', justifyContent: 'center',
-            background: 'rgba(88, 150, 255, 0.22)', border: '1px solid rgba(140, 185, 255, 0.3)'
-          }}>
-            <Icone nome="losango" tamanho={20} cor="#8fc0ff" largura={1.8} />
-          </span>
-          <span style={{ display: 'block', lineHeight: 1 }}>
-            <span style={{ display: 'block', fontSize: 21, fontWeight: 800, letterSpacing: '-0.4px', color: c.branco }}>{PRODUTO.marca}</span>
-            <span style={{ display: 'block', fontSize: 9, fontWeight: 700, letterSpacing: '2.2px', color: '#7ba7e8', marginTop: 5 }}>CHAMADOS DE TI</span>
+          <span style={{ display: 'inline-flex', flexDirection: 'column' }}>
+            <span style={{ fontSize: 21, fontWeight: 800, letterSpacing: '-0.4px', lineHeight: 1, whiteSpace: 'nowrap' }}>
+              <span style={{ color: '#8fc0ff' }}>FONSE</span><span style={{ color: '#c7cdd6' }}>DESK</span>
+            </span>
+            <span style={{ display: 'block', marginTop: 5, fontSize: 9, fontWeight: 700, letterSpacing: '3.6px', color: '#7ba7e8', whiteSpace: 'nowrap' }}>CHAMADOS DE TI</span>
           </span>
         </div>
 
