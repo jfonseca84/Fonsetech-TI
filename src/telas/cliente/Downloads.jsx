@@ -1,16 +1,42 @@
+import { useMemo } from 'react';
 import { c, card } from '../../ui/tokens.js';
 import { usarDados } from '../../dados/usarDados.js';
 import { listarMateriais } from '../../dados/consultas.js';
+import { useSessao } from '../../auth/SessaoProvider.jsx';
 import { Carregando, Erro, Vazio } from '../../ui/Estado.jsx';
 import Icone from '../../ui/Icone.jsx';
 
 export default function Downloads() {
-  const { dados, carregando, erro, recarregar } = usarDados(() => listarMateriais(['programa']), [], []);
+  const { perfil } = useSessao();
+  const { dados, carregando, erro, recarregar } = usarDados(() => listarMateriais(['programa', 'software', 'driver', 'ferramenta']), [], []);
+
+  const listaAcessivel = useMemo(() => {
+    const planoCliente = perfil?.empresas?.plano || 'Profissional';
+    const niveis = { 'Básico': 1, 'Profissional': 2, 'Premium': 3 };
+    const nivelCliente = niveis[planoCliente] || 1;
+
+    return (dados || []).filter((m) => {
+      // 1. Público
+      if (!m.disponibilidade || m.disponibilidade === 'todos' || m.disponibilidade === 'todas') {
+        return true;
+      }
+      // 2. Exclusivo para empresa específica
+      if (m.disponibilidade === 'empresa' || m.disponibilidade === 'por_empresa') {
+        return m.empresa_id === perfil?.empresa_id;
+      }
+      // 3. Exclusivo para plano específico
+      if (m.disponibilidade === 'plano' || m.disponibilidade === 'por_plano') {
+        const minNivel = niveis[m.plano_minimo] || 1;
+        return nivelCliente >= minNivel;
+      }
+      return true;
+    });
+  }, [dados, perfil]);
 
   if (carregando) return <Carregando altura={320} />;
   if (erro) return <div style={{ marginTop: 26 }}><Erro mensagem={erro} aoTentar={recarregar} /></div>;
 
-  if (!dados.length) {
+  if (!listaAcessivel.length) {
     return (
       <div style={{ marginTop: 24 }}>
         <Vazio
@@ -24,7 +50,7 @@ export default function Downloads() {
 
   return (
     <div style={{ marginTop: 24, display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 18 }}>
-      {dados.map((p) => (
+      {listaAcessivel.map((p) => (
         <div key={p.id} style={{
           display: 'flex', flexDirection: 'column', ...card, padding: '22px 22px 20px',
           borderColor: p.destaque ? 'rgba(29, 95, 245, 0.34)' : c.borda

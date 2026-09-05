@@ -240,9 +240,19 @@ class MockQueryBuilder {
       clone.empresas = empresa ? { id: empresa.id, razao_social: empresa.razao_social, plano: empresa.plano } : null;
     }
 
-    if (this.tabela === 'maquinas' || this.tabela === 'agendamentos') {
+    if (this.tabela === 'maquinas' || this.tabela === 'agendamentos' || this.tabela === 'financeiro_lancamentos' || this.tabela === 'crm_propostas') {
+      const empresa = mockStorage.empresas.find(e => e.id === clone.empresa_id);
+      clone.empresas = empresa ? { id: empresa.id, razao_social: empresa.razao_social, nome_fantasia: empresa.nome_fantasia, plano: empresa.plano, whatsapp: empresa.whatsapp } : null;
+    }
+
+    if (this.tabela === 'crm_leads' && clone.empresa_id) {
       const empresa = mockStorage.empresas.find(e => e.id === clone.empresa_id);
       clone.empresas = empresa ? { id: empresa.id, razao_social: empresa.razao_social } : null;
+    }
+
+    if (this.tabela === 'crm_propostas' && clone.lead_id) {
+      const lead = mockStorage.crm_leads.find(l => l.id === clone.lead_id);
+      clone.lead = lead ? { id: lead.id, nome: lead.nome, empresa_nome: lead.empresa_nome } : null;
     }
 
     if (this.tabela === 'chamado_historico') {

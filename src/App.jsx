@@ -17,7 +17,10 @@ import MinhaEmpresa from './telas/cliente/MinhaEmpresa.jsx';
 import VisaoGeralAdmin from './telas/admin/VisaoGeralAdmin.jsx';
 import ChamadosAdmin from './telas/admin/ChamadosAdmin.jsx';
 import Clientes from './telas/admin/Clientes.jsx';
+import CrmAdmin from './telas/admin/CrmAdmin.jsx';
 import AgendaAdmin from './telas/admin/AgendaAdmin.jsx';
+import FinanceiroAdmin from './telas/admin/FinanceiroAdmin.jsx';
+import ConteudoAdmin from './telas/admin/ConteudoAdmin.jsx';
 import Maquinas from './telas/admin/Maquinas.jsx';
 import ConfiguracoesSite from './telas/admin/ConfiguracoesSite.jsx';
 
@@ -79,7 +82,10 @@ export default function App() {
           <Route index element={<VisaoGeralAdmin />} />
           <Route path="chamados" element={<ChamadosAdmin />} />
           <Route path="clientes" element={<Clientes />} />
+          <Route path="crm" element={<CrmAdmin />} />
           <Route path="agenda" element={<AgendaAdmin />} />
+          <Route path="financeiro" element={<FinanceiroAdmin />} />
+          <Route path="conteudo" element={<ConteudoAdmin />} />
           <Route path="maquinas" element={<Maquinas />} />
           <Route path="configuracoes" element={<ConfiguracoesSite />} />
           <Route path="*" element={<Navigate to="/admin" replace />} />

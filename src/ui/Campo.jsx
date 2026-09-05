@@ -48,3 +48,5 @@ export function Campo({ label, alto, opcoes, compacto, style, ...props }) {
     </label>
   );
 }
+
+export default Campo;

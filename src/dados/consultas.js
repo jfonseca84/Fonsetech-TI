@@ -72,7 +72,7 @@ export async function acoesRecentes(limite = 6) {
 export async function listarEmpresas() {
   const { data, error } = await supabase
     .from('empresas')
-    .select('id, razao_social, cnpj, endereco, email, telefone, tem_ti_interno, responsavel_ti, gerente_geral, diretor, plano, ativo')
+    .select('*')
     .order('razao_social');
   if (error) throw error;
   return data || [];
@@ -90,13 +90,258 @@ export async function criarEmpresa(campos) {
   return data;
 }
 
-// ---------- PERFIS ----------
+export async function excluirEmpresa(id) {
+  const { error } = await supabase.from('empresas').delete().eq('id', id);
+  if (error) throw error;
+  return true;
+}
+
+// ---------- PERFIS E USUARIOS DA EMPRESA ----------
 export async function listarPerfis() {
   const { data, error } = await supabase
     .from('profiles')
-    .select('id, nome, telefone, role, ativo, empresa_id, empresas ( id, razao_social )')
+    .select('id, nome, email, telefone, whatsapp, cargo, role, ativo, empresa_id, empresas ( id, razao_social, nome_fantasia )')
     .order('nome');
   if (error) throw error;
+  return data || [];
+}
+
+export async function listarUsuariosEmpresa(empresaId) {
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('id, nome, email, telefone, whatsapp, cargo, role, ativo, empresa_id')
+    .eq('empresa_id', empresaId)
+    .order('nome');
+  if (error) throw error;
+  return data || [];
+}
+
+export async function criarUsuarioEmpresa(dados) {
+  const { data, error } = await supabase
+    .from('profiles')
+    .insert({
+      nome: dados.nome,
+      email: dados.email,
+      telefone: dados.telefone || null,
+      whatsapp: dados.whatsapp || null,
+      cargo: dados.cargo || null,
+      role: dados.role || 'cliente',
+      empresa_id: dados.empresa_id,
+      ativo: true
+    })
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+}
+
+export async function atualizarUsuarioEmpresa(id, campos) {
+  const { data, error } = await supabase
+    .from('profiles')
+    .update(campos)
+    .eq('id', id)
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+}
+
+export async function redefinirSenhaUsuario(email) {
+  if (supabase?.auth?.resetPasswordForEmail) {
+    const { error } = await supabase.auth.resetPasswordForEmail(email);
+    if (error) throw error;
+  }
+  return true;
+}
+
+// ---------- PLANOS ----------
+export async function listarPlanos() {
+  const { data, error } = await supabase
+    .from('planos')
+    .select('*')
+    .order('valor_mensal');
+  if (error) throw error;
+  return data || [];
+}
+
+export async function criarPlano(campos) {
+  const { data, error } = await supabase.from('planos').insert(campos).select().single();
+  if (error) throw error;
+  return data;
+}
+
+export async function salvarPlano(id, campos) {
+  const { data, error } = await supabase.from('planos').update(campos).eq('id', id).select().single();
+  if (error) throw error;
+  return data;
+}
+
+// ---------- CRM / FUNIL DE VENDAS ----------
+export async function listarCrmLeads() {
+  const { data, error } = await supabase
+    .from('crm_leads')
+    .select('*, empresas(id, razao_social)')
+    .order('criado_em', { ascending: false });
+  if (error) throw error;
+  return data || [];
+}
+
+export async function criarCrmLead(campos) {
+  const { data, error } = await supabase.from('crm_leads').insert(campos).select().single();
+  if (error) throw error;
+  return data;
+}
+
+export async function atualizarCrmLead(id, campos) {
+  const { data, error } = await supabase
+    .from('crm_leads')
+    .update({ ...campos, atualizado_em: new Date().toISOString() })
+    .eq('id', id)
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+}
+
+export async function excluirCrmLead(id) {
+  const { error } = await supabase.from('crm_leads').delete().eq('id', id);
+  if (error) throw error;
+  return true;
+}
+
+export async function converterLeadEmCliente(leadId, dadosExtras = {}) {
+  const { data: lead, error: eLead } = await supabase.from('crm_leads').select('*').eq('id', leadId).single();
+  if (eLead) throw eLead;
+
+  // 1. Cria a empresa a partir do Lead
+  const dadosEmpresa = {
+    razao_social: dadosExtras.razao_social || lead.empresa_nome || lead.nome,
+    nome_fantasia: dadosExtras.nome_fantasia || lead.empresa_nome || lead.nome,
+    cnpj: dadosExtras.cnpj || '',
+    telefone: dadosExtras.telefone || lead.telefone || '',
+    whatsapp: dadosExtras.whatsapp || lead.whatsapp || '',
+    email: dadosExtras.email || lead.email || '',
+    responsavel_nome: lead.nome,
+    responsavel_email: lead.email,
+    responsavel_whatsapp: lead.whatsapp,
+    plano: dadosExtras.plano || 'Profissional',
+    valor_mensal: dadosExtras.valor_mensal || lead.valor_estimado || 599.00,
+    status_cliente: 'Ativo',
+    situacao_financeira: 'Em dia',
+    ativo: true,
+    inicio_contrato: new Date().toISOString().split('T')[0]
+  };
+
+  const { data: novaEmpresa, error: eEmp } = await supabase.from('empresas').insert(dadosEmpresa).select().single();
+  if (eEmp) throw eEmp;
+
+  // 2. Atualiza o lead como Ganho e vincula a empresa criada
+  await supabase.from('crm_leads').update({
+    etapa: 'ganho',
+    empresa_id: novaEmpresa.id,
+    probabilidade: 100
+  }).eq('id', leadId);
+
+  // 3. Se houver e-mail de contato, cria o usuário cliente_admin correspondente
+  if (lead.email) {
+    await supabase.from('profiles').insert({
+      nome: lead.nome,
+      email: lead.email,
+      telefone: lead.telefone,
+      whatsapp: lead.whatsapp,
+      role: 'cliente_admin',
+      cargo: 'Responsável',
+      empresa_id: novaEmpresa.id,
+      ativo: true
+    });
+  }
+
+  return novaEmpresa;
+}
+
+// ---------- PROPOSTAS COMERCIAIS ----------
+export async function listarPropostas(leadId = null) {
+  let q = supabase
+    .from('crm_propostas')
+    .select('*, empresas(id, razao_social), crm_leads(id, nome, empresa_nome)');
+  if (leadId) q = q.eq('lead_id', leadId);
+  const { data, error } = await q.order('criado_em', { ascending: false });
+  if (error) throw error;
+  return data || [];
+}
+
+export async function criarProposta(campos) {
+  const { data, error } = await supabase.from('crm_propostas').insert(campos).select().single();
+  if (error) throw error;
+  return data;
+}
+
+export async function atualizarProposta(id, campos) {
+  const { data, error } = await supabase.from('crm_propostas').update(campos).eq('id', id).select().single();
+  if (error) throw error;
+  return data;
+}
+
+export async function excluirProposta(id) {
+  const { error } = await supabase.from('crm_propostas').delete().eq('id', id);
+  if (error) throw error;
+  return true;
+}
+
+// ---------- FINANCEIRO ----------
+export async function listarLancamentosFinanceiros(empresaId = null) {
+  let q = supabase
+    .from('financeiro_lancamentos')
+    .select('*, empresas(id, razao_social, nome_fantasia, plano, whatsapp)')
+    .order('data_vencimento', { ascending: false });
+  if (empresaId) q = q.eq('empresa_id', empresaId);
+  const { data, error } = await q;
+  if (error) throw error;
+  return data || [];
+}
+
+export async function criarLancamentoFinanceiro(campos) {
+  const { data, error } = await supabase.from('financeiro_lancamentos').insert(campos).select().single();
+  if (error) throw error;
+  return data;
+}
+
+export async function atualizarLancamentoFinanceiro(id, campos) {
+  const { data, error } = await supabase.from('financeiro_lancamentos').update(campos).eq('id', id).select().single();
+  if (error) throw error;
+  return data;
+}
+
+export async function excluirLancamentoFinanceiro(id) {
+  const { error } = await supabase.from('financeiro_lancamentos').delete().eq('id', id);
+  if (error) throw error;
+  return true;
+}
+
+// ---------- AUDITORIA ----------
+export async function registrarAuditoria({ usuarioNome, empresaId, acao, recurso, recursoId = null, resultado = 'sucesso', detalhes = {} }) {
+  try {
+    await supabase.from('auditoria_logs').insert({
+      usuario_nome: usuarioNome || 'Sistema',
+      empresa_id: empresaId || null,
+      acao,
+      recurso,
+      recurso_id: recursoId ? String(recursoId) : null,
+      resultado,
+      detalhes
+    });
+  } catch {
+    // Ignora erro silencioso de log
+  }
+}
+
+export async function listarAuditoria(limite = 20) {
+  const { data, error } = await supabase
+    .from('auditoria_logs')
+    .select('*')
+    .order('criado_em', { ascending: false })
+    .limit(limite);
+  if (error) return [];
   return data || [];
 }
 
@@ -148,8 +393,8 @@ export async function criarMaquina(campos, acesso) {
 export async function listarAgendamentos() {
   const { data, error } = await supabase
     .from('agendamentos')
-    .select('id, tipo, data, hora, assunto, endereco, formato, status, empresa_id, empresas ( id, razao_social )')
-    .order('data');
+    .select('id, tipo, data, hora, duracao_minutos, assunto, endereco, formato, modalidade, status, contato_nome, contato_whatsapp, observacoes, cobranca_tipo, cobranca_valor, empresa_id, empresas ( id, razao_social, nome_fantasia, whatsapp )')
+    .order('data', { ascending: true });
   if (error) throw error;
   return data || [];
 }
@@ -161,20 +406,54 @@ export async function solicitarAgendamento(dados) {
 }
 
 export async function atualizarAgendamento(id, campos) {
-  const { error } = await supabase.from('agendamentos').update(campos).eq('id', id);
+  const { data, error } = await supabase.from('agendamentos').update(campos).eq('id', id).select().single();
   if (error) throw error;
+  return data;
+}
+
+export async function excluirAgendamento(id) {
+  const { error } = await supabase.from('agendamentos').delete().eq('id', id);
+  if (error) throw error;
+  return true;
 }
 
 // ---------- MATERIAIS ----------
 export async function listarMateriais(tipos) {
   let q = supabase
     .from('materiais')
-    .select('id, tipo, titulo, descricao, categoria, nivel, paginas, arquivo_path, link_externo, versao, tamanho, sistema, destaque')
+    .select('id, tipo, titulo, descricao, categoria, nivel, paginas, arquivo_path, link_externo, versao, tamanho, sistema, destaque, disponibilidade, plano_minimo, empresa_id, ordem')
     .eq('publicado', true);
   if (tipos) q = q.in('tipo', tipos);
-  const { data, error } = await q.order('titulo');
+  const { data, error } = await q.order('ordem', { ascending: true });
   if (error) throw error;
   return data || [];
+}
+
+export async function listarMateriaisAdmin() {
+  const { data, error } = await supabase
+    .from('materiais')
+    .select('*')
+    .order('ordem', { ascending: true });
+  if (error) throw error;
+  return data || [];
+}
+
+export async function criarMaterialAdmin(campos) {
+  const { data, error } = await supabase.from('materiais').insert(campos).select().single();
+  if (error) throw error;
+  return data;
+}
+
+export async function salvarMaterialAdmin(id, campos) {
+  const { data, error } = await supabase.from('materiais').update(campos).eq('id', id).select().single();
+  if (error) throw error;
+  return data;
+}
+
+export async function excluirMaterialAdmin(id) {
+  const { error } = await supabase.from('materiais').delete().eq('id', id);
+  if (error) throw error;
+  return true;
 }
 
 /** URL assinada temporaria do bucket privado. */

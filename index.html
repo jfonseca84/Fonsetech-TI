@@ -38,7 +38,13 @@
             background: #eef2f9; display: flex; align-items: center; justify-content: center; }
   .fs-img > img { position: relative; z-index: 1; width: 100%; height: 100%; object-fit: cover; display: block; }
 
-  html { scroll-behavior: smooth; }
+  /* Suporte para scroll suave via Lenis com fallback elegante */
+  html:not(.lenis) { scroll-behavior: smooth; }
+  html.lenis, html.lenis body { height: auto; }
+  .lenis.lenis-smooth { scroll-behavior: auto !important; }
+  .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+  .lenis.lenis-stopped { overflow: clip; }
+  .lenis.lenis-smooth iframe { pointer-events: none; }
   /* o header tem 72px e e sticky: sem esta margem o topo da secao fica escondido atras dele */
   section[id] { scroll-margin-top: 72px; }
 
@@ -1411,5 +1417,6 @@ class Component extends DCLogic {
     .catch(function () {});
 })();
 </script>
+<script type="module" src="/src/lp-lenis.js"></script>
 </body>
 </html>

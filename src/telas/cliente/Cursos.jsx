@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { c, card } from '../../ui/tokens.js';
 import { usarDados, traduzir } from '../../dados/usarDados.js';
 import { listarMateriais, urlAssinada } from '../../dados/consultas.js';
+import { useSessao } from '../../auth/SessaoProvider.jsx';
 import { Carregando, Erro, Vazio } from '../../ui/Estado.jsx';
 import Chip from '../../ui/Chip.jsx';
 import Botao from '../../ui/Botao.jsx';
@@ -10,12 +11,36 @@ import Icone from '../../ui/Icone.jsx';
 const CATS = ['Todas', 'Segurança', 'Infraestrutura', 'Redes', 'Produtividade'];
 
 export default function Cursos() {
-  const { dados, carregando, erro, recarregar } = usarDados(() => listarMateriais(['pdf', 'ppt']), [], []);
+  const { perfil } = useSessao();
+  const { dados, carregando, erro, recarregar } = usarDados(() => listarMateriais(['pdf', 'ppt', 'curso', 'apostila', 'apresentacao']), [], []);
   const [cat, setCat] = useState('Todas');
   const [leitura, setLeitura] = useState(null);
   const [url, setUrl] = useState('');
   const [carUrl, setCarUrl] = useState(false);
   const [erroUrl, setErroUrl] = useState('');
+
+  const listaAcessivel = useMemo(() => {
+    const planoCliente = perfil?.empresas?.plano || 'Profissional';
+    const niveis = { 'Básico': 1, 'Profissional': 2, 'Premium': 3 };
+    const nivelCliente = niveis[planoCliente] || 1;
+
+    return (dados || []).filter((m) => {
+      // 1. Público
+      if (!m.disponibilidade || m.disponibilidade === 'todos' || m.disponibilidade === 'todas') {
+        return true;
+      }
+      // 2. Exclusivo para empresa específica
+      if (m.disponibilidade === 'empresa' || m.disponibilidade === 'por_empresa') {
+        return m.empresa_id === perfil?.empresa_id;
+      }
+      // 3. Exclusivo para plano específico
+      if (m.disponibilidade === 'plano' || m.disponibilidade === 'por_plano') {
+        const minNivel = niveis[m.plano_minimo] || 1;
+        return nivelCliente >= minNivel;
+      }
+      return true;
+    });
+  }, [dados, perfil]);
 
   async function abrir(m) {
     setLeitura(m);
@@ -120,8 +145,8 @@ export default function Cursos() {
     );
   }
 
-  /* ----- lista de materiais ----- */
-  const lista = cat === 'Todas' ? dados : dados.filter((m) => m.categoria === cat);
+  /* ----- lista de materiais acessíveis conforme plano e empresa ----- */
+  const lista = cat === 'Todas' ? listaAcessivel : listaAcessivel.filter((m) => m.categoria === cat);
 
   return (
     <div style={{ marginTop: 24 }}>
