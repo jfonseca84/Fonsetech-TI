@@ -30,15 +30,18 @@ export default function Clientes() {
     razao_social: '',
     nome_fantasia: '',
     cnpj: '',
-    email: '',
+    inscricao_estadual: '',
     telefone: '',
     whatsapp: '',
+    email: '',
+    site: '',
+    responsavel_nome: '',
+    responsavel_cargo: '',
+    responsavel_email: '',
+    responsavel_whatsapp: '',
     cidade: 'Lajeado',
     estado: 'RS',
     endereco: '',
-    responsavel_nome: '',
-    responsavel_cargo: '',
-    responsavel_whatsapp: '',
     plano: 'Profissional',
     valor_mensal: 599.00,
     situacao_financeira: 'Em dia',
@@ -299,27 +302,29 @@ export default function Clientes() {
                 <Campo rotulo="Razão Social" valor={novaEmpresa.razao_social} onChange={v => setNovaEmpresa({ ...novaEmpresa, razao_social: v })} obrigatorio />
                 <Campo rotulo="Nome Fantasia" valor={novaEmpresa.nome_fantasia} onChange={v => setNovaEmpresa({ ...novaEmpresa, nome_fantasia: v })} />
                 <Campo rotulo="CNPJ" valor={novaEmpresa.cnpj} onChange={v => setNovaEmpresa({ ...novaEmpresa, cnpj: v })} placeholder="00.000.000/0001-00" />
-                <Campo rotulo="WhatsApp Principal" valor={novaEmpresa.whatsapp} onChange={v => setNovaEmpresa({ ...novaEmpresa, whatsapp: v })} dica="Com DDD, ex: (51) 98888-1234" />
-                <Campo rotulo="Telefone Fixo" valor={novaEmpresa.telefone} onChange={v => setNovaEmpresa({ ...novaEmpresa, telefone: v })} />
-                <Campo rotulo="E-mail Comercial" tipo="email" valor={novaEmpresa.email} onChange={v => setNovaEmpresa({ ...novaEmpresa, email: v })} />
+                <Campo rotulo="Inscrição Estadual" valor={novaEmpresa.inscricao_estadual} onChange={v => setNovaEmpresa({ ...novaEmpresa, inscricao_estadual: v })} />
+                <Campo rotulo="Telefone" valor={novaEmpresa.telefone} onChange={v => setNovaEmpresa({ ...novaEmpresa, telefone: v })} />
+                <Campo rotulo="WhatsApp" valor={novaEmpresa.whatsapp} onChange={v => setNovaEmpresa({ ...novaEmpresa, whatsapp: v })} dica="Com DDD, ex: (51) 98888-1234" />
+                <Campo rotulo="E-mail" tipo="email" valor={novaEmpresa.email} onChange={v => setNovaEmpresa({ ...novaEmpresa, email: v })} />
+                <Campo rotulo="Site" valor={novaEmpresa.site} onChange={v => setNovaEmpresa({ ...novaEmpresa, site: v })} placeholder="https://..." />
+                <Campo rotulo="Responsável" valor={novaEmpresa.responsavel_nome} onChange={v => setNovaEmpresa({ ...novaEmpresa, responsavel_nome: v })} />
+                <Campo rotulo="Cargo do responsável" valor={novaEmpresa.responsavel_cargo} onChange={v => setNovaEmpresa({ ...novaEmpresa, responsavel_cargo: v })} />
+                <Campo rotulo="E-mail do responsável" tipo="email" valor={novaEmpresa.responsavel_email} onChange={v => setNovaEmpresa({ ...novaEmpresa, responsavel_email: v })} />
+                <Campo rotulo="WhatsApp do responsável" valor={novaEmpresa.responsavel_whatsapp} onChange={v => setNovaEmpresa({ ...novaEmpresa, responsavel_whatsapp: v })} dica="Com DDD, ex: (51) 98888-1234" />
                 <Campo rotulo="Cidade" valor={novaEmpresa.cidade} onChange={v => setNovaEmpresa({ ...novaEmpresa, cidade: v })} />
                 <Campo rotulo="Endereço Completo" valor={novaEmpresa.endereco} onChange={v => setNovaEmpresa({ ...novaEmpresa, endereco: v })} />
-                <Campo rotulo="Responsável (Nome)" valor={novaEmpresa.responsavel_nome} onChange={v => setNovaEmpresa({ ...novaEmpresa, responsavel_nome: v })} />
-                <Campo rotulo="Responsável (Cargo)" valor={novaEmpresa.responsavel_cargo} onChange={v => setNovaEmpresa({ ...novaEmpresa, responsavel_cargo: v })} />
                 
-                <div>
-                  <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: c.tinta, marginBottom: 6 }}>Plano de TI Contratado</label>
-                  <select
-                    value={novaEmpresa.plano}
-                    onChange={e => setNovaEmpresa({ ...novaEmpresa, plano: e.target.value })}
-                    style={{ width: '100%', height: 42, padding: '0 12px', borderRadius: 8, border: '1px solid ' + c.borda }}
-                  >
-                    <option value="Básico">Plano Básico (R$ 299/mês)</option>
-                    <option value="Profissional">Plano Profissional (R$ 599/mês)</option>
-                    <option value="Premium">Plano Premium (R$ 999/mês)</option>
-                    <option value="Enterprise">Plano Enterprise (Sob medida)</option>
-                  </select>
-                </div>
+                <Campo
+                  rotulo="Plano de TI Contratado"
+                  valor={novaEmpresa.plano}
+                  onChange={v => setNovaEmpresa({ ...novaEmpresa, plano: v })}
+                  opcoes={[
+                    { valor: 'Básico', texto: 'Plano Básico (R$ 299/mês)' },
+                    { valor: 'Profissional', texto: 'Plano Profissional (R$ 599/mês)' },
+                    { valor: 'Premium', texto: 'Plano Premium (R$ 999/mês)' },
+                    { valor: 'Enterprise', texto: 'Plano Enterprise (Sob medida)' }
+                  ]}
+                />
 
                 <Campo rotulo="Valor Mensal (R$)" tipo="number" valor={novaEmpresa.valor_mensal} onChange={v => setNovaEmpresa({ ...novaEmpresa, valor_mensal: v })} />
               </div>
